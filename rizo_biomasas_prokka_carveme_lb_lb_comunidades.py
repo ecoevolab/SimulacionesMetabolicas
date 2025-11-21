@@ -15,11 +15,34 @@ import csv
 all_models = {} 
 model_summary_data = []
 sim_params = c.params()
-sim_params.set_param('maxCycles', 240)
+sim_params.set_param('maxCycles', 80)
+sim_params.set_param('timeStep', 0.1)
+# ----------------------------------------
+# Filtror modelos de las comunidades
+ruta = 
 
-path_list = glob.glob('02_data/rizo/carveme/ST*_dimont_carveme_lb.xml')
+
+path_list = glob.glob('01_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
 initial_mass = [0, 0, 1e-8]   
 csv_output_path = '04_resultados/rizo/biomasas'
+# ----------------------------
+import glob
+import os
+
+# Ruta donde se encuentran los archivos
+directorio = 'ruta/a/mi/carpeta_de_modelos/'
+# ----------------------------------------------------------------------------------------------
+# Solución B: Si el set es una lista específica de IDs
+ids_deseados = ['ST00060', 'ST00109', 'ST00143']
+archivos_set_especifico = []
+
+for modelo_id in ids_deseados:
+    # Busca el archivo con el ID exacto
+    ruta_archivo = os.path.join(directorio, f'{modelo_id}.xml') 
+    if os.path.exists(ruta_archivo):
+        archivos_set_especifico.append(ruta_archivo)
+
+print(f"Archivos seleccionados: {len(archivos_set_especifico)}")
 # ----------------------------
 # Ciclo for
 for model_path in path_list:
@@ -113,7 +136,7 @@ for model_path in path_list:
         experimet.run()
         final_models = experimet.total_biomass
         if final_models is not None:
-            csv_file_name = os.path.join(csv_output_path, f"{model_id}.csv")
+            csv_file_name = os.path.join(csv_output_path, f"{model_id}_80.csv")
             final_models.to_csv(csv_file_name, index=False)
 
             # Guardar resumen
@@ -145,5 +168,3 @@ if model_summary_data:
     print(f"\n Resumen de biomasa guardado en: {summary_csv_path}")
 else:
     print("\n No se generaron datos de resumen de biomasa.")
-
-    # --- IMPRESIÓN DEL RESUMEN FINAL (FUERA DEL BUCLE) ---

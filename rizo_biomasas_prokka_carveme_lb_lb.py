@@ -18,7 +18,8 @@ sim_params = c.params()
 sim_params.set_param('maxCycles', 80)
 sim_params.set_param('timeStep', 0.1)
 
-path_list = glob.glob('01_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
+path_list = glob.glob('02_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
+
 initial_mass = [0, 0, 1e-8]   
 csv_output_path = '04_resultados/rizo/biomasas'
 # ----------------------------
@@ -147,17 +148,4 @@ if model_summary_data:
 else:
     print("\n No se generaron datos de resumen de biomasa.")
 
-    # --- IMPRESIÓN DEL RESUMEN FINAL (FUERA DEL BUCLE) ---
 
-
-# for model_id, df in summary_df.items():
-#     biomass = sim_params.total_biomass
-#     log_biomass = np.log10(biomass + 1e-10)
-#     log_biomass['t'] = biomass['cycle'] * sim_params.parameters.all_params['timeStep']
-#     myplot = log_biomass.drop(columns=['cycle']).plot(x = 't', linewidth=5)
-#     myplot.set_ylabel(r'Biomasa [$\it{log10}$($\bf{g}$)]', fontsize=10)
-#     plt.xlabel('horas', fontsize=10 )
-#     output_folder = '04_resultados/rizo/graficas'
-#     output_path = os.path.join(output_folder, 'competencia80_log10.png')
-#     plt.savefig(output_path)
-#     plt.show

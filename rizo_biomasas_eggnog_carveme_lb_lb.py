@@ -17,7 +17,7 @@ model_summary_data = []
 sim_params = c.params()
 sim_params.set_param('maxCycles', 240)
 
-path_list = glob.glob('02_data/rizo/carveme/ST*_dimont_carveme_lb.xml')
+path_list = glob.glob('02_data/rizo/carveme/ST*_eggnog_carveme_lb.xml')
 initial_mass = [0, 0, 1e-8]   
 csv_output_path = '04_resultados/rizo/biomasas'
 # ----------------------------
@@ -146,4 +146,4 @@ if model_summary_data:
 else:
     print("\n No se generaron datos de resumen de biomasa.")
 
-    # --- IMPRESIÓN DEL RESUMEN FINAL (FUERA DEL BUCLE) ---
+    # --- IMPRESIÓN DEL RESUMEN FINAL (FUERA DEL BUCLE) --
