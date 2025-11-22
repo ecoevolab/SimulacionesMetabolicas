@@ -1,29 +1,3 @@
-# import matplotlib.pyplot as plt
-# # Number of preferences for different libraries
-# library = ['Matplotlib', 'Seaborn', 'Plotly', 'Plotnine']
-# chosen_by = [2500, 1800, 3000, 2200]
-# # Vertical Bar Plot
-# plt.bar(library, chosen_by, color='skyblue')
-# plt.xlabel('Visualization Library')
-# plt.ylabel('Number of Enthusiasts')
-# plt.title('Which Visualization Library Do People Prefer?')
-# plt.show()
-
-# #################################################################
-# import cometspy as c
-# import cobra.io
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import os
-
-# ST46 = c.model(cobra.io.read_sbml_model('/home/abigaylmontantearenas/Documents/practicas/MODELOS/01_data/rizo/carveme/ST00046_prokka_carveme_lb.xml'))
-# print(len(ST46.reactions))
-
-###########################################################################################
-# -------------------------------------------
-# Genoma anotado en prokka y GEM recostruido en carveme
-# --------------------------
-# Cargar paqutes 
 import cometspy as c
 import cobra.io
 import pandas as pd
@@ -36,18 +10,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import csv
 
-# --------------------------
-# Cargar variables, rutas y parametros
-# --------------------------
-# Cargar variables, rutas y parametros
-# --------------------------
-# Cargar variables, rutas y parametros
+
 all_models = {} 
 model_summary_data = []
 model_reactions = {} # <--- ¡Asegúrate de que está inicializado como DICCIONARIO!
+model_metabolites = {}
 csv_output_path = '04_resultados/rizo/biomasas'
 
-path_list = glob.glob('01_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
+path_list = glob.glob('02_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
 # ----------------------------
 
 # Ciclo for
@@ -72,11 +42,14 @@ for model_path in path_list:
         
         # Guardar el conteo de reacciones en una VARIABLE TEMPORAL
         number_of_reactions = len(processed_models.reactions)
-        
-        # Registrar el conteo en el DICCIONARIO model_reactions
+        number_of_metabolites = len(processed_models.metabolites)
+
+                # Registrar el conteo en el DICCIONARIO model_reactions
         model_reactions[model_id] = number_of_reactions 
-        
+        model_metabolites[model_id] = number_of_metabolites
         print(f"Modelo {model_id} cargado. Total de reacciones: {number_of_reactions}")
+        print(f"Modelo {model_id} cargado. Total de reacciones: {number_of_metabolites}")
+
 
         # ... (el resto del código de simulación) ...
         
@@ -86,19 +59,35 @@ for model_path in path_list:
 
 # --- REPORTE FINAL (CORRECTO) ---
 
-final_counts_df = pd.DataFrame(
-    model_reactions.items(), # .items() solo funciona porque model_reactions es un dict.
+reactions_df = pd.DataFrame(
+    model_reactions.items(),
     columns=['Model ID', 'Total Reactions']
 )
 
-print("\n========================================================")
-print("RESUMEN DE CONTEO DE REACCIONES POR MODELO")
-print("========================================================")
+metabolities_df = pd.DataFrame(
+    model_metabolites.items(), # .items() solo funciona porque model_reactions es un dict.
+    columns=['Model ID', 'Total Metabolites']
+)
+# 2. FUSIONAR las dos tablas por la clave 'Model ID'
+final_counts_df = pd.merge(
+    reactions_df, 
+    metabolities_df, 
+    on='Model ID', 
+    how='inner' # Asegura que solo se incluyan los modelos que tienen ambos conteos
+)
 
-print(final_counts_df.to_string())
-
-# 2. GUARDAR EL CSV CONSOLIDADO
-summary_csv_path = os.path.join(csv_output_path, "reacciones_totales_consolidado.csv")
-
+# 3. GUARDAR EL CSV CONSOLIDADO
+summary_csv_path = os.path.join(csv_output_path, "conteo_total_consolidado.csv")
 if not final_counts_df.empty:
     final_counts_df.to_csv(summary_csv_path, index=False)
+
+# 4. IMPRESIÓN DEL REPORTE FINAL
+print("\n========================================================")
+print("RESUMEN DE CONTEO DE REACCIONES Y METABOLITOS")
+print("========================================================")
+
+if final_counts_df.empty:
+    print("ADVERTENCIA: El DataFrame de conteo está vacío.")
+else:
+    print(final_counts_df.to_string())
+    print(f"\nResumen guardado en: {summary_csv_path}")

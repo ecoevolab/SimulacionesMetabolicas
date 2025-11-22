@@ -14,7 +14,7 @@ model_reactions = {} # <--- ¡Asegúrate de que está inicializado como DICCIONA
 model_metabolites = {}
 csv_output_path = '04_resultados/rizo/biomasas'
 
-path_list = glob.glob('02_data/rizo/carveme/ST*_eggnog_carveme_lb.xml')
+path_list = glob.glob('02_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
 # ----------------------------
 
 # Ciclo for
@@ -74,7 +74,7 @@ final_counts_df = pd.merge(
 )
 
 # 3. GUARDAR EL CSV CONSOLIDADO
-summary_csv_path = os.path.join(csv_output_path, "conteo_total_consolidado_eggnog.csv")
+summary_csv_path = os.path.join(csv_output_path, "conteo_total_consolidado.csv")
 if not final_counts_df.empty:
     final_counts_df.to_csv(summary_csv_path, index=False)
 
