@@ -16,12 +16,12 @@ colores_bac = {
 }
 
 # --- Carga y Extracción de Datos (Asumido Correcto) ---
-df1_reacs = pd.read_csv('04_resultados/rizo/biomasas/reacciones_totales_reactions_dimont_carveme_lb_4.csv')
-df2_reacs = pd.read_csv('04_resultados/rizo/biomasas/reacciones_totales_reactions_prokka_carveme_lb_4.csv')
+df1_reacs = pd.read_csv('04_resultados/rizo/reacciones/reacciones_totales_reactions_dimont_carveme_lb_4.csv')
+df2_reacs = pd.read_csv('04_resultados/rizo/reacciones/reacciones_totales_reactions_prokka_carveme_lb_4.csv')
 
-model_ids = df1_reacs['Model ID']
-total_reactions1 = df1_reacs['Total Reactions']
-total_reactions2 = df2_reacs['Total Reactions']
+model_ids = df1_reacs['Model_ID']
+total_reactions1 = df1_reacs['Total_Reactions']
+total_reactions2 = df2_reacs['Total_Reactions']
 N = len(model_ids) # Longitud de los datos
 
 bar_width = 0.35 

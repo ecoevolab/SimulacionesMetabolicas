@@ -4,8 +4,6 @@ import cobra.io
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
-import pandas as pd
-import matplotlib.pyplot as plt
 import glob
 import numpy as np 
 import os 
@@ -13,19 +11,20 @@ import matplotlib.cm as cm
 import math
 
 
+
 #ruta_C2R = '/home/abigaylmontantearenas/Documents/practicas/MODELOS/data/GEM/cvm_C2R.xml'
 #ruta_RC3 = '/home/abigaylmontantearenas/Documents/practicas/MODELOS/data/GEM/cvm_RC3.xml'
 
 
-ST42 = c.model(cobra.io.read_sbml_model('/home/abigaylmontantearenas/Documents/practicas/MODELOS/01_data/rizo/carveme/ST00042_prokka_carveme_lb.xml'))
+ST42 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00042_prokka_carveme_lb.xml'))
 ST42.id = 'Pumsongensis'
-ST46 = c.model(cobra.io.read_sbml_model('/home/abigaylmontantearenas/Documents/practicas/MODELOS/01_data/rizo/carveme/ST00046_prokka_carveme_lb.xml'))
+ST46 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00046_prokka_carveme_lb.xml'))
 ST46.id = 'Bacillus'
-ST101 = c.model(cobra.io.read_sbml_model('/home/abigaylmontantearenas/Documents/practicas/MODELOS/01_data/rizo/carveme/ST00101_prokka_carveme_lb.xml'))
+ST101 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00101_prokka_carveme_lb.xml'))
 ST101.id = 'Pseudomonas'
-ST109 = c.model(cobra.io.read_sbml_model('/home/abigaylmontantearenas/Documents/practicas/MODELOS/01_data/rizo/carveme/ST00109_prokka_carveme_lb.xml'))
+ST109 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00109_prokka_carveme_lb.xml'))
 ST109.id = 'Mycobacterium'
-ST154 = c.model(cobra.io.read_sbml_model('/home/abigaylmontantearenas/Documents/practicas/MODELOS/01_data/rizo/carveme/ST00154_prokka_carveme_lb.xml'))
+ST154 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00154_prokka_carveme_lb.xml'))
 ST154.id = 'Agrobacterium'
 
 # set its initial biomass, 5e-6 gr at coordinate [0,0]
@@ -123,20 +122,31 @@ comp_params.set_param('maxCycles', 80)
 comp_assay = c.comets(test_tube, comp_params)
 comp_assay.run()
 
+
+
 strains = [
-    r'$\it{Pseudomonas\ umsongensis}$ (ST00060)',   
-    r'$\it{Rhodococcus\ erythropolis}$ (ST00094)', 
-    r'$\it{Variovorax\ paradoxus.}$ (ST00110)', 
-    r'$\it{Bacillus\ thuringensis}$ (ST00164)', 
-    r'$\it{Paenibacillus\ sp.}$ (ST00143)'    
+    r'$\it{Pseudomonas\ umsongensis}$ (ST00042)',   
+    r'$\it{Bacillus\ spp.}$ (ST00046)', 
+    r'$\it{Pseudomonas\ spp.}$ (ST00101)', 
+    r'$\it{Mycobacterium\ spp.}$ (ST00109)', 
+    r'$\it{Agrobacterium\ sp.}$ (ST00154)'    
 ]
-pallete = ('#D4807C','#C76662','#B7464C','#9E3345','#752530')
+pallete = ('#80B6B3','#1A3749','#5F9EAD','#3D788E','#26526B')
 
 plt.figure(figsize=(20, 8))
 biomass = comp_assay.total_biomass
 log_biomass = np.log10(biomass + 1e-10)
 log_biomass['t'] = biomass['cycle'] * comp_assay.parameters.all_params['timeStep']
+t = biomass['cycle'] * comp_assay.parameters.all_params['timeStep']
 
+
+# df = pd.DataFrame({
+#     'time': t,
+#     'biomasa': biomass,
+#     'log_biomass': log_biomass
+# })
+
+# print(df)
 
 # 2. PLOTEAR: Dibuja todas las curvas vs. 't', asignando los 5 colores Hex
 myplot = log_biomass.drop(columns=['cycle']).plot(
@@ -164,7 +174,7 @@ plt.tight_layout()
 
 # 5. GUARDAR Y MOSTRAR
 output_folder = '04_resultados/rizo/graficas'
-output_path = os.path.join(output_folder, 'competencia80_log10_1.png')
+output_path = os.path.join(output_folder, 'competencia80_log10_1_2511.png')
 os.makedirs(output_folder, exist_ok=True) # Asegurar directorio
 
 plt.savefig(output_path, bbox_inches='tight') # Usa tight para guardar bien la leyenda

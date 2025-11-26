@@ -14,7 +14,7 @@ model_reactions = {} # <--- ¡Asegúrate de que está inicializado como DICCIONA
 model_metabolites = {}
 csv_output_path = '04_resultados/rizo/biomasas'
 
-path_list = glob.glob('02_data/rizo/carveme/ST*_dimont_carveme_lb.xml')
+path_list = glob.glob('./02_data/rizo/carveme/ST*_dimont_carveme_lb.xml')
 # ----------------------------
 
 # Ciclo for

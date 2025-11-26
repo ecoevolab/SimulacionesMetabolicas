@@ -1,57 +1,72 @@
-from scipy.stats import kruskal
 import pandas as pd
-import scipy.stats as stats
 import matplotlib.pyplot as plt
+import numpy as np
 
-import os
-# # --- 1. DATOS DE EJEMPLO ---
-# # Usamos el mismo DataFrame para la consistencia
-data = {
-     'Valor': [20, 22, 25, 23, 27, 
-               15, 18, 17, 19, 16, 
-               30, 32, 35, 31, 34],
-     'Grupo': ['Cepa A', 'Cepa A', 'Cepa A', 'Cepa A', 'Cepa A',
-               'Cepa B', 'Cepa B', 'Cepa B', 'Cepa B', 'Cepa B',
-               'Cepa C', 'Cepa C', 'Cepa C', 'Cepa C', 'Cepa C']
- }
-df = pd.DataFrame(data)
+df1 = pd.read_csv('04_resultados/rizo/reacciones/conteo_dimont.csv')
+df2 = pd.read_csv('04_resultados/rizo/reacciones/conteo_eggnog.csv')
+df3 = pd.read_csv('04_resultados/rizo/reacciones/conteo_prokka.csv')
 
-# # --- 2. PREPARACIÓN PARA KRUSKAL-WALLIS Y PLOTEO ---
+JOIN_KEY = "Model ID"
 
-# # Crea la lista de arrays, uno por cada grupo (necesario para scipy.stats)
-grupos_separados = [df['Valor'][df['Grupo'] == g].values for g in df['Grupo'].unique()]
-nombres_grupos = df['Grupo'].unique()
+df = (
+    df1.merge(df2, on=JOIN_KEY, suffixes=("dimont","eggnog"))
+       .merge(df3, on=JOIN_KEY)
+)
 
-# # Ejecutar la prueba
-H_statistic, p_value = stats.kruskal(*grupos_separados)
+df.rename(columns={
+    "Total Reactions":"Total Reactions prokka",
+    "Total Metabolites":"Total Metabolites prokka",
+    "Total Genes":"Total Genes prokka"
+}, inplace=True)
 
-print("--- Resultado de la Prueba de Kruskal-Wallis ---")
-print(f"Estadístico H: {H_statistic:.4f}")
-print(f"Valor p: {p_value:.4f}")
-print("-" * 40)
+long_df = pd.DataFrame({
+    "Variable": ["Reacciones"]*len(df)*3 + ["Metabolitos"]*len(df)*3 + ["Genes"]*len(df)*3,
+    "Anotación": (["Dimont"]*len(df) + ["EggNOG"]*len(df) + ["Prokka"]*len(df)) * 3,
+    "Valor": pd.concat([
+        df["Total Reactions dimont"], df["Total Reactions eggnog"], df["Total Reactions prokka"],
+        df["Total Metabolites dimont"], df["Total Metabolites eggnog"], df["Total Metabolites prokka"],
+        df["Total Genes dimont"],      df["Total Genes eggnog"],      df["Total Genes prokka"]
+    ], ignore_index=True)
+})
 
-# # --- 3. GRÁFICO BOXPLOT CON MATPLOTLIB ---
+variables = ["Reacciones", "Metabolitos", "Genes"]
+anotacion = ["Dimont", "EggNOG", "Prokka"]
+colores = {"Dimont": "red", "EggNOG": "blue", "Prokka": "green"}
 
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(10, 6))
 
-# # La función boxplot de Matplotlib toma una lista de arrays como entrada
-plt.boxplot(grupos_separados, 
-             labels=nombres_grupos, # Nombres en el eje X
-             patch_artist=True,    # Permite colorear las cajas
-             medianprops={'color': 'red'}, # Estilo para la mediana
-             boxprops={'facecolor': 'lightblue'} # Color de la caja
-            )
+positions = []
+data_box = []
+colors_box = []
 
-# # Opcional: Añadir un título y etiquetas
-plt.title('Comparación de Valores por Grupo (Kruskal-Wallis)')
-plt.xlabel('Grupos (Cepas/Tratamientos)')
-plt.ylabel('Valor de Crecimiento/Metabolito')
-plt.grid(axis='y', linestyle='--', alpha=0.7)
+for i, var in enumerate(variables):
+    for j, metodo in enumerate(anotacion):
+        subset = long_df[(long_df["Variable"] == var) & (long_df["Anotación"] == metodo)]["Valor"]
+        
+        positions.append(i*4 + j) 
+        data_box.append(subset)
+        colors_box.append(colores[metodo])
 
-# # Opcional: Añadir el resultado p al gráfico para contexto
-plt.text(0.5, df['Valor'].max() * 1.05, 
-          f'Kruskal-Wallis: p={p_value:.3e}', 
-          ha='center', fontsize=10, 
-          bbox=dict(facecolor='white', alpha=0.5))
+box = plt.boxplot(
+    data_box,
+    positions=positions,
+    patch_artist=True,
+    widths=0.7
+)
 
+for patch, color in zip(box['boxes'], colors_box):
+    patch.set_facecolor(color)
+    patch.set_alpha(0.6)
+
+plt.xticks([1, 5, 9], variables, fontsize=12)
+
+plt.ylabel("Número de elementos", fontsize=12)
+plt.title("Comparación por método de anotación (Boxplot agrupado)", fontsize=14)
+
+handles = [plt.Line2D([0], [0], color=colores[m], linewidth=10) for m in anotacion]
+plt.legend(handles, anotacion, title="Anotación", loc="upper right")
+
+plt.grid(axis='y', linestyle='--', alpha=0.6)
+plt.tight_layout()
 plt.show()
+
