@@ -92,36 +92,65 @@ import glob
 import numpy as np 
 import os 
 
-path = './04_resultados/rizo/biomasas/'
+path = './04_resultados/rizo/biomasas/bioss/ensayo'
+output_path = './04_resultados'
 
-# Archivos individuales
-all_files = glob.glob(os.path.join(path, "*_bueno.csv"))
+# Buscar archivos
+com_files = glob.glob(os.path.join(path, "*_bueno.csv"))
+comunidad_files = glob.glob(os.path.join(path, "*_prokka_carveme_lb_80.csv"))
 
-# Archivo de comunidad (asumo solo 1)
-comunidad_file = glob.glob(os.path.join(path, "*_dimont_carveme_lb.csv"))[0]
-df_com = pd.read_csv(comunidad_file)
+# Crear diccionarios usando el nombre base
+com_dict = {
+    os.path.basename(f).replace("_bueno.csv", ""): f
+    for f in com_files
+}
 
-# Segunda columna del archivo de comunidad
-col_com = df_com.columns[1]
+indi_dict = {
+    os.path.basename(f).replace("_prokka_carveme_lb_80.csv", ""): f
+    for f in comunidad_files
+}
+
 colores = ['#80B6B3', '#3D788E', '#5F9EAD', '#1A3749', '#26526B']
 
-for i, file in enumerate(all_files):
-    df = pd.read_csv(file)
+# Encontrar nombres que EXISTEN en ambos
+nombres_comunes = set(com_dict.keys()) & set(indi_dict.keys())
 
-    col_ind = df.columns[1]
-    nombre = os.path.basename(file).replace('_bueno.csv','')
+for i, nombre in enumerate(sorted(nombres_comunes)):
 
-    plt.plot(df['cycle'], np.log(df[col_ind] + 1e-10),
+    # Leer ambos archivos del par
+    df_coms = pd.read_csv(com_dict[nombre])
+    df_indis = pd.read_csv(indi_dict[nombre])
+
+    col_ind = df_coms.columns[1]
+    col_com = df_indis.columns[1]
+
+    # Graficar Individual
+    plt.plot(df_coms['cycle'], np.log(df_coms[col_ind] + 1e-10),
              color= colores[i % len(colores)],
-             label='sola', marker='o')
+             label='comunidad', marker='o')
 
-    plt.plot(df_com['cycle'], np.log(df_com[col_com] + 1e-10),
+    # Graficar Comunidad
+    plt.plot(df_indis['cycle'], np.log(df_indis[col_com] + 1e-10),
              color= colores[i % len(colores)],
-             label='comunidad', linestyle='--')
+             label='individual', linestyle='--')
 
     plt.xlabel('Cycle')
     plt.ylabel('Log Biomasa')
     plt.title(f'Crecimiento de {nombre}')
     plt.grid(True)
     plt.legend()
+
+    # Crear nombre del archivo
+    filename = f"comparacion_biomasas_{nombre}.png"
+    filepath = os.path.join(output_path, filename)
+
+    # Guardar ANTES del show
+    plt.savefig(filepath, dpi=300, bbox_inches='tight')
+
+    # Mostrar
     plt.show()
+
+    # Limpiar figura para la siguiente
+    plt.clf()
+
+
