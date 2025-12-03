@@ -17,8 +17,8 @@ model_summary_data = []
 sim_params = c.params()
 sim_params.set_param('maxCycles', 240)
 
-path_list = glob.glob('02_data/rizo/carveme/ST*_dimont_carveme_lb.xml')
-initial_mass = [0, 0, 1e-8]   
+path_list = glob.glob('02_data/rizo/carveme/ST*_dimont_carveme_lb_1.xml')
+initial_mass = [0, 0, 5e-8]   
 csv_output_path = '04_resultados/rizo/biomasas'
 # ----------------------------
 # Ciclo for
@@ -113,7 +113,7 @@ for model_path in path_list:
         experimet.run()
         final_models = experimet.total_biomass
         if final_models is not None:
-            csv_file_name = os.path.join(csv_output_path, f"{model_id}.csv")
+            csv_file_name = os.path.join(csv_output_path, f"{model_id}_este.csv")
             final_models.to_csv(csv_file_name, index=False)
 
             # Guardar resumen

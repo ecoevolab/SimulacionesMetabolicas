@@ -110,7 +110,7 @@ indi_dict = {
     for f in comunidad_files
 }
 
-colores = ['#80B6B3', '#3D788E', '#5F9EAD', '#1A3749', '#26526B']
+colores = ['#26526B', '#1A3749', '#3D788E', '#5F9EAD', '#80B6B3']
 
 # Encontrar nombres que EXISTEN en ambos
 nombres_comunes = set(com_dict.keys()) & set(indi_dict.keys())
@@ -120,26 +120,30 @@ for i, nombre in enumerate(sorted(nombres_comunes)):
     # Leer ambos archivos del par
     df_coms = pd.read_csv(com_dict[nombre])
     df_indis = pd.read_csv(indi_dict[nombre])
+    
+    y_com = df_coms.iloc[:, 0] * 0.1
+    y_ind = df_indis.iloc[:, 0] * 0.1
 
     col_ind = df_coms.columns[1]
     col_com = df_indis.columns[1]
 
     # Graficar Individual
-    plt.plot(df_coms['cycle'], np.log(df_coms[col_ind] + 1e-10),
+    plt.plot(df_coms.iloc[:, 0] * 0.1, np.log(df_coms[col_ind] + 1e-10),
              color= colores[i % len(colores)],
              label='comunidad', marker='o')
 
+
     # Graficar Comunidad
-    plt.plot(df_indis['cycle'], np.log(df_indis[col_com] + 1e-10),
+    plt.plot(df_coms.iloc[:, 0] * 0.1, np.log(df_indis[col_com] + 1e-10),
              color= colores[i % len(colores)],
              label='individual', linestyle='--')
 
-    plt.xlabel('Cycle')
-    plt.ylabel('Log Biomasa')
+    plt.xlabel('t(h)')
+    plt.ylabel((r'Biomasa [$\it{log10}$($\bf{g}$)]'))
     plt.title(f'Crecimiento de {nombre}')
     plt.grid(True)
     plt.legend()
-
+    
     # Crear nombre del archivo
     filename = f"comparacion_biomasas_{nombre}.png"
     filepath = os.path.join(output_path, filename)

@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 
 #leer los archivos csv
@@ -35,7 +36,11 @@ long_df = pd.DataFrame({
 print(long_df)
 
 variables = ["Reacciones", "Metabolitos", "Genes"]
+variables1 = ["Reactions", "Metabolites", "Genes"]
+
 anotacion = ["Dimont", "EggNOG", "Prokka"]
+reconstruccion = ["CarveMe_Dimont_LB", "Carveme_EggNOG_LB", "CarveMe_Prokka_LB"]
+
 colores = {"Dimont": '#C8F2C2', "EggNOG": "#E8C9F0", "Prokka": '#FFB7CE'}
 
 
@@ -64,15 +69,20 @@ for patch, color in zip(box['boxes'], colors_box):
     patch.set_facecolor(color)
     patch.set_alpha(0.6)
 
-plt.xticks([1, 5, 9], variables, fontsize=12)
+plt.xticks([1, 5, 9], variables1, fontsize=12)
 
-plt.ylabel("Número de elementos", fontsize=12)
+plt.ylabel("Number of elements", fontsize=12)
 plt.title("Comparación por método de anotación", fontsize=14)
 
 handles = [plt.Line2D([0], [0], color=colores[m], linewidth=10) for m in anotacion]
-plt.legend(handles, anotacion, title="Anotación", loc="upper right")
+plt.legend(handles, reconstruccion, title="Reconstruction Method", loc="upper right")
 
 plt.grid(axis='y', linestyle='--', alpha=0.6)
 plt.tight_layout()
+
+output_folder = '04_resultados/rizo/graficas'
+output_path = os.path.join(output_folder, 'reconstruction_methods.png')
+
+plt.savefig(output_path, bbox_inches='tight') # Usa tight para guardar bien la leyenda
 plt.show()
 

@@ -22,8 +22,13 @@ path_list = glob.glob('02_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
 
 initial_mass = [0, 0, 5e-8]   
 csv_output_path = '04_resultados/rizo/biomasas/bioss/ensayo'
+
+
+
+
 # ----------------------------
-# Ciclo for
+
+
 for model_path in path_list:
     
     file_name = os.path.basename(model_path)

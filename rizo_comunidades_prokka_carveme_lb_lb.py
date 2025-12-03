@@ -174,7 +174,7 @@ plt.tight_layout()
 
 # 5. GUARDAR Y MOSTRAR
 output_folder = '04_resultados/rizo/graficas'
-output_path = os.path.join(output_folder, 'competencia80_log10_1_2511.png')
+output_path = os.path.join(output_folder, 'competencia80_log10_1_2611.png')
 os.makedirs(output_folder, exist_ok=True) # Asegurar directorio
 
 plt.savefig(output_path, bbox_inches='tight') # Usa tight para guardar bien la leyenda

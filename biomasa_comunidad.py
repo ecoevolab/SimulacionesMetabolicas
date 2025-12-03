@@ -15,11 +15,11 @@ ST42 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00042_prokka_c
 ST42.id = 'Pumsongensis'
 ST46 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00046_prokka_carveme_lb.xml'))
 ST46.id = 'Bacillus'
-ST101 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00101_prokka_carveme_lb.xml'))
+ST101 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00094_prokka_carveme_lb.xml'))
 ST101.id = 'Pseudomonas'
 ST109 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00109_prokka_carveme_lb.xml'))
 ST109.id = 'Mycobacterium'
-ST154 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00154_prokka_carveme_lb.xml'))
+ST154 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00110_prokka_carveme_lb.xml'))
 ST154.id = 'Agrobacterium'
 
 csv_output_path = '04_resultados/rizo/biomasas'
