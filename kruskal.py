@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # --- 1. DATA LOADING ---
-df1_reacs = pd.read_csv('04_resultados/rizo/reacciones/conteo_dimont.csv')
-df2_reacs = pd.read_csv('04_resultados/rizo/reacciones/conteo_eggnog.csv')
-df3_reacs = pd.read_csv('04_resultados/rizo/reacciones/conteo_prokka.csv')
+df1_reacs = pd.read_csv('./04_resultados/rizo/reacciones/conteo_dimont.csv')
+df2_reacs = pd.read_csv('./04_resultados/rizo/reacciones/conteo_eggnog.csv')
+df3_reacs = pd.read_csv('./04_resultados/rizo/reacciones/conteo_prokka.csv')
 
 # --- 2. FUSIÓN ---
 

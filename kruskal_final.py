@@ -4,9 +4,9 @@ import numpy as np
 
 
 #leer los archivos csv
-df1 = pd.read_csv('04_resultados/rizo/reacciones/conteo_dimont.csv')
-df2 = pd.read_csv('04_resultados/rizo/reacciones/conteo_eggnog.csv')
-df3 = pd.read_csv('04_resultados/rizo/reacciones/conteo_prokka.csv')
+df1 = pd.read_csv('04_resultados/rizo/reacciones/variables_dimont.csv')
+df2 = pd.read_csv('04_resultados/rizo/reacciones/variables_eggnog.csv')
+df3 = pd.read_csv('04_resultados/rizo/reacciones/variables_prokka.csv')
 
 #merge es para combinar dos bases de datos basados en una columna en comun, esta la extraen con el argumento ''on''
 #El argumento suffixes toma una secuencia de dos elementos, donde el primer elemento 
