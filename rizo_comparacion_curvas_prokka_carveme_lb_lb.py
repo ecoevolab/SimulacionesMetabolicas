@@ -12,7 +12,7 @@ import math
 # Directorio donde se encuentran todos los CSV de biomasa
 BASE_PATH = '01_data/rizo/carveme' 
 # Encontrar todos los archivos CSV de biomasa
-csv_files = glob.glob('04_resultados/rizo/biomasas/*_prokka_carveme_lb_80.csv')
+csv_files = glob.glob('04_resultados/rizo/biomasas/*_prokka_carveme_lb_biomasa_8hrs.csv')
 # Diccionario para almacenar los DataFrames cargados (Modelo ID como clave)
 ALL_GROWTH_DATA = {} 
 colores_bac = {
@@ -53,7 +53,7 @@ for file_path in csv_files:
         
         # Extraer el ID del modelo 
         file_name = os.path.basename(file_path)
-        model_id = file_name.replace('_prokka_carveme_lb_80.csv', '') 
+        model_id = file_name.replace('_prokka_carveme_lb_biomasa_8hrs.csv', '') 
 
         scientific_name = name_bac.get(model_id)
         final_label = f"{scientific_name} ({model_id})"
@@ -145,7 +145,7 @@ plt.grid(True, linestyle='--', alpha=0.5)
 # Muestra la leyenda con todos los IDs de los modelos
 plt.legend(title='Strain ID', bbox_to_anchor=(1.05, 1), loc='upper center') 
 output_folder = '04_resultados/rizo/graficas'
-output_path = os.path.join(output_folder, "comparacion_curvas__prokka_carveme_lb_lb_80_2.png")
+output_path = os.path.join(output_folder, "comparacion_curvas_prokka_carveme_lb_biomasa_8hrs.png")
 plt.savefig(output_path)
 
 

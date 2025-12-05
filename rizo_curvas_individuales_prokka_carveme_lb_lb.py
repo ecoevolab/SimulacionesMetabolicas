@@ -4,7 +4,7 @@ import glob
 import os
 import numpy as np
 # -----------------------------------
-csv_files = glob.glob('./04_resultados/rizo/biomasas/*_prokka_carveme_lb.csv')
+csv_files = glob.glob('./04_resultados/rizo/biomasas/*_prokka_carveme_lb_biomasa_8hrs.csv')
 colores_bac = {
     # Rojo/Marrón (Top 5 del póster)
     'ST00000': '#00FF00', 
@@ -36,7 +36,7 @@ name_bac = {
 
 for file in csv_files:
     file_name = os.path.basename(file)
-    model_id = file_name.replace('_prokka_carveme_lb.csv', '')
+    model_id = file_name.replace('_prokka_carveme_lb_biomasa_8hrs.csv', '')
     scientific_name = name_bac.get(model_id)
     final_label = f"{scientific_name} ({model_id})"
     cepa_color = colores_bac.get(model_id, 'black')
@@ -52,12 +52,11 @@ for file in csv_files:
         label= final_label)
         plt.title(f"Curvas de Crecimiento Microbiano para {scientific_name}")
         #plt.xlabel('Tiempo (Ciclos de Simulación)')
-        plt.xlabel('''Tiempo (Ciclos de Simulación)
-        Fig. 1. Genomas anotados con Prokka, modelo reconstruido con CarveMe y Gapfilling con medio LB.''')
+        plt.xlabel('Tiempo (Ciclos de Simulación)')
         plt.ylabel('Biomasa [ln(g)]')
         plt.grid(True, linestyle='--', alpha=0.6)
         output_folder = '04_resultados/rizo/graficas'
-        output_path = os.path.join(output_folder, f"{model_id}__prokka_carveme_lb_lb.png")
+        output_path = os.path.join(output_folder, f"{model_id}_prokka_carveme_lb_biomasa_8hrs.png")
         plt.savefig(output_path)
         plt.show()
 

@@ -13,14 +13,14 @@ import math
 
 ST42 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00042_prokka_carveme_lb.xml'))
 ST42.id = 'Pumsongensis'
-ST46 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00046_prokka_carveme_lb.xml'))
-ST46.id = 'Bacillus'
-ST101 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00094_prokka_carveme_lb.xml'))
-ST101.id = 'Pseudomonas'
-ST109 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00109_prokka_carveme_lb.xml'))
-ST109.id = 'Mycobacterium'
-ST154 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00110_prokka_carveme_lb.xml'))
-ST154.id = 'Agrobacterium'
+# ST46 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00046_prokka_carveme_lb.xml'))
+# ST46.id = 'Bacillus'
+# ST101 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00094_prokka_carveme_lb.xml'))
+# ST101.id = 'Pseudomonas'
+# ST109 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00109_prokka_carveme_lb.xml'))
+# ST109.id = 'Mycobacterium'
+# ST154 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00110_prokka_carveme_lb.xml'))
+# ST154.id = 'Agrobacterium'
 
 csv_output_path = '04_resultados/rizo/biomasas'
 model_summary_data = []
@@ -28,20 +28,20 @@ model_summary_data = []
 
 # set its initial biomass, 5e-6 gr at coordinate [0,0]
 ST42.initial_pop = [0, 0, 5e-8]
-ST46.initial_pop = [0, 0, 5e-8]
-ST101.initial_pop = [0, 0, 5e-8]
-ST109.initial_pop = [0, 0, 5e-8]
-ST154.initial_pop = [0, 0, 5e-8]
+# ST46.initial_pop = [0, 0, 5e-8]
+# ST101.initial_pop = [0, 0, 5e-8]
+# ST109.initial_pop = [0, 0, 5e-8]
+# ST154.initial_pop = [0, 0, 5e-8]
 
 # create an empty layout
 test_tube = c.layout()
 
 # add the models to the test tube
 test_tube.add_model(ST42)
-test_tube.add_model(ST46)
-test_tube.add_model(ST101)
-test_tube.add_model(ST109)
-test_tube.add_model(ST154)
+# test_tube.add_model(ST46)
+# test_tube.add_model(ST101)
+# test_tube.add_model(ST109)
+# test_tube.add_model(ST154)
 
 test_tube.set_specific_metabolite("h2o_e", 100)
 test_tube.set_specific_metabolite("o2_e", 10)
@@ -121,27 +121,27 @@ comp_params.set_param('maxCycles', 80)
 comp_assay = c.comets(test_tube, comp_params)
 comp_assay.run()
 
-final_models = comp_assay.total_biomass
-print(final_models)
+# final_models = comp_assay.total_biomass
+# print(final_models)
 
-csv_file_name = os.path.join(csv_output_path, "biomasa_comunidad.csv")
-final_models.to_csv(csv_file_name, index=False)
+# csv_file_name = os.path.join(csv_output_path, "biomasa_comunidad.csv")
+# final_models.to_csv(csv_file_name, index=False)
 
 
 
-df_biomasas = pd.read_csv('./04_resultados/rizo/biomasas/biomasa_comunidad.csv')
-#df_biomasas_final = df_biomasas.drop('columna1', axis=1)
+# df_biomasas = pd.read_csv('./04_resultados/rizo/biomasas/biomasa_comunidad.csv')
+# #df_biomasas_final = df_biomasas.drop('columna1', axis=1)
 
-# df_cycles = pd.DataFrame({
-#     "cycles": range(1, 81)
-# })
+# # df_cycles = pd.DataFrame({
+# #     "cycles": range(1, 81)
+# # })
 
-out_folder = './04_resultados/rizo/biomasas'
+# out_folder = './04_resultados/rizo/biomasas'
 
-for i in df_biomasas.columns[1:]:
-    sub_df = df_biomasas[['cycle', i]]  
-    nombre = f"{out_folder}/{i}_bueno.csv"
-    sub_df.to_csv(nombre, index=False)
+# for i in df_biomasas.columns[1:]:
+#     sub_df = df_biomasas[['cycle', i]]  
+#     nombre = f"{out_folder}/{i}_bueno.csv"
+#     sub_df.to_csv(nombre, index=False)
 
 
 # for bacteria in df_biomasas:

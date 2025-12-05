@@ -75,8 +75,8 @@ comunidad_12 = ["ST00046_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
 # found_4 = select_specific_files_os(folder_location, comunidad_4)
 # found_5 = select_specific_files_os(folder_location, comunidad_5)
 # found_6 = select_specific_files_os(folder_location, comunidad_6)
-# --------------------------------------------------------------
-found_7 = select_specific_files_os(folder_location, comunidad_7)
+# # --------------------------------------------------------------
+#found_7 = select_specific_files_os(folder_location, comunidad_7)
 found_8 = select_specific_files_os(folder_location, comunidad_8)
 found_9 = select_specific_files_os(folder_location, comunidad_9)
 found_10 = select_specific_files_os(folder_location, comunidad_10)
@@ -84,7 +84,7 @@ found_11 = select_specific_files_os(folder_location, comunidad_11)
 found_12 = select_specific_files_os(folder_location, comunidad_12)
 
 
-comunidades = [found_7, found_8, found_9, found_10, found_11, found_12]
+comunidades = [found_8, found_9, found_10, found_11, found_12]
 
 print("Found files (full paths):")
 

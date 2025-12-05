@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Genoma anotado en prokka y GEM recostruido en carveme
 # --------------------------
-# Cargar paqutes 
+# Cargar paquetes 
 import cometspy as c
 import cobra.io
 import pandas as pd
@@ -21,7 +21,7 @@ sim_params.set_param('timeStep', 0.1)
 path_list = glob.glob('02_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
 
 initial_mass = [0, 0, 5e-8]   
-csv_output_path = '04_resultados/rizo/biomasas/bioss/ensayo'
+csv_output_path = '04_resultados/rizo/biomasas'
 
 
 
@@ -120,7 +120,7 @@ for model_path in path_list:
         experimet.run()
         final_models = experimet.total_biomass
         if final_models is not None:
-            csv_file_name = os.path.join(csv_output_path, f"{model_id}_80.csv")
+            csv_file_name = os.path.join(csv_output_path, f"{model_id}_biomasa_8hrs.csv")
             final_models.to_csv(csv_file_name, index=False)
 
             # Guardar resumen
@@ -147,7 +147,7 @@ for model_path in path_list:
 # Reseumen final
 if model_summary_data:
     summary_df = pd.DataFrame(model_summary_data, columns=["Model ID", "Final Biomass"])
-    summary_csv_path = os.path.join(csv_output_path, "biomass_summary.csv")
+    summary_csv_path = os.path.join(csv_output_path)
     summary_df.to_csv(summary_csv_path, index=False)
     print(f"\n Resumen de biomasa guardado en: {summary_csv_path}")
 else:
