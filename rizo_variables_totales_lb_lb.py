@@ -47,7 +47,6 @@ for anotacion, model_list in paths.items():
         "Total Genes": list(model_genes.values())
     })
 
-    # Guardar CSV por anotación
     output_file = os.path.join(csv_output_path, f"variables_{anotacion}.csv")
     df.to_csv(output_file, index=False)
 

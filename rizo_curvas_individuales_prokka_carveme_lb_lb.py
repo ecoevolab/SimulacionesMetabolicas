@@ -6,32 +6,30 @@ import numpy as np
 # -----------------------------------
 csv_files = glob.glob('./04_resultados/rizo/biomasas/*_prokka_carveme_lb_biomasa_8hrs.csv')
 colores_bac = {
-    # Rojo/Marrón (Top 5 del póster)
     'ST00000': '#00FF00', 
     'ST00060': '#D4807C', # Arthrobacter
     'ST00094': '#C76662', # Rhodococcus 
     'ST00101': '#5F9EAD', # Pseudomonas
     'ST00110': '#B7464C', # Pseudomonas 
-    'ST00164': '#9E3345', # Ballicus thuringesis #🤔
+    'ST00164': '#9E3345', # Ballicus thuringesis 
     'ST00143': '#752530', # Paenibacillus
-    # Azul/Cian (Bottom 5 del póster)
-    'ST00042': '#80B6B3', # Pseudomonas umsongensis #🤔
+    'ST00042': '#80B6B3', # Pseudomonas umsongensis 
     'ST00109': '#3D788E', # Mycobacterium
     'ST00154': '#26526B', # Agrobacterium
-    'ST00046': '#1A3749'  # Bacillus (Usando el color más oscuro de la escala azul)
+    'ST00046': '#1A3749'  # Bacillus
 }
 name_bac = { 
-    'ST00000': r'$\it{Escherichia\ sp.}$', #✅
-    'ST00060': r'$\it{Arthrobacter\ sp.}$', #✅
-    'ST00094': r'$\it{Rhodococcus\ erythropolis}$', #✅
-    'ST00101': r'$\it{Pseudomonas\ sp.}$', #✅
-    'ST00110': r'$\it{Variovorax\ paradoxus}$', #✅
+    'ST00000': r'$\it{Escherichia\ sp.}$', 
+    'ST00060': r'$\it{Arthrobacter\ sp.}$', 
+    'ST00094': r'$\it{Rhodococcus\ erythropolis}$', 
+    'ST00101': r'$\it{Pseudomonas\ sp.}$', 
+    'ST00110': r'$\it{Variovorax\ paradoxus}$', 
     'ST00164': r'$\it{Ballicus thuringesis\ sp.}$', 
-    'ST00143': r'$\it{Paenibacillus\ sp.}$', #✅
-    'ST00042': r'$\it{Pseudomonas\ umsongensis}$', #✅
-    'ST00109': r'$\it{Mycobacterium\ sp.}$', #✅
-    'ST00154': r'$\it{Agrobacterium\ sp.}$', #✅
-    'ST00046': r'$\it{Bacillus\ sp.}$' #✅
+    'ST00143': r'$\it{Paenibacillus\ sp.}$',
+    'ST00042': r'$\it{Pseudomonas\ umsongensis}$', 
+    'ST00109': r'$\it{Mycobacterium\ sp.}$', 
+    'ST00154': r'$\it{Agrobacterium\ sp.}$', 
+    'ST00046': r'$\it{Bacillus\ sp.}$' 
 }
 
 for file in csv_files:
@@ -60,7 +58,6 @@ for file in csv_files:
         plt.savefig(output_path)
         plt.show()
 
-# Muestra la leyenda con todos los IDs de los modelos
         plt.legend(title='Modelo ID', bbox_to_anchor=(1.05, 1), loc='upper left') 
     except Exception as e:
         print(f"Error al cargar {file_name}: {e}")
