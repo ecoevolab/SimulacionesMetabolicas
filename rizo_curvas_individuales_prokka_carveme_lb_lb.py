@@ -9,7 +9,7 @@ import numpy as np
 # # ---------------------
 # Buscar archivos CSV
 # ---------------------
-csv_files = glob.glob('./04_resultados/rizo/*_prokka_carveme_lb_biomasa_8hrs.csv')
+csv_files = glob.glob('/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomasa_24horas/resultados/ST*_prokka_carveme_lb_biomasa_24hrs.csv')
 # --------------------------
 # Asignar colores a los ids
 # --------------------------
@@ -45,7 +45,7 @@ name_bac = {
 
 for file in csv_files:
     file_name = os.path.basename(file)
-    model_id = file_name.replace('_prokka_carveme_lb_biomasa_8hrs.csv', '')
+    model_id = file_name.replace('_prokka_carveme_lb_biomasa_24hrs.csv', '')
     scientific_name = name_bac.get(model_id)
     final_label = f"{scientific_name} ({model_id})"
     cepa_color = colores_bac.get(model_id, 'black')
@@ -65,7 +65,7 @@ for file in csv_files:
         plt.ylabel('Biomasa [ln(g)]')
         plt.grid(True, linestyle='--', alpha=0.6)
         output_folder = '04_resultados/rizo/graficas'
-        output_path = os.path.join(output_folder, f"{model_id}_prokka_carveme_lb_biomasa_8hrs.png")
+        output_path = os.path.join(output_folder, f"{model_id}_prokka_carveme_lb_biomasa_24hrs.png")
         plt.savefig(output_path)
         plt.show()
 
