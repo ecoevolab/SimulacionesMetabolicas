@@ -1,10 +1,18 @@
+# ------------------------------------------------------
+# Cargar paquetes 
+# ------------------------------------------------------
 import pandas as pd
 import matplotlib.pyplot as plt
 import glob
 import os
 import numpy as np
-# -----------------------------------
-csv_files = glob.glob('./04_resultados/rizo/biomasas/*_prokka_carveme_lb_biomasa_8hrs.csv')
+# # ---------------------
+# Buscar archivos CSV
+# ---------------------
+csv_files = glob.glob('./04_resultados/rizo/*_prokka_carveme_lb_biomasa_8hrs.csv')
+# --------------------------
+# Asignar colores a los ids
+# --------------------------
 colores_bac = {
     'ST00000': '#00FF00', 
     'ST00060': '#D4807C', # Arthrobacter
@@ -18,6 +26,9 @@ colores_bac = {
     'ST00154': '#26526B', # Agrobacterium
     'ST00046': '#1A3749'  # Bacillus
 }
+# ---------------------------------------
+# Asignar nombres científicos a los ids
+# --------------------------------------
 name_bac = { 
     'ST00000': r'$\it{Escherichia\ sp.}$', 
     'ST00060': r'$\it{Arthrobacter\ sp.}$', 

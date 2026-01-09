@@ -1,14 +1,6 @@
-#Start by loading required packages, including the COMETS toolbox
 import cometspy as c
 import cobra.io
-import pandas as pd
-import matplotlib.pyplot as plt
 import os
-import glob
-import numpy as np 
-import os 
-import matplotlib.cm as cm 
-import math
 
 
 ST00 = c.model(cobra.io.read_sbml_model('./02_data/rizo/carveme/ST00000_prokka_carveme_lb.xml'))
@@ -105,89 +97,4 @@ comp_params.set_param('maxCycles', 80)
 
 comp_assay = c.comets(test_tube, comp_params)
 comp_assay.run()
-
-
-import re
-import pandas as pd
-
-cmd_path = comp_assay.cmd
-
-# with open(cmd_path, "r") as f:
-#     lines = f.readlines()
-
-# media_data = []
-# in_media = False
-
-# for line in lines:
-#     if line.strip().upper() == "MEDIA":        # inicia sección
-#         in_media = True
-#         continue
-#     if in_media and line.strip() == "":        # fin de sección
-#         break
-#     if in_media:
-#         parts = line.split()
-#         if len(parts) >= 2:
-#             media_data.append([parts[0], float(parts[1])])
-
-# df_media = pd.DataFrame(media_data, columns=["metabolite", "initial_concentration"])
-
-# print(df_media)
-
-#comp_assay.fluxes
-#comp_assay.fluxes_by_species
-#comp_assay.specific_media
-#omp_assay.genotypes
-# final_models = comp_assay.total_biomass
-# print(final_models)
-
-# csv_file_name = os.path.join(csv_output_path, "biomasa_comunidad.csv")
-# final_models.to_csv(csv_file_name, index=False)
-
-
-
-# df_biomasas = pd.read_csv('./04_resultados/rizo/biomasas/biomasa_comunidad.csv')
-# #df_biomasas_final = df_biomasas.drop('columna1', axis=1)
-
-# # df_cycles = pd.DataFrame({
-# #     "cycles": range(1, 81)
-# # })
-
-# out_folder = './04_resultados/rizo/biomasas'
-
-# for i in df_biomasas.columns[1:]:
-#     sub_df = df_biomasas[['cycle', i]]  
-#     nombre = f"{out_folder}/{i}_bueno.csv"
-#     sub_df.to_csv(nombre, index=False)
-
-
-# for bacteria in df_biomasas:
-#     select_column = df_biomasas[['cycle', 'Score']]
-
-# for label, values in df_biomasas_final.items():
-#     biomasas = values
-#     id = values
-#     cycles_final = df_cycles
-
-#     try:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-#         df = pd.DataFrame()
-#         print(df)
-#         df.to_csv('04_resultados/rizo/biomasas/bacillus_data.csv', index=False)
-
-
-
-
-# final_biomass = final_models['Bacillus']
-# cycles = final_models['cycle']
-
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-# df = pd.DataFrame(final_models, columns=['cycle', 'Bacillus'])
-# print(df)
-# df.to_csv('04_resultados/rizo/biomasas/bacillus_data.csv', index=False)
-
-# print(f"ÉXITO: {model_id} registrado y guardado en {csv_file_name}")
-# print("========================================================")
-# print(f"TABLA DE CRECIMIENTO: {model_id}")
-# print("========================================================")
-# print(final_models.to_string())
 

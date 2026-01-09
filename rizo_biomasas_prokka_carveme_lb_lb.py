@@ -1,7 +1,8 @@
-# -------------------------------------------
+# ------------------------------------------------------
 # Genoma anotado en prokka y GEM recostruido en carveme
-# -------------------------------------------
+# ------------------------------------------------------
 # Cargar paquetes 
+# ------------------------------------------------------
 import cometspy as c
 import cobra.io
 import pandas as pd
@@ -10,9 +11,9 @@ import os
 import glob
 import numpy as np 
 import csv
-# --------------------------
+# -------------------------------------
 # Cargar variables, rutas y parametros
-# --------------------------
+# -------------------------------------
 all_models = {} 
 model_summary_data = []
 sim_params = c.params()
@@ -22,10 +23,10 @@ sim_params.set_param('timeStep', 0.1)
 path_list = glob.glob('02_data/rizo/carveme/ST*_prokka_carveme_lb.xml')
 
 initial_mass = [0, 0, 5e-8]   
-csv_output_path = '04_resultados/rizo/biomasas'
-# ----------------------------
+csv_output_path = '04_resultados/rizo'
+# -----------
 # Ciclo for
-# ----------------------------
+# -----------
 for model_path in path_list:
     
     file_name = os.path.basename(model_path)
@@ -118,37 +119,20 @@ for model_path in path_list:
         if final_models is not None:
             csv_file_name = os.path.join(csv_output_path, f"{model_id}_biomasa_8hrs.csv")
             final_models.to_csv(csv_file_name, index=False)
-            # --------------------
-            # Guardar resumen
-            # --------------------
-            final_biomass = final_models['Biomass (gr.)'].iloc[-1]
-            model_summary_data.append([model_id, final_biomass])
+          
 
-            print(f"ÉXITO: {model_id} registrado y guardado en {csv_file_name}")
+            print(f"archivo: {csv_file_name}, listo")
             print("========================================================")
-            print(f"TABLA DE CRECIMIENTO: {model_id}")
+            print(f"tabla biomasa: {model_id}, listo")
             print("========================================================")
             print(final_models.to_string())
 
-        else:
-            print(f"ADVERTENCIA: Modelo {model_id} falló la simulación.")
-
     except Exception as e:
-        print(f"ADVERTENCIA: Falló el procesamiento de {model_id}: {e}. Archivo: {file_name}")
+        print(f"Fallo en {model_id}: {e}.")
 
     finally:
         if final_models is None:
-            print(f"--- Iteración {model_id} finalizada. Estado: FALLO DE SIMULACIÓN/NO REGISTRADO ---")
+            print(f"error")
 
-# -------------------
-# Reseumen final
-# ------------------
-if model_summary_data:
-    summary_df = pd.DataFrame(model_summary_data, columns=["Model ID", "Final Biomass"])
-    summary_csv_path = os.path.join(csv_output_path)
-    summary_df.to_csv(summary_csv_path, index=False)
-    print(f"\n Resumen de biomasa guardado en: {summary_csv_path}")
-else:
-    print("\n No se generaron datos de resumen de biomasa.")
 
 

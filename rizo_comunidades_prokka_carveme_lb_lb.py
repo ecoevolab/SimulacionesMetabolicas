@@ -191,14 +191,14 @@ for num, comunidad in enumerate(comunidades, start=8):
             csv_file_name = os.path.join(csv_output_path, f"comunidad_{num}.csv")
             final_models.to_csv(csv_file_name, index=False)
 
-            print(f"ÉXITO: comunidad {num} registrada en {csv_file_name}")
+            print(f" {num} registrada")
             print(final_models.to_string())
         else:
-            print(f"ADVERTENCIA: comunidad {num} falló la simulación.")
+            print(f"{num} falló")
 
     except Exception as e:
-        print(f"ADVERTENCIA: Falló el procesamiento de comunidad {num}: {e}. Archivo: {file_name}")
+        print(f"Falló {num}: {e}")
 
     finally:
         if final_models is None:
-            print(f"--- Iteración {num} finalizada. Estado: FALLO DE SIMULACIÓN ---")
+            print("ALLO DE SIMULACIÓN")

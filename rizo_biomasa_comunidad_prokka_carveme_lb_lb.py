@@ -1,11 +1,14 @@
-import pandas as pd
-import numpy as np
-import glob
-import os
-
+# -------------------------------------------------------------
+# Cargar librerias
+import pandas as pd #para crear tablas y leer archivos csv
+import glob #para importar todos los datos de una carpeta
+import os #para nombrar los archivos 
+# -------------------------------------------------------------
+# Seleccionar mis datos
 comu_path = glob.glob('./04_resultados/rizo/biomasas/comunidad_*.csv')
 output_folder = './04_resultados/rizo/biomasas'
-
+# -------------------------------------------------------------
+# Ciclo for 
 for comunidad in comu_path:
     comu_name = os.path.basename(comunidad)
     comu_id = comu_name.replace('.csv', '')
@@ -16,14 +19,13 @@ for comunidad in comu_path:
         # Sumar todas las columnas excepto la primera (tiempo)
         df["row_sum"] = df.iloc[:, 1:].sum(axis=1)
 
+        # Renombrar los archivos de salida
         csv_file_name = os.path.join(output_folder, f"{comu_id}_biomasa_suma.csv")
         df.to_csv(csv_file_name, index=False)
 
     except Exception as e:
-        print(f"ADVERTENCIA: Falló el procesamiento de {comu_id}: {e}. Archivo: {comu_name}")
+        print(f"Falló la {comu_id}: {e}")
+    else:
+        print(f"Lista la {comu_id}")
 
-    finally:
-        if df is None:
-            print(f"--- Iteración {comu_id} finalizada. Estado: FALLO DE SIMULACIÓN/NO REGISTRADO ---")
-        else:
-            print(f"--- Iteración {comu_id} finalizada correctamente. ---")
+    
