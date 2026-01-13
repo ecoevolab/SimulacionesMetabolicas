@@ -108,7 +108,7 @@ for num, comunidad in enumerate(comunidades, start=3):
         # Agregar metabolitos específicos (UNA sola vez)
         test_tube.set_specific_metabolite("h2o_e", 100)
         test_tube.set_specific_metabolite("o2_e", 10)
-        test_tube.set_specific_metabolite("pi_e", 100)
+        test_tube.set_specific_metabolite("pi_e", 100 * perc_lb)
         test_tube.set_specific_metabolite("prbamp_e", 100)
         test_tube.set_specific_metabolite("glu__L_e", 1)
         test_tube.set_specific_metabolite("mn2_e", 100)
