@@ -1,16 +1,8 @@
 import cometspy as c
 import cobra.io
 import pandas as pd
-import matplotlib.pyplot as plt
 import os
-import glob
-import numpy as np 
-import csv
-from pathlib import Path
-
 # ---------------------------
-all_models = {} 
-model_summary_data = []
 sim_params = c.params()
 sim_params.set_param('maxCycles', 80)
 sim_params.set_param('timeStep', 0.1)
@@ -88,7 +80,7 @@ print("Found files (full paths):")
 
 # -----------------------------------------------------------
 
-for num, comunidad in enumerate(comunidades, start=3):
+for num, comunidad in enumerate(comunidades, start=1):
     test_tube = c.layout()
 
     try:
@@ -197,4 +189,5 @@ for num, comunidad in enumerate(comunidades, start=3):
 
     except Exception as e:
         print(f"Falló {num}: {e}")
+
 
