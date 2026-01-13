@@ -1,32 +1,29 @@
 # ------------------------------------------------------
 # Cargar paquetes 
 # ------------------------------------------------------
-import pandas as pd
-import matplotlib.pyplot as plt
-import glob
-import os
-import numpy as np
+import pandas as pd # leer csv
+import matplotlib.pyplot as plt # editar graficas
+import glob # importar datos
+import os # re nombrar datos 
+import numpy as np # usar el logaritmo natural
 # # ---------------------
 # Buscar archivos CSV
 # ---------------------
-
+# Tratamiento por tipo de anotacion
 biomas_prokka = glob.glob('./04_resultados/rizo/biomasas/ST*_prokka_carveme_lb_treat.csv')
 biomas_dimont = glob.glob('./04_resultados/rizo/biomasas/ST*_dimont_carveme_lb_treat.csv')
 biomas_eggnog = glob.glob('./04_resultados/rizo/biomasas/ST*_eggnog_carveme_lb_treat.csv')
-
-# ----------------------
-
+# ---------------------
+# Tratamiento por horas
 biomas_08 = glob.glob('./04_resultados/rizo/biomasas/ST*_prokka_carveme_lb_biomasa_08hrs.csv')
 biomas_16 = glob.glob('./04_resultados/rizo/biomasas/ST*_prokka_carveme_lb_biomasa_16hrs.csv')
 biomas_24 = glob.glob('./04_resultados/rizo/biomasas/ST*_prokka_carveme_lb_biomasa_24hrs.csv')
 biomas_48 = glob.glob('./04_resultados/rizo/biomasas/ST*_prokka_carveme_lb_biomasa_48hrs.csv')
-
 # -------------------------
 model_paths = [biomas_prokka, biomas_dimont, biomas_eggnog, biomas_08, biomas_16, biomas_24, biomas_48]
-
+# -----------------------------------
 output_folder = '04_resultados/rizo/graficas_2'
 os.makedirs(output_folder, exist_ok=True)
-
 # --------------------------
 # Asignar colores a los ids
 # --------------------------
@@ -62,8 +59,9 @@ name_bac = {
 
 for grupo in model_paths:
     for individual_model in grupo:
-        file_name = os.path.basename(individual_model)
-        model_id = file_name[:7]
+        file_name = os.path.basename(individual_model) # extraer nombre del archivo
+        model_id = file_name[:7] # tomar las primeras 7 letras del nombre del archivo ''STXXXXX''
+        # buscar por tratamiento para hacer etiquetas 
         if '_prokka_carveme_lb_treat' in file_name:
             treat = '_prokka_carveme_treat'
         elif '_dimont_carveme_lb_treat' in file_name:
@@ -80,15 +78,18 @@ for grupo in model_paths:
             treat = '_prokka_carveme_lb_biomasa_48hrs'
         else: 
             treat = 'desconocido'
-
-        scientific_name = name_bac.get(model_id, 'desconocido')
-        final_label = f"{model_id}{treat}"
-        cepa_color = colores_bac.get(model_id, 'black')
+        # etiquetas
+        scientific_name = name_bac.get(model_id, 'desconocido') # para el nombre específico de la grafica; busca dentro del diccionario de 
+        #''name_bac'' la que se relacione con el model_id, si no existe, se nombra ''desconocido''
+        final_label = f"{model_id}{treat}" # nombre para que se guarde el archivo, incluye el tratamiento  
+        cepa_color = colores_bac.get(model_id, 'black') # para asignar color, en el diccionario de ''colores bac'' busca
+        # los id que sean los mismos que en ''model_id''
+        #hacer la grafica:
         try:
             df = pd.read_csv(individual_model)
-            tiempo = (df.iloc[:, 0]*0.1)
-            masa = df.iloc[:, 1]
-            log_masa = np.log10(masa + 1e-10)
+            tiempo = (df.iloc[:, 0]*0.1) # extraer la primer columna de los ciclos y convertirlos a horas 
+            masa = df.iloc[:, 1] # extraer siempre la segunda columna, datos de biomasa
+            log_masa = np.log10(masa + 1e-10) # biomasa en log
             plt.figure(figsize=(20, 8))
             plt.plot(tiempo, masa, 
             marker='o', 
@@ -100,7 +101,7 @@ for grupo in model_paths:
             plt.xlabel('Tiempo (Ciclos de Simulación)')
             plt.ylabel('Biomasa [ln(g)]')
             plt.grid(True, linestyle='--', alpha=0.6)
-            plt.legend(title='Modelo ID', bbox_to_anchor=(1.05, 1), loc='upper left') 
+            plt.legend(title='Modelo ID', bbox_to_anchor=(1.05, 1), loc='upper left')
             output_path = os.path.join(output_folder, f"{final_label}.png")
             plt.savefig(output_path)
 

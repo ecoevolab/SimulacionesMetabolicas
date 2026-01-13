@@ -1,45 +1,43 @@
 # -------------------------------------------
-# Genoma anotado en prokka y GEM recostruido en carveme
-# --------------------------
+# Genoma anotado en dimont, prokka o eggnog y GEM recostruido en carveme
+# ---------------------------------------------
 # Cargar paqutes 
 import cometspy as c
 import cobra.io
-import pandas as pd
-import matplotlib.pyplot as plt
-import os
-import glob
-import numpy as np 
-import csv
+import pandas as pd #libreria para manejar tablas
+import os # crear carpetas y ''extraer'' nombres 
+import glob # para seleccionar varios archivos
 # --------------------------
 # Cargar variables, rutas y parametros
+# Diccionarios para almacenar datos mas adelante
 all_models = {} 
-model_summary_data = []
+# Parametors de la simulación
+initial_mass = [0, 0, 5e-8]   
 sim_params = c.params()
 sim_params.set_param('maxCycles', 240)
-
+# Datos
 dimont_carve = sorted(glob.glob('02_data/rizo/carveme/ST*_dimont_carveme_lb.xml'))
 eggnoge_carve = sorted(glob.glob('02_data/rizo/carveme/ST*_eggnog_carveme_lb.xml'))
 prokka_carve = sorted(glob.glob('02_data/rizo/carveme/ST*_prokka_carveme_lb.xml'))
 
 model_paths = [dimont_carve, eggnoge_carve, prokka_carve]
-
-initial_mass = [0, 0, 5e-8]   
+# Salida de datos   
 csv_output_path = '04_resultados/rizo/biomasa'
 os.makedirs(csv_output_path, exist_ok=True)
 # ----------------------------
 # Ciclo for
 for grupo in model_paths: 
     for model_path in grupo:
-        file_name = os.path.basename(model_path)
-        model_id = file_name.replace('.xml', '') 
-        if '-draft' in file_name:
+        file_name = os.path.basename(model_path) # extraer nombre del archivo
+        model_id = file_name.replace('.xml', '') # sustituit la ultima parte para cambiar nombre
+        if '-draft' in file_name: 
             continue
         
         try:          
             # Cargar modelos y procesarlos                       
             cobra_models = cobra.io.read_sbml_model(model_path)
             processed_models = c.model(cobra_models) 
-            all_models[model_id] = processed_models
+            all_models[model_id] = processed_models # guarda cada uno de los modelos procesados
             # Cargar experimento 
             processed_models.initial_pop = initial_mass
             test_tube = c.layout()
@@ -118,24 +116,11 @@ for grupo in model_paths:
             experimet = c.comets(test_tube, sim_params)
             experimet.run()
             final_models = experimet.total_biomass
-            if final_models is not None:
-                csv_file_name = os.path.join(csv_output_path, f"{model_id}_lb.csv")
-                final_models.to_csv(csv_file_name, index=False)
+            csv_file_name = os.path.join(csv_output_path, f"{model_id}_lb.csv") # ruta y nombre del archivo 
+            final_models.to_csv(csv_file_name, index=False) # gusrad como cvs
 
-
-                print(f"ÉXITO: {model_id} registrado y guardado en {csv_file_name}")
-                print("========================================================")
-                print(f"TABLA DE CRECIMIENTO: {model_id}")
-                print("========================================================")
-                print(final_models.to_string())
-
-            else:
-                print(f"ADVERTENCIA: Modelo {model_id} falló la simulación.")
-
+            
         except Exception as e:
-            print(f"Fallo en {model_id}: {e}.")
+            print(f"{model_id}: {e}.")
 
-        finally:
-            if final_models is None:
-                print("error")
 

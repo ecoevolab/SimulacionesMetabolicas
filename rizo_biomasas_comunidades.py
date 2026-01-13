@@ -35,7 +35,6 @@ def select_specific_files_os(folder_path, specific_filenames):
             
     return selected_files
 
-# --- Example Usage ---
 folder_location = "./02_data/rizo/carveme" 
 
 comunidad_1 = ["ST00046_prokka_carveme_lb.xml", "ST00154_prokka_carveme_lb.xml"
@@ -47,49 +46,49 @@ comunidad_2 = ["ST00046_prokka_carveme_lb.xml", "ST00154_prokka_carveme_lb.xml"
 comunidad_3 = ["ST00046_prokka_carveme_lb.xml", "ST00154_prokka_carveme_lb.xml"
                   , "ST00101_prokka_carveme_lb.xml", "ST00042_prokka_carveme_lb.xml", "ST00094_prokka_carveme_lb.xml"]
 
-comunidad_4 = ["ST00046_prokka_carveme_lb.xml", "ST00154_prokka_carveme_lb.xml"
-                  , "ST00109_prokka_carveme_lb.xml", "ST00042_prokka_carveme_lb.xml", "ST00110_prokka_carveme_lb.xml"]
+# comunidad_4 = ["ST00046_prokka_carveme_lb.xml", "ST00154_prokka_carveme_lb.xml"
+#                   , "ST00109_prokka_carveme_lb.xml", "ST00042_prokka_carveme_lb.xml", "ST00110_prokka_carveme_lb.xml"]
 
-comunidad_5 = ["ST00046_prokka_carveme_lb.xml", "ST00101_prokka_carveme_lb.xml"
-                  , "ST00109_prokka_carveme_lb.xml", "ST00042_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml"]
-comunidad_6 = ["ST00154_prokka_carveme_lb.xml", "ST00101_prokka_carveme_lb.xml"
-                  , "ST00109_prokka_carveme_lb.xml", "ST00042_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml"]
-#-------------------------------------------------
-comunidad_7 = ["ST00060_prokka_carveme_lb.xml", "ST00094_prokka_carveme_lb.xml"
-                 , "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml", "ST00143_prokka_carveme_lb.xml"]
-comunidad_8 = ["ST00042_prokka_carveme_lb.xml", "ST00094_prokka_carveme_lb.xml"
-                 , "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml", "ST00143_prokka_carveme_lb.xml"]
-comunidad_9 = ["ST00109_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
-                 , "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml", "ST00143_prokka_carveme_lb.xml"]
-comunidad_10 = ["ST00101_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
-                 , "ST00094_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml", "ST00143_prokka_carveme_lb.xml"]
-comunidad_11 = ["ST00154_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
-                 , "ST00094_prokka_carveme_lb.xml", "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml"]
-comunidad_12 = ["ST00046_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
-                 , "ST00094_prokka_carveme_lb.xml", "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml"]
+# comunidad_5 = ["ST00046_prokka_carveme_lb.xml", "ST00101_prokka_carveme_lb.xml"
+#                   , "ST00109_prokka_carveme_lb.xml", "ST00042_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml"]
+# comunidad_6 = ["ST00154_prokka_carveme_lb.xml", "ST00101_prokka_carveme_lb.xml"
+#                   , "ST00109_prokka_carveme_lb.xml", "ST00042_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml"]
+# #-------------------------------------------------
+# comunidad_7 = ["ST00060_prokka_carveme_lb.xml", "ST00094_prokka_carveme_lb.xml"
+#                  , "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml", "ST00143_prokka_carveme_lb.xml"]
+# comunidad_8 = ["ST00042_prokka_carveme_lb.xml", "ST00094_prokka_carveme_lb.xml"
+#                  , "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml", "ST00143_prokka_carveme_lb.xml"]
+# comunidad_9 = ["ST00109_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
+#                  , "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml", "ST00143_prokka_carveme_lb.xml"]
+# comunidad_10 = ["ST00101_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
+#                  , "ST00094_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml", "ST00143_prokka_carveme_lb.xml"]
+# comunidad_11 = ["ST00154_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
+#                  , "ST00094_prokka_carveme_lb.xml", "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml"]
+# comunidad_12 = ["ST00046_prokka_carveme_lb.xml", "ST00060_prokka_carveme_lb.xml"
+#                  , "ST00094_prokka_carveme_lb.xml", "ST00110_prokka_carveme_lb.xml", "ST00164_prokka_carveme_lb.xml"]
 
 found_1 = select_specific_files_os(folder_location, comunidad_1)
 found_2 = select_specific_files_os(folder_location, comunidad_2)
 found_3 = select_specific_files_os(folder_location, comunidad_3)
-found_4 = select_specific_files_os(folder_location, comunidad_4)
-found_5 = select_specific_files_os(folder_location, comunidad_5)
-found_6 = select_specific_files_os(folder_location, comunidad_6)
-# --------------------------------------------------------------
-found_7 = select_specific_files_os(folder_location, comunidad_7)
-found_8 = select_specific_files_os(folder_location, comunidad_8)
-found_9 = select_specific_files_os(folder_location, comunidad_9)
-found_10 = select_specific_files_os(folder_location, comunidad_10)
-found_11 = select_specific_files_os(folder_location, comunidad_11)
-found_12 = select_specific_files_os(folder_location, comunidad_12)
+# found_4 = select_specific_files_os(folder_location, comunidad_4)
+# found_5 = select_specific_files_os(folder_location, comunidad_5)
+# found_6 = select_specific_files_os(folder_location, comunidad_6)
+# # --------------------------------------------------------------
+# found_7 = select_specific_files_os(folder_location, comunidad_7)
+# found_8 = select_specific_files_os(folder_location, comunidad_8)
+# found_9 = select_specific_files_os(folder_location, comunidad_9)
+# found_10 = select_specific_files_os(folder_location, comunidad_10)
+# found_11 = select_specific_files_os(folder_location, comunidad_11)
+# found_12 = select_specific_files_os(folder_location, comunidad_12)
 
 
-comunidades = [found_1, found_2, found_3, found_4, found_5, found_6,found_7, found_8, found_9, found_10, found_11, found_12]
+comunidades = [found_1, found_2, found_3]
 
 print("Found files (full paths):")
 
 # -----------------------------------------------------------
 
-for num, comunidad in enumerate(comunidades, start=8):
+for num, comunidad in enumerate(comunidades, start=3):
     test_tube = c.layout()
 
     try:
@@ -195,9 +194,7 @@ for num, comunidad in enumerate(comunidades, start=8):
         else:
             print(f"{num} falló")
 
+
     except Exception as e:
         print(f"Falló {num}: {e}")
 
-    finally:
-        if final_models is None:
-            print("ALLO DE SIMULACIÓN")
