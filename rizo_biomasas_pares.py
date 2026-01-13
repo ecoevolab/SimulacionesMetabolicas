@@ -10,14 +10,17 @@ import numpy as np
 # --------------------------
 # Cargar modelos
 # --------------------------
+# What is path list
 path_list = glob.glob('02_data/rizo/carveme/*_prokka_carveme_lb.xml')
 pairs = list(combinations(path_list, 2))
 
+# Parameterrs
 all_models = {}
 model_summary_data = []
 sim_params = c.params()
-sim_params.set_param('maxCycles', 80)
-sim_params.set_param('timeStep', 0.1)
+sim_params.set_param('maxCycles', 80) # Make sure to use a time to cover steady state
+sim_params.set_param('timeStep', 0.1) # Make the convertion to hours the same in all scritps
+
 
 initial_mass = [0, 0, 5e-8]   
 csv_output_path = '04_resultados/rizo/biomasas'
@@ -49,9 +52,16 @@ for modelA_path, modelB_path in pairs:
         test_tube.add_model(modelA)
         test_tube.add_model(modelB)
 
+        # Write function for arbitrary number of models
+        # for model_i in model_list:
+        #     test_tube.add_model(model_i)
+
+
+
+
         test_tube.set_specific_metabolite("h2o_e", 100)
         test_tube.set_specific_metabolite("o2_e", 10)
-        test_tube.set_specific_metabolite("pi_e", 100)
+        test_tube.set_specific_metabolite("pi_e", 100 * perc_lb)
         test_tube.set_specific_metabolite("prbamp_e", 100)
         test_tube.set_specific_metabolite("glu__L_e", 1)
         test_tube.set_specific_metabolite("mn2_e", 100)
