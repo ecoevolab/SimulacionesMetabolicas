@@ -89,20 +89,20 @@ for tratamiento, grupo in enumerate(grupos_biomasa): # grupos grande es el set d
         color = colores_bac.get(model_id, 'gray')
         label = name_bac.get(model_id, model_id)
 
-        plt.plot(tiempo_h, log_masa, 
+        plt.plot(tiempo_h, masa, 
                  linestyle='-', 
                  linewidth=3, 
                  color=color, 
                  label=label) 
 
     # Estética de la gráfica
-    plt.title(f"Curvas de Crecimiento - {nombre_actual}", fontsize=20)
-    plt.xlabel('Tiempo (h)', fontsize=16)
-    plt.ylabel(r'Biomasa [$\log_{10}$(g)]', fontsize=16) # para las letras en cursiva 
+    plt.title(f"Growth Curves - {nombre_actual}", fontsize=20)
+    plt.xlabel('Time (h)', fontsize=16)
+    plt.ylabel(r'Biomass (g)', fontsize=16) # para las letras en cursiva 
     plt.grid(True, linestyle='--', alpha=0.5)
     
     # Leyenda fuera de la gráfica
-    plt.legend(title='Cepa Bacteriana', bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=10)
+    plt.legend(title='Strain ID', bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=10)
 
     # 4. Guardar y Cerrar
     output_path = os.path.join(output_folder, f"comparacion_{nombre_actual}.png")

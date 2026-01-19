@@ -4,7 +4,7 @@ import pandas as pd
 import os
 # ---------------------------
 sim_params = c.params()
-sim_params.set_param('maxCycles', 80)
+sim_params.set_param('maxCycles', 30)
 sim_params.set_param('timeStep', 0.1)
 initial_mass = [0, 0, 5e-8]   
 csv_output_path = '04_resultados/rizo/biomasas/'
