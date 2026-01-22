@@ -12,9 +12,13 @@ import glob # para seleccionar varios archivos
 # Diccionarios para almacenar datos mas adelante
 all_models = {} 
 # Parametors de la simulación
-initial_mass = [0, 0, 5e-8]   
+initial_mass = [0, 0, 5e-8]
 sim_params = c.params()
 sim_params.set_param('maxCycles', 240)
+
+# Parametro lb
+perc_lb = 1
+
 # Datos
 dimont_carve = sorted(glob.glob('02_data/rizo/carveme/ST*_dimont_carveme_lb.xml'))
 eggnoge_carve = sorted(glob.glob('02_data/rizo/carveme/ST*_eggnog_carveme_lb.xml'))
@@ -45,7 +49,7 @@ for grupo in model_paths:
 
             test_tube.set_specific_metabolite("h2o_e", 100)
             test_tube.set_specific_metabolite("o2_e", 10)
-            test_tube.set_specific_metabolite("pi_e", 100)
+            test_tube.set_specific_metabolite("pi_e", 100 * perc_lb)
             test_tube.set_specific_metabolite("prbamp_e", 100)
             test_tube.set_specific_metabolite("glu__L_e", 1)
             test_tube.set_specific_metabolite("mn2_e", 100)
