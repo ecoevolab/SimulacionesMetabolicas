@@ -49,7 +49,7 @@ for grupo in model_paths:
 
             test_tube.set_specific_metabolite("h2o_e", 100)
             test_tube.set_specific_metabolite("o2_e", 10)
-            test_tube.set_specific_metabolite("pi_e", 100 * perc_lb)
+            test_tube.set_specific_metabolite("pi_e", 100)
             test_tube.set_specific_metabolite("prbamp_e", 100)
             test_tube.set_specific_metabolite("glu__L_e", 1)
             test_tube.set_specific_metabolite("mn2_e", 100)
