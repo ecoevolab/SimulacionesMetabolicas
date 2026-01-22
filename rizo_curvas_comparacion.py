@@ -108,5 +108,6 @@ for tratamiento, grupo in enumerate(grupos_biomasa): # grupos grande es el set d
     output_path = os.path.join(output_folder, f"comparacion_{nombre_actual}.png")
     plt.savefig(output_path, bbox_inches='tight')
     plt.close() 
-
+    
+plt.show
 print("Todas las gráficas han sido generadas")
