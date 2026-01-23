@@ -3,7 +3,6 @@ import cobra.io
 import pandas as pd
 import os
 
-
 def biomass_cepas_rizo(gems, X, Y, Z, cicles):
     all_models = {} 
     initial_mass = [X, Y, Z]
@@ -107,34 +106,68 @@ def biomass_cepas_rizo(gems, X, Y, Z, cicles):
         except Exception as e:
             print(f"{model_id}: {e}.")
 
+import cometspy as c
+import cobra.io
+import pandas as pd
+import os
+import glob  # Importante para usar el patrón ST*_prokka
 
-def biomass_comunidad_rizo(comunidades, X, Y , Z, cicle, tstep):
+def biomass_comunidades_rizo(ruta_csv_syncoms, patron_xml, folder_resultados):
+    """
+    patron_xml: debe recibir algo como './02_data/rizo/carveme/*_prokka_carveme_lb.xml'
+    """
+    # --- 1. CONFIGURACIÓN DE PARÁMETROS ---
     sim_params = c.params()
-    sim_params.set_param('maxCycles', cicle)
-    sim_params.set_param('timeStep', tstep)
-    initial_mass = [X, Y, Z]   
-    csv_output_path = '04_resultados/rizo/biomasas/'
+    sim_params.set_param('maxCycles', 480)
+    sim_params.set_param('timeStep', 0.1)
+    initial_mass = [0, 0, 5e-8]
 
-    for num, items in enumerate(comunidades, start=1):
-        test_tube = c.layout()
+    os.makedirs(folder_resultados, exist_ok=True)
 
+    # --- 2. PREPARACIÓN DE COMUNIDADES ---
+    df = pd.read_csv(ruta_csv_syncoms)
+    id_comunidad = df.iloc[:, 0].tolist()
+    matriz_bacterias = df.iloc[:, 1:].astype(int).T.values.tolist()  
+    
+    comunidades_finales = []
+    for ensayo in matriz_bacterias:
+        bacterias_presentes = [nombre for nombre, valor in zip(id_comunidad, ensayo) if valor == 1]
+        comunidades_finales.append(bacterias_presentes)
+
+    # --- 3. CARGA ÚNICA DE MODELOS A MEMORIA (Usando glob) ---
+    modelos_base = {}
+    # glob.glob busca todos los archivos que coincidan con tu patrón ST*_prokka...
+    lista_archivos = glob.glob(patron_xml)
+    
+    print(f"Cargando {len(lista_archivos)} modelos SBML a memoria...")
+    for path_completo in lista_archivos:
+        archivo = os.path.basename(path_completo)
+        #model_id = archivo[:7]  # Extrae el ID (ej: ST00046)
+        model_id = archivo.split('_')[0]
         try:
+            modelos_base[model_id] = cobra.io.read_sbml_model(path_completo)
+        except Exception as e:
+            print(f"Error cargando {archivo}: {e}")
+
+    # --- 4. CICLO DE SIMULACIÓN POR COMUNIDAD ---
+    for num, lista_nombres in enumerate(comunidades_finales, start=1):    
+        test_tube = c.layout()
+        print(f"\n>>> Procesando Comunidad {num}...")
+        
+        try:
+            # Cargar modelos de la comunidad desde memoria
+            for model_id in lista_nombres:
+                if model_id in modelos_base:
+                    cobra_copy = modelos_base[model_id].copy()
+                    processed_model = c.model(cobra_copy)
+                    processed_model.initial_pop = initial_mass
+                    test_tube.add_model(processed_model)
+                else:
+                    print(f"⚠️ Alerta: No se encontró el modelo para {model_id} en la carga inicial")
+
             # ----------------------------------------------------
-            # Cargar todos los modelos de la comunidad
-            for items in comunidades:
-                file_name = os.path.basename(items)
-                output_name = file_name.replace("_prokka_carveme_lb.xml", "")
-                model_id = file_name[:7]
-
-
-                cobra_models = cobra.io.read_sbml_model(modelo)
-                processed_models = c.model(cobra_models)
-
-                processed_models.initial_pop = initial_mass
-                test_tube.add_model(processed_models)
-
+            # MEDIO DE CULTIVO (Mantenido igual)
             # ----------------------------------------------------
-            # Agregar metabolitos específicos (UNA sola vez)
             test_tube.set_specific_metabolite("h2o_e", 100)
             test_tube.set_specific_metabolite("o2_e", 10)
             test_tube.set_specific_metabolite("pi_e", 100)
@@ -173,7 +206,6 @@ def biomass_comunidad_rizo(comunidades, X, Y , Z, cicle, tstep):
             test_tube.set_specific_metabolite("mg2_e", 100)
             test_tube.set_specific_metabolite("gsn_e", 0.1)
             test_tube.set_specific_metabolite("ile__L_e", 1)
-            test_tube.set_specific_metabolite("cys__L_e", 1)
             test_tube.set_specific_metabolite("skm_e", 1)
             test_tube.set_specific_metabolite("fol_e", 1)
             test_tube.set_specific_metabolite("dadn_e", 1)
@@ -197,7 +229,6 @@ def biomass_comunidad_rizo(comunidades, X, Y , Z, cicle, tstep):
             test_tube.set_specific_metabolite("thmpp_e", 0.1)
             test_tube.set_specific_metabolite("cbl1_e", 0.1)
 
-            # ----------------------------------------------------
             trace_metabolites = [
                 'ca2_e', 'cl_e', 'cobalt2_e', 'cu2_e', 'fe2_e', 'fe3_e',
                 'h_e', 'k_e', 'h2o_e', 'mg2_e', 'mn2_e', 'mobd_e',
@@ -208,23 +239,19 @@ def biomass_comunidad_rizo(comunidades, X, Y , Z, cicle, tstep):
                 test_tube.set_specific_metabolite(i, 1000)
                 test_tube.set_specific_static(i, 1000)
 
-            # ----------------------------------------------------
+            # --- EJECUCIÓN ---
             experimet = c.comets(test_tube, sim_params)
             experimet.run()
 
             final_models = experimet.total_biomass
-
-            if final_models is not None:
-                csv_file_name = os.path.join(csv_output_path, f"comunidad_{num}.csv")
+            if final_models is not None and not final_models.empty:
+                final_models.columns = ['cycle'] + lista_nombres
+                csv_file_name = os.path.join(folder_resultados, f"comunidad_{num}.csv")
                 final_models.to_csv(csv_file_name, index=False)
-
-                print(f" {num} registrada")
-                print(final_models.to_string())
+                print(f"✅ Comunidad {num} guardada con éxito.")
             else:
-                print(f"{num} falló")
-
+                print(f"⚠️ Comunidad {num} terminó sin biomasa.")
 
         except Exception as e:
-            print(f"Falló {num}: {e}")
-
+            print(f"❌ Falló Comunidad {num}: {e}")
 
