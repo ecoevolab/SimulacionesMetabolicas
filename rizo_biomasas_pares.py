@@ -26,11 +26,11 @@ lb = {
 
 # --- EJECUCIÓN ---
 biomass_comunidades_rizo(
-    ruta_csv_syncoms='./02_data/rizo/syncoms_pairs.csv',
-    patron_xml='./02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
+    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncom_pairs.csv',
+    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=4,      # Ajusta según tu CPU
-    cycles=80,      # Número de pasos de tiempo
+    cycles=480,      # Número de pasos de tiempo
     mass=5e-8,      # Masa inicial por bacteria
     media=lb,       # Diccionario definido arriba
-    folder_resultados='./04_results/rizo/biomass_pairs/'
+    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_pairs/'
 )
