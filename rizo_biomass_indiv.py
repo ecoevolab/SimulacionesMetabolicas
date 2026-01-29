@@ -29,7 +29,7 @@ biomass_comunidades_rizo(
     ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncom_indiv.csv',
     patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=4,      # Ajusta según tu CPU
-    cycles=80,      # Número de pasos de tiempo
+    cycles=480,      # Número de pasos de tiempo
     mass=5e-8,      # Masa inicial por bacteria
     media=lb,       # Diccionario definido arriba
     folder_resultados='/mnt/data/sur/users/mmontante//04_results/rizo/biomass_indiv/'
