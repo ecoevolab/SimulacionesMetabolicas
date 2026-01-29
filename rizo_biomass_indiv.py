@@ -32,7 +32,7 @@ biomass_comunidades_rizo(
     cycles=480,      # Número de pasos de tiempo
     mass=5e-8,      # Masa inicial por bacteria
     media=lb,       # Diccionario definido arriba
-    folder_resultados='/mnt/data/sur/users/mmontante/04_results/rizo/biomass_indiv/'
+    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_indiv/'
 )
 
 
