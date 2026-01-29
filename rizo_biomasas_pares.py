@@ -26,7 +26,7 @@ lb = {
 
 # --- EJECUCIÓN ---
 biomass_comunidades_rizo(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncom_pairs.csv',
+    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncoms_pairs.csv',
     patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=4,      # Ajusta según tu CPU
     cycles=480,      # Número de pasos de tiempo
