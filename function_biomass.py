@@ -1,19 +1,3 @@
-import cometspy as c
-import cobra.io
-import os
-from biomass_funtion import biomass_comunidades_rizo
-
-biomass_comunidades_rizo(
-    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms.csv',
-    patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml', 
-    folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomasas')
-
-
-
-
-
-
-# -----------------
 # -------------------------------------------------------------------------------------------------
 import cometspy as c
 import cobra.io
@@ -33,24 +17,21 @@ def biomass_comunidades_rizo(ruta_csv_syncoms, patron_xml,
 
     # --- SELECCIONAR COMUNIDADES ---
     df = pd.read_csv(ruta_csv_syncoms)
-    id_comunidad = df.iloc[:, 0].tolist() #seleccionar la primera columna como lista
-    matriz_bacterias = df.iloc[:, 1:].astype(int).T.values.tolist() #seleccionar el resto de columnas como matriz binaria, de la primera
-    # a la última fila, astype(int) para asegurar que los valores sean enteros (0 o 1), .T para transponer la matriz y .values.tolist() para convertir a lista de listas
+    id_comunidad = df.iloc[:, 0].tolist()
+    matriz_bacterias = df.iloc[:, 1:].astype(int).T.values.tolist()
     
     comunidades_finales = []
     for ensayo in matriz_bacterias:
         bacterias_presentes = [nombre for nombre, valor in zip(id_comunidad, ensayo) if valor == 1]
         comunidades_finales.append(bacterias_presentes)
 
-    # --- CARGAR MODELOS  ---
+    # --- CARGAR MODELOS ---
     modelos_base = {}
-    # glob.glob busca todos los archivos que coincidan con tu patrón ST*_prokka...
     lista_archivos = glob.glob(patron_xml)
     
     print(f"Cargando {len(lista_archivos)} modelos SBML a memoria...")
     for path_completo in lista_archivos:
         archivo = os.path.basename(path_completo)
-        #model_id = archivo[:7]  # Extrae el ID (ej: ST00046)
         model_id = archivo.split('_')[0]
         try:
             modelos_base[model_id] = cobra.io.read_sbml_model(path_completo)
@@ -64,37 +45,50 @@ def biomass_comunidades_rizo(ruta_csv_syncoms, patron_xml,
         
         try:
             # Cargar modelos de la comunidad desde memoria
+            modelos_agregados = []
             for model_id in lista_nombres:
                 if model_id in modelos_base:
                     cobra_copy = modelos_base[model_id].copy()
                     processed_model = c.model(cobra_copy)
                     processed_model.initial_pop = initial_mass
                     test_tube.add_model(processed_model)
+                    modelos_agregados.append(model_id)
                 else:
                     print(f"No se encontró el {model_id}")
 
             # ----------------------------------------------------
             # MEDIO DE CULTIVO 
-            # ----------------------------------------------------
-            metabolites = {media}
-            for media, conc in metabolites.items():
-                test_tube.set_specific_metabolite(media, conc)
+            # ----------------------------------------------------            
+            for met, conc in media.items():
+                try:
+                    test_tube.set_specific_metabolite(met, conc)
+                except:
+                    pass
 
-            trace_metabolites = ['ca2_e', 'cl_e', 'cobalt2_e', 'cu2_e', 'fe2_e', 'fe3_e', 'h_e', 'k_e', 'h2o_e', 'mg2_e',
-                     'mn2_e', 'mobd_e', 'na1_e', 'ni2_e', 'nh4_e', 'o2_e', 'pi_e', 'so4_e', 'zn2_e']
+            # Mantener los traza estáticos
+            trace_metabolites = ['ca2_e', 'cl_e', 'cobalt2_e', 'cu2_e', 'fe2_e', 'fe3_e', 'h_e', 
+                                 'k_e', 'h2o_e', 'mg2_e', 'mn2_e', 'mobd_e', 'na1_e', 'ni2_e', 
+                                 'nh4_e', 'o2_e', 'pi_e', 'so4_e', 'zn2_e']
+            
             for i in trace_metabolites:
-                test_tube.set_specific_metabolite(i, 1000)
+                if i not in media:
+                    test_tube.set_specific_metabolite(i, 1000)
                 test_tube.set_specific_static(i, 1000)
 
-            # --- CICLO FOR ---
+            # --- EJECUCIÓN ---
             experimet = c.comets(test_tube, sim_params)
             experimet.run()
 
+            # --- RESULTADOS ---
             final_models = experimet.total_biomass
-            final_models['t'] = final_models['cycle'] * experimet.parameters.all_params['timeStep']
-
+            
             if final_models is not None and not final_models.empty:
-                final_models.columns = ['cycle'] + lista_nombres
+                # Calculamos tiempo real antes de renombrar columnas
+                final_models['t'] = final_models['cycle'] * experimet.parameters.all_params['timeStep']
+                
+                # Ajustamos columnas (cycle + nombres de bacterias + t)
+                final_models.columns = ['cycle'] + modelos_agregados + ['t']
+                
                 csv_file_name = os.path.join(folder_resultados, f"comunidad_{num}.csv")
                 final_models.to_csv(csv_file_name, index=False)
                 print(f"Comunidad {num} guardada con éxito.")
@@ -103,4 +97,3 @@ def biomass_comunidades_rizo(ruta_csv_syncoms, patron_xml,
 
         except Exception as e:
             print(f"Falló Comunidad {num}: {e}")
-
