@@ -1,0 +1,60 @@
+nextflow.enable.dsl=2
+
+/* * PARÁMETROS GLOBALES 
+ * Se pueden cambiar al ejecutar: --csv ruta/a/archivo.csv
+ */
+params.csv = '/mnt/data/sur/users/mmontante/nextflow/syncoms.csv'
+params.xml_path = '/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml'
+params.outdir = '/mnt/data/sur/users/mmontante/resultados_comets'
+
+// Proceso que define la tarea de simulación
+process COMETS_SIM {
+    tag "Simulando: ${community_id}" // Etiqueta para ver el progreso en consola
+    
+    // Indica que al terminar, el archivo de salida se copie a la carpeta de resultados
+    publishDir "${params.outdir}", mode: 'copy'
+
+    input:
+    // Recibe una tupla con el ID de la comunidad y la lista de bacterias
+    tuple val(community_id), val(strains_list)
+
+    output:
+    // El archivo que esperamos que genere el script de Python
+    path "${community_id}_biomass.csv"
+
+    script:
+    // Convertimos la lista de Nextflow [A, B] a un string "A,B" para Python
+    def strains_str = strains_list.join(',')
+    """
+    python run_single_comets.py \
+        --strains "${strains_str}" \
+        --xml_pattern "${params.xml_path}" \
+        --output "${community_id}_biomass.csv" \
+        --community_name "${community_id}"
+    """
+}
+
+workflow {
+    // 1. PROCESAMIENTO DEL CSV
+    // Leemos el archivo y transformamos las columnas (R1, R2...) en tareas independientes
+    communities_ch = Channel
+        .fromPath(params.csv)
+        .splitCsv(header:true)
+        .reduce([:]) { map, row ->
+            def strain = row.strain
+            row.each { k, v ->
+                // Si la columna no es 'strain' y el valor es '1', añadimos la bacteria a esa comunidad
+                if (k != 'strain' && v == '1') {
+                    if (!map.containsKey(k)) map[k] = []
+                    map[k] << strain
+                }
+            }
+            return map
+        }
+        .flatMap { it.entrySet() } // Convertimos el mapa en elementos individuales
+        .map { it -> tuple(it.key, it.value) } // Estructura: [ID_Comunidad, [Lista_Bacterias]]
+
+    // 2. EJECUCIÓN PARALELA
+    // Nextflow enviará cada elemento del canal al proceso COMETS_SIM
+    COMETS_SIM(communities_ch)
+}

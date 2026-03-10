@@ -104,6 +104,7 @@ for grupo in model_paths:
             plt.legend(title='Modelo ID', bbox_to_anchor=(1.05, 1), loc='upper left')
             output_path = os.path.join(output_folder, f"{final_label}.png")
             plt.savefig(output_path)
+            plt.plot.close()
 
         except Exception as e:
             print(f"Error al cargar {file_name}: {e}")

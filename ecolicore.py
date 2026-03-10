@@ -1,3 +1,108 @@
+# ==========================================================
+# VARIABLES DE ENTORNO (ANTES DE IMPORTAR COMETSPY)
+# ==========================================================
+import os
+
+GUROBI_PATH = "/opt/gurobi1201/linux64"
+
+os.environ["GUROBI_HOME"] = GUROBI_PATH
+os.environ["GUROBI_COMETS_HOME"] = GUROBI_PATH
+os.environ["LD_LIBRARY_PATH"] = f"{GUROBI_PATH}/lib"
+
+print("GUROBI_HOME:", os.environ.get("GUROBI_HOME"))
+
+# ==========================================================
+# IMPORTS
+# ==========================================================
+import cometspy as c
+import cobra.io
+import pandas as pd
+from matplotlib import pyplot as plt
+
+# ==========================================================
+# WORKING DIRECTORY
+# ==========================================================
+working_dir = "./comets_runs"
+os.makedirs(working_dir, exist_ok=True)
+
+# ==========================================================
+# CREATE LAYOUT
+# ==========================================================
+test_tube = c.layout()
+
+# Media conditions
+test_tube.set_specific_metabolite('glc__D_e', 0.011)  # 11 mM glucose
+test_tube.set_specific_metabolite('o2_e', 0)
+
+test_tube.set_specific_metabolite('nh4_e', 1000)
+test_tube.set_specific_metabolite('pi_e', 1000)
+test_tube.set_specific_metabolite('h2o_e', 1000)
+test_tube.set_specific_metabolite('h_e', 1000)
+
+# ==========================================================
+# LOAD MODEL
+# ==========================================================
+cobra_model = cobra.io.read_sbml_model(
+    './02_data/rizo/carveme/ST00101_prokka_carveme_lb.xml'
+)
+
+ST00101 = c.model(cobra_model)
+ST00101.id = 'ST00101'
+
+# Exchange bounds
+ST00101.change_bounds('EX_glc__D_e', -1000, 1000)
+
+# Initial biomass
+ST00101.initial_pop = [0, 0, 5e-6]
+
+# Add to layout
+test_tube.add_model(ST00101)
+
+# ==========================================================
+# SIMULATION PARAMETERS
+# ==========================================================
+sim_params = c.params()
+sim_params.working_dir = working_dir
+sim_params.max_cycles = 100
+
+experiment = c.comets(test_tube, sim_params)
+
+# ==========================================================
+# RUN SIMULATION (CON DEBUG)
+# ==========================================================
+try:
+    print("Running COMETS simulation ...")
+    experiment.run()
+    print("✅ Simulation completed successfully")
+
+except RuntimeError as e:
+    print("\n❌ ERROR EN COMETS")
+    print(e)
+    print("\n==== JAVA TRACE ====")
+    print(experiment.run_output)
+    raise
+
+# ==========================================================
+# PLOTS
+# ==========================================================
+# Biomass
+ax = experiment.total_biomass.plot(x='cycle')
+ax.set_ylabel("Biomass (g)")
+plt.show()
+
+# Media time series
+media = experiment.media.copy()
+media = media[media.conc_mmol < 900]
+
+fig, ax = plt.subplots()
+
+for met in media.metabolite.unique():
+    subset = media[media.metabolite == met]
+    subset.plot(x='cycle', y='conc_mmol', ax=ax)
+
+ax.set_ylabel("Concentration (mmol)")
+plt.show()
+#############################################
 import cometspy as c
 import cobra.io
 import os
@@ -49,3 +154,15 @@ comp_params.set_param('maxCycles', 80)
 # Run simulation
 comp_assay = c.comets(test_tube, comp_params)
 comp_assay.run()
+
+########################
+
+media = comp_assay.media.copy()
+media = media[media.conc_mmol<900]
+
+
+
+
+
+
+

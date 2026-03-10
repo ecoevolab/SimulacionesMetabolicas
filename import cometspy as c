@@ -1,0 +1,70 @@
+import cometspy as c
+import cobra.io
+import pandas as pd
+import sys
+import os
+import argparse
+
+def run_simulation(strains_list, xml_pattern, output_file, community_name):
+    # --- 1. CONFIGURACIÓN DE PARÁMETROS ---
+    sim_params = c.params()
+    # Importante: Usamos 1 hilo porque Nextflow paraleliza enviando múltiples trabajos a SLURM
+    sim_params.set_param('numRunThreads', 8) 
+    sim_params.set_param('maxCycles', 480)
+    sim_params.set_param('timeStep', 0.1)
+    initial_mass = [0, 0, 5e-8] # Masa inicial para cada modelo
+
+    # Creamos el 'layout' (el entorno de la simulación)
+    test_tube = c.layout()
+    
+    # --- 2. CARGA DINÁMICA DE MODELOS ---
+    # Convertimos el string "ST00046,ST00154..." en una lista real de Python
+    bacteria_ids = strains_list.split(',')
+    
+    for b_id in bacteria_ids:
+        # Reemplazamos 'ST*' en la ruta por el ID real de la bacteria
+        path = xml_pattern.replace("ST*", b_id)
+        if os.path.exists(path):
+            # Leemos el modelo XML con COBRA y lo convertimos a objeto COMETS
+            cobra_model = cobra.io.read_sbml_model(path)
+            comets_model = c.model(cobra_model)
+            comets_model.initial_pop = initial_mass
+            test_tube.add_model(comets_model)
+        else:
+            print(f"Error: No se encontró el archivo XML para {b_id}")
+
+    # --- 3. CONFIGURACIÓN DEL MEDIO DE CULTIVO ---
+    # Definimos los traza (metabolitos que no deben limitarse)
+    trace_metabolites = ['ca2_e', 'cl_e', 'cobalt2_e', 'cu2_e', 'fe2_e', 'fe3_e',
+                         'h_e', 'k_e', 'h2o_e', 'mg2_e', 'mn2_e', 'mobd_e',
+                         'na1_e', 'ni2_e', 'nh4_e', 'o2_e', 'pi_e', 'so4_e', 'zn2_e']
+    
+    for i in trace_metabolites:
+        test_tube.set_specific_metabolite(i, 1000)
+        test_tube.set_specific_static(i, 1000)
+
+    # Aquí agregarías el resto de tu medio LB (glucosa, aminoácidos, etc.)
+    # Ejemplo: test_tube.set_specific_metabolite("glu__L_e", 0.1)
+
+    # --- 4. EJECUCIÓN Y GUARDADO ---
+    # Creamos el objeto experimento y corremos la simulación
+    experiment = c.comets(test_tube, sim_params)
+    experiment.run()
+
+    # Extraemos la biomasa total y guardamos como CSV
+    final_models = experiment.total_biomass
+    if not final_models.empty:
+        # Asignamos nombres de columnas para que el CSV sea claro (Ciclo, Bacteria1, Bacteria2...)
+        final_models.columns = ['cycle'] + bacteria_ids
+        final_models.to_csv(output_file, index=False)
+
+if __name__ == "__main__":
+    # Esta sección permite que Nextflow pase argumentos por línea de comandos
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--strains", help="Lista de cepas (IDs) separadas por coma")
+    parser.add_argument("--xml_pattern", help="Ruta completa al XML usando ST* como comodín")
+    parser.add_argument("--output", help="Nombre del archivo CSV de salida")
+    parser.add_argument("--community_name", help="Nombre de la comunidad (ej. R1)")
+    args = parser.parse_args()
+    
+    run_simulation(args.strains, args.xml_pattern, args.output, args.community_name)

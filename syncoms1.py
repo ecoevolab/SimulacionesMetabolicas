@@ -1,7 +1,6 @@
-import cometspy as c
 import cobra.io
 import os
-from biomass_funtion import biomass_comunidades_rizo
+from function_biomass import biomass_comunidades_rizo
 
 # --- CONFIGURACIÓN DEL MEDIO LB ---
 dilution_rate = 0.1
@@ -26,37 +25,12 @@ lb = {
 
 # --- EJECUCIÓN ---
 biomass_comunidades_rizo(
-    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms.csv',
+    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms_1.csv',
     patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
-    threads=4,      # Ajusta según tu CPU
-    cycles=50,      # Número de pasos de tiempo
+    threads=8,      # Ajusta según tu CPU
+    cycles=80,      # Número de pasos de tiempo
     mass=5e-8,      # Masa inicial por bacteria
     media=lb,       # Diccionario definido arriba
-    folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_5/'
+    folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/syncoms_1'
 )
-
-# ------------------------------------------------------
-biomass_comunidades_rizo(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncoms_pairs.csv',
-    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
-    threads=4,      # Ajusta según tu CPU
-    cycles=480,      # Número de pasos de tiempo
-    mass=5e-8,      # Masa inicial por bacteria
-    media=lb,       # Diccionario definido arriba
-    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_pairs/'
-)
-
-biomass_comunidades_rizo(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncom_indiv.csv',
-    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
-    threads=4,      # Ajusta según tu CPU
-    cycles=480,      # Número de pasos de tiempo
-    mass=5e-8,      # Masa inicial por bacteria
-    media=lb,       # Diccionario definido arriba
-    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_indiv/'
-)
-
-
-
-
 

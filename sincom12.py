@@ -7,10 +7,10 @@ from function_biomass import biomass_comunidades_rizo
 dilution_rate = 0.1
 # Nota: Se eliminó nh3_c y pheme porque COMETS requiere metabolitos extracelulares (_e)
 lb = {
-    "h2o_e": 100*dilution_rate, "o2_e": 10, "pi_e": 10, "zn2_e": 10, 
-    "cobalt2_e": 10, "k_e": 10, "mg2_e": 10, "na1_e": 10, "cd2_e": 10, 
-    "aso4_e": 10, "fe2_e": 10, "fe3_e": 10, "cro4_e": 10, 
-    "pydx_e": 10, "nac_e": 10, "ribflv_e": 10, "ura_e": 0.1*dilution_rate,
+    "h2o_e": 100*dilution_rate, "o2_e": 10*dilution_rate, "pi_e": 10*dilution_rate, "zn2_e": 10, 
+    "cobalt2_e": 10*dilution_rate, "k_e": 10*dilution_rate, "mg2_e": 10*dilution_rate, "na1_e": 10*dilution_rate, "cd2_e": 10*dilution_rate, 
+    "aso4_e": 10*dilution_rate, "fe2_e": 10*dilution_rate, "fe3_e": 10*dilution_rate, "cro4_e": 10*dilution_rate, 
+    "pydx_e": 10*dilution_rate, "nac_e": 10*dilution_rate, "ribflv_e": 10*dilution_rate, "ura_e": 0.1*dilution_rate,
     "glu__L_e": 0.1*dilution_rate, "gly_e": 0.1*dilution_rate,
     "ala__L_e": 0.1*dilution_rate, "lys__L_e": 0.1*dilution_rate, 
     "asp__L_e": 0.1*dilution_rate, "so4_e": 0.1*dilution_rate,
@@ -26,15 +26,14 @@ lb = {
 
 # --- EJECUCIÓN ---
 biomass_comunidades_rizo(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncom_indiv.csv',
-    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
-    threads=4,      # Ajusta según tu CPU
-    cycles=480,      # Número de pasos de tiempo
+    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncom11.csv',
+    patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
+    threads=8,      # Ajusta según tu CPU
+    cycles=50,      # Número de pasos de tiempo
     mass=5e-8,      # Masa inicial por bacteria
     media=lb,       # Diccionario definido arriba
-    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_indiv/'
+    folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/'
 )
-
 
 
 

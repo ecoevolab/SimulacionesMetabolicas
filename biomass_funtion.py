@@ -5,36 +5,33 @@ import pandas as pd
 import os
 import glob 
 
-def biomass_comunidades_rizo(ruta_csv_syncoms, patron_xml, folder_resultados):
+def biomass_comunidades_rizo(ruta_csv_syncoms, patron_xml, 
+                             threads, cycles, mass, media, folder_resultados):
     # --- PARÁMETROS ---
     sim_params = c.params()
-    sim_params.set_param('numRunThreads', 6)
-    sim_params.set_param('maxCycles', 80)
-    sim_params.set_param('timeStep', 0.1)
-    initial_mass = [0, 0, 5e-8]
-
+    sim_params.set_param('numRunThreads', threads)
+    sim_params.set_param('maxCycles', cycles)
+    initial_mass = [0, 0, mass]
+    dilution_rate = 0.1
     os.makedirs(folder_resultados, exist_ok=True)
 
     # --- SELECCIONAR COMUNIDADES ---
     df = pd.read_csv(ruta_csv_syncoms)
-    id_comunidad = df.iloc[:, 0].tolist() #seleccionar la primera columna como lista
-    matriz_bacterias = df.iloc[:, 1:].astype(int).T.values.tolist() #seleccionar el resto de columnas como matriz binaria, de la primera
-    # a la última fila, astype(int) para asegurar que los valores sean enteros (0 o 1), .T para transponer la matriz y .values.tolist() para convertir a lista de listas
+    id_comunidad = df.iloc[:, 0].tolist()
+    matriz_bacterias = df.iloc[:, 1:].astype(int).T.values.tolist()
     
     comunidades_finales = []
     for ensayo in matriz_bacterias:
         bacterias_presentes = [nombre for nombre, valor in zip(id_comunidad, ensayo) if valor == 1]
         comunidades_finales.append(bacterias_presentes)
 
-    # --- CARGAR MODELOS  ---
+    # --- CARGAR MODELOS ---
     modelos_base = {}
-    # glob.glob busca todos los archivos que coincidan con tu patrón ST*_prokka...
     lista_archivos = glob.glob(patron_xml)
     
     print(f"Cargando {len(lista_archivos)} modelos SBML a memoria...")
     for path_completo in lista_archivos:
         archivo = os.path.basename(path_completo)
-        #model_id = archivo[:7]  # Extrae el ID (ej: ST00046)
         model_id = archivo.split('_')[0]
         try:
             modelos_base[model_id] = cobra.io.read_sbml_model(path_completo)
@@ -48,96 +45,50 @@ def biomass_comunidades_rizo(ruta_csv_syncoms, patron_xml, folder_resultados):
         
         try:
             # Cargar modelos de la comunidad desde memoria
+            modelos_agregados = []
             for model_id in lista_nombres:
                 if model_id in modelos_base:
                     cobra_copy = modelos_base[model_id].copy()
                     processed_model = c.model(cobra_copy)
                     processed_model.initial_pop = initial_mass
                     test_tube.add_model(processed_model)
+                    modelos_agregados.append(model_id)
                 else:
                     print(f"No se encontró el {model_id}")
 
             # ----------------------------------------------------
             # MEDIO DE CULTIVO 
-            # ----------------------------------------------------
-            test_tube.set_specific_metabolite("h2o_e", 100)
-            test_tube.set_specific_metabolite("o2_e", 10)
-            test_tube.set_specific_metabolite("pi_e", 100)
-            test_tube.set_specific_metabolite("prbamp_e", 100)
-            test_tube.set_specific_metabolite("glu__L_e", 1)
-            test_tube.set_specific_metabolite("mn2_e", 100)
-            test_tube.set_specific_metabolite("gly_e", 1)
-            test_tube.set_specific_metabolite("zn2_e", 100)
-            test_tube.set_specific_metabolite("ala__L_e", 1)
-            test_tube.set_specific_metabolite("lys__L_e", 1)
-            test_tube.set_specific_metabolite("asp__L_e", 1)
-            test_tube.set_specific_metabolite("so4_e", 1)
-            test_tube.set_specific_metabolite("arg__L_e", 1)
-            test_tube.set_specific_metabolite("ser__L_e", 1)
-            test_tube.set_specific_metabolite("cu2_e", 1)
-            test_tube.set_specific_metabolite("met__L_e", 1)
-            test_tube.set_specific_metabolite("trp__L_e", 1)
-            test_tube.set_specific_metabolite("phe__L_e", 1)
-            test_tube.set_specific_metabolite("h_e", 1)
-            test_tube.set_specific_metabolite("tyr__L_e", 1)
-            test_tube.set_specific_metabolite("cys__L_e", 1)
-            test_tube.set_specific_metabolite("ura_e", 1)
-            test_tube.set_specific_metabolite("cl_e", 1)
-            test_tube.set_specific_metabolite("leu__L_e", 1)
-            test_tube.set_specific_metabolite("his__L_e", 1)
-            test_tube.set_specific_metabolite("pro__L_e", 1)
-            test_tube.set_specific_metabolite("cobalt2_e", 100)
-            test_tube.set_specific_metabolite("val__L_e", 1)
-            test_tube.set_specific_metabolite("thr__L_e", 1)
-            test_tube.set_specific_metabolite("adn_e", 0.1)
-            test_tube.set_specific_metabolite("thymd_e", 0.1)
-            test_tube.set_specific_metabolite("k_e", 100)
-            test_tube.set_specific_metabolite("h2s_e", 0.1)
-            test_tube.set_specific_metabolite("ins_e", 0.1)
-            test_tube.set_specific_metabolite("uri_e", 0.1)
-            test_tube.set_specific_metabolite("mg2_e", 100)
-            test_tube.set_specific_metabolite("gsn_e", 0.1)
-            test_tube.set_specific_metabolite("ile__L_e", 1)
-            test_tube.set_specific_metabolite("skm_e", 1)
-            test_tube.set_specific_metabolite("fol_e", 1)
-            test_tube.set_specific_metabolite("dadn_e", 1)
-            test_tube.set_specific_metabolite("lipoate_e", 0.1)
-            test_tube.set_specific_metabolite("na1_e", 100)
-            test_tube.set_specific_metabolite("cd2_e", 100)
-            test_tube.set_specific_metabolite("aso4_e", 100)
-            test_tube.set_specific_metabolite("fe2_e", 100)
-            test_tube.set_specific_metabolite("fe3_e", 100)
-            test_tube.set_specific_metabolite("cro4_e", 100)
-            test_tube.set_specific_metabolite("nh3_c_e", 100)
-            test_tube.set_specific_metabolite("pheme_e", 100)
-            test_tube.set_specific_metabolite("cmp_e", 100)
-            test_tube.set_specific_metabolite("ump_e", 100)
-            test_tube.set_specific_metabolite("gmp_e", 100)
-            test_tube.set_specific_metabolite("pydx_e", 100)
-            test_tube.set_specific_metabolite("nac_e", 100)
-            test_tube.set_specific_metabolite("ribflv_e", 100)
-            test_tube.set_specific_metabolite("pphn_e", 100)
-            test_tube.set_specific_metabolite("hxan_e", 100)
-            test_tube.set_specific_metabolite("thmpp_e", 0.1)
-            test_tube.set_specific_metabolite("cbl1_e", 0.1)
+            # ----------------------------------------------------            
+            for met, conc in media.items():
+                try:
+                    test_tube.set_specific_metabolite(met, conc)
+                except:
+                    pass
 
-            trace_metabolites = [
-                'ca2_e', 'cl_e', 'cobalt2_e', 'cu2_e', 'fe2_e', 'fe3_e',
-                'h_e', 'k_e', 'h2o_e', 'mg2_e', 'mn2_e', 'mobd_e',
-                'na1_e', 'ni2_e', 'nh4_e', 'o2_e', 'pi_e', 'so4_e', 'zn2_e'
-            ]
-
+            # Mantener los traza estáticos
+            trace_metabolites = ['ca2_e', 'cl_e', 'cobalt2_e', 'cu2_e', 'fe2_e', 'fe3_e', 'h_e', 
+                                 'k_e', 'h2o_e', 'mg2_e', 'mn2_e', 'mobd_e', 'na1_e', 'ni2_e', 
+                                 'nh4_e', 'o2_e', 'pi_e', 'so4_e', 'zn2_e']
+            
             for i in trace_metabolites:
-                test_tube.set_specific_metabolite(i, 1000)
+                if i not in media:
+                    test_tube.set_specific_metabolite(i, 1000)
                 test_tube.set_specific_static(i, 1000)
 
-            # --- CICLO FOR ---
+            # --- EJECUCIÓN ---
             experimet = c.comets(test_tube, sim_params)
             experimet.run()
 
+            # --- RESULTADOS ---
             final_models = experimet.total_biomass
+            
             if final_models is not None and not final_models.empty:
-                final_models.columns = ['cycle'] + lista_nombres
+                # Calculamos tiempo real antes de renombrar columnas
+                final_models['t'] = final_models['cycle'] * experimet.parameters.all_params['timeStep']
+                
+                # Ajustamos columnas (cycle + nombres de bacterias + t)
+                final_models.columns = ['cycle'] + modelos_agregados + ['t']
+                
                 csv_file_name = os.path.join(folder_resultados, f"comunidad_{num}.csv")
                 final_models.to_csv(csv_file_name, index=False)
                 print(f"Comunidad {num} guardada con éxito.")
@@ -146,4 +97,3 @@ def biomass_comunidades_rizo(ruta_csv_syncoms, patron_xml, folder_resultados):
 
         except Exception as e:
             print(f"Falló Comunidad {num}: {e}")
-
