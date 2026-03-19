@@ -1,8 +1,8 @@
 import cobra.io
 import os
-from function_biomass import biomass_comunidades_rizo
+from biomass_funtion import biomass_comunidades_rizo
 
-# --- CONFIGURACIÓN DEL MEDIO LB ---
+# --- CONFIGURACIÓN DEL MEDIO LB ---ee
 dilution_rate = 0.1
 # Nota: Se eliminó nh3_c y pheme porque COMETS requiere metabolitos extracelulares (_e)
 lb = {
@@ -25,12 +25,12 @@ lb = {
 
 # --- EJECUCIÓN ---
 biomass_comunidades_rizo(
-    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms_1.csv',
+    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/symcons/syncom1.csv',
     patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=8,      # Ajusta según tu CPU
-    cycles=80,      # Número de pasos de tiempo
+    cycles=10,      # Número de pasos de tiempo
     mass=5e-8,      # Masa inicial por bacteria
     media=lb,       # Diccionario definido arriba
-    folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/syncoms_1'
+    folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis'
 )
 

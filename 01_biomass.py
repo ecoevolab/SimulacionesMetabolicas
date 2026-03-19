@@ -5,7 +5,6 @@ from biomass_funtion import biomass_comunidades_rizo
 
 # --- CONFIGURACIÓN DEL MEDIO LB ---
 dilution_rate = 0.1
-# Nota: Se eliminó nh3_c y pheme porque COMETS requiere metabolitos extracelulares (_e)
 lb = {
     "h2o_e": 100*dilution_rate, "o2_e": 10*dilution_rate, "pi_e": 10*dilution_rate, "zn2_e": 10, 
     "cobalt2_e": 10*dilution_rate, "k_e": 10*dilution_rate, "mg2_e": 10*dilution_rate, "na1_e": 10*dilution_rate, "cd2_e": 10*dilution_rate, 
@@ -34,28 +33,6 @@ biomass_comunidades_rizo(
     media=lb,       # Diccionario definido arriba
     folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_5/'
 )
-
-# ------------------------------------------------------
-biomass_comunidades_rizo(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncoms_pairs.csv',
-    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
-    threads=4,      # Ajusta según tu CPU
-    cycles=480,      # Número de pasos de tiempo
-    mass=5e-8,      # Masa inicial por bacteria
-    media=lb,       # Diccionario definido arriba
-    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_pairs/'
-)
-
-biomass_comunidades_rizo(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncom_indiv.csv',
-    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
-    threads=4,      # Ajusta según tu CPU
-    cycles=480,      # Número de pasos de tiempo
-    mass=5e-8,      # Masa inicial por bacteria
-    media=lb,       # Diccionario definido arriba
-    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_indiv/'
-)
-
 
 
 

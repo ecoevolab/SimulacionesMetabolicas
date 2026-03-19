@@ -45,8 +45,10 @@ ggplot(df_memote,
 # ------------ REACTIONS --------------
 # leer csv
 df_variables <- read.csv(
-  "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/reacciones/variables_totales.csv"
+  "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/reacciones/variables_totales_kbase.csv"
 )
+
+
 
 print(df_variables)
 
@@ -69,15 +71,20 @@ long_df$Variable <- recode(
 print(long_df)
 
 colores <- c(
-  "dimont"="#C8F2C2",
-  "eggnog"="#E8C9F0",
-  "prokka"="#FFB7CE"
+  "dimont"="#009473",
+  "eggnog"="#440099",
+  "prokka"="#E06195",
+  "default"="#F5A327",
+  "rast"="#22ABA2"
+  
 )
 
 reconstruccion <- c(
-  "dimont"="CarveMe_Dimont_LB",
-  "eggnog"="Carveme_EggNOG_LB",
-  "prokka"="CarveMe_Prokka_LB"
+  "dimont"="Dimont_LB",
+  "eggnog"="EggNOG_LB",
+  "prokka"="Prokka_LB",
+  "default"="Default_LB",
+  "rast"="Rast_LB"
 )
 
 # boxplot
@@ -123,6 +130,9 @@ output_path <- file.path(
 )
 
 ggsave(output_path, p, width = 10, height = 6)
+
+
+
 # ------------ INDIVIDUAL EXPERIMENTAL CURVES --------------
 files <- list.files(
   "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass/individuales",
@@ -252,10 +262,9 @@ for(file in files){
 }
 
 
-
-# ------------ INDIVIDUAL BIOMASS CURVES (48 h) -----------
-# Colores de bacterias
-# ------------------------------------------------
+# --------------------------------------------------
+# INDIVIDUAL BIOMASS CURVES 
+# --------------------------------------------------
 colores_bac <- c(
   ST00000 = "#00FF00",
   ST00060 = "#D4807C",
@@ -296,6 +305,9 @@ files <- list.files(
   full.names=TRUE
 )
 
+# filas que quieres seleccionar
+rows <- c(2,42,202,242,480,722)
+
 # ------------------------------------------------
 # Leer y unir datos
 # ------------------------------------------------
@@ -305,20 +317,21 @@ datos <- map_dfr(files, function(file){
   
   df <- read_csv(file, show_col_types = FALSE)
   
+  df_sel <- df[rows, ]
+  
   tibble(
-    tiempo = df[[1]]*0.1,
-    biomasa = df[[2]],
+    tiempo = df_sel[[3]],
+    biomasa = df_sel[[2]],
     modelo = model_id
   )
-  
 })
 
 # ------------------------------------------------
 # Graficar
 # ------------------------------------------------
-ggplot(datos, aes(x=tiempo, y=biomasa, color=modelo)) +
+ggplot(datos, aes(x = tiempo, y = biomasa, color = modelo, group = modelo)) +
   
-  geom_line(size=1) +
+  geom_line(linewidth = 1) +
   geom_point() +
   
   scale_color_manual(
@@ -329,14 +342,91 @@ ggplot(datos, aes(x=tiempo, y=biomasa, color=modelo)) +
   theme_minimal() +
   
   labs(
-    title="Curvas de crecimiento microbiano",
-    x="Tiempo (horas)",
-    y="Biomasa",
-    color="Especie"
+    title = "Curvas de crecimiento microbiano",
+    x = "Tiempo (horas)",
+    y = "Biomasa",
+    color = "Especie"
   )
 
 
+# EXPERIMENTAL 
+library(tidyverse)
 
+# ------------------------------------------------
+# Colores bacterias
+# ------------------------------------------------
+colores_bac <- c(
+  ST00000 = "#00FF00",
+  ST00060 = "#D4807C",
+  ST00094 = "#C76662",
+  ST00101 = "#5F9EAD",
+  ST00110 = "#B7464C",
+  ST00164 = "#9E3345",
+  ST00143 = "#752530",
+  ST00042 = "#80B6B3",
+  ST00109 = "#3D788E",
+  ST00154 = "#26526B",
+  ST00046 = "#1A3749"
+)
+
+# ------------------------------------------------
+# Nombres científicos
+# ------------------------------------------------
+name_bac <- c(
+  ST00000 = "Escherichia sp.",
+  ST00060 = "Arthrobacter sp.",
+  ST00094 = "Rhodococcus erythropolis",
+  ST00101 = "Pseudomonas sp.",
+  ST00110 = "Variovorax paradoxus",
+  ST00164 = "Ballicus thuringesis",
+  ST00143 = "Paenibacillus sp.",
+  ST00042 = "Pseudomonas umsongensis",
+  ST00109 = "Mycobacterium sp.",
+  ST00154 = "Agrobacterium sp.",
+  ST00046 = "Bacillus sp."
+)
+
+# ------------------------------------------------
+# Leer datos experimentales
+# ------------------------------------------------
+ruta_experimental <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/05_doc/resultados_experimentales/data_test_single_strains_28.csv"
+
+df_experimental <- read_csv(ruta_experimental, show_col_types = FALSE)
+
+# ------------------------------------------------
+# Convertir a formato largo
+# ------------------------------------------------
+datos_long <- df_experimental %>%
+  pivot_longer(
+    cols = c(`0`,`4`,`20`,`24`,`48`,`72`),
+    names_to = "tiempo",
+    values_to = "biomasa"
+  ) %>%
+  mutate(tiempo = as.numeric(tiempo))
+
+# ------------------------------------------------
+# Graficar
+# ------------------------------------------------
+ggplot(datos_long, aes(x = tiempo, y = biomasa, color = strain, group = strain)) +
+  
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  
+  scale_color_manual(
+    values = colores_bac,
+    labels = name_bac
+  ) +
+  
+  theme_minimal() +
+  
+  labs(
+    title = "Curvas de crecimiento microbiano",
+    x = "Tiempo (horas)",
+    y = "Biomasa",
+    color = "Especie"
+  )
+
+# ---------------------------------------
 
 
 # ----------------------------------------------------
