@@ -1,10 +1,11 @@
+import cometspy as c
 import cobra.io
 import os
 from biomass_funtion_mets import biomass_comunidades
 
 # --- CONFIGURACIÓN DEL MEDIO LB ---
 dilution_rate = 0.1
-
+# Nota: Se eliminó nh3_c y pheme porque COMETS requiere metabolitos extracelulares (_e)
 lb = {
     "h2o_e": 100*dilution_rate, "o2_e": 10*dilution_rate, "pi_e": 10*dilution_rate, "zn2_e": 10, 
     "cobalt2_e": 10*dilution_rate, "k_e": 10*dilution_rate, "mg2_e": 10*dilution_rate, "na1_e": 10*dilution_rate, "cd2_e": 10*dilution_rate, 
@@ -24,13 +25,24 @@ lb = {
 }
 
 # --- EJECUCIÓN ---
-biomass_comunidades(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncoms_indiv.csv',
-    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
+biomass_comunidades_rizo(
+<<<<<<< Updated upstream:sincom11.py
+    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncom11.csv',
+    patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=8,      # Ajusta según tu CPU
-    cycles=1000,      # Número de pasos de tiempo
+    cycles=80,      # Número de pasos de tiempo
     mass=5e-8,      # Masa inicial por bacteria
     media=lb,       # Diccionario definido arriba
-    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/syncoms_indiv'
+    folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/'
 )
 
+=======
+    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncoms_pairs.csv',
+    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
+    threads=4,      # Ajusta según tu CPU
+    cycles=480,      # Número de pasos de tiempo
+    mass=5e-8,      # Masa inicial por bacteria
+    media=lb,       # Diccionario definido arriba
+    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_pairs/'
+)
+>>>>>>> Stashed changes:rizo_biomasas_pares.py

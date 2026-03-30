@@ -26,6 +26,7 @@ lb = {
 
 # --- EJECUCIÓN ---
 biomass_comunidades_rizo(
+<<<<<<< Updated upstream:sincom11.py
     ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncom11.csv',
     patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=8,      # Ajusta según tu CPU
@@ -35,3 +36,13 @@ biomass_comunidades_rizo(
     folder_resultados='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/'
 )
 
+=======
+    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncoms_pairs.csv',
+    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
+    threads=4,      # Ajusta según tu CPU
+    cycles=480,      # Número de pasos de tiempo
+    mass=5e-8,      # Masa inicial por bacteria
+    media=lb,       # Diccionario definido arriba
+    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/biomass_pairs/'
+)
+>>>>>>> Stashed changes:rizo_biomasas_pares.py

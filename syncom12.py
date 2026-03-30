@@ -1,6 +1,7 @@
+import cometspy as c
 import cobra.io
 import os
-from biomass_funtion_mets import biomass_comunidades
+from biomass_funtion import biomass_comunidades_rizo
 
 # --- CONFIGURACIÓN DEL MEDIO LB ---
 dilution_rate = 0.1
@@ -24,13 +25,14 @@ lb = {
 }
 
 # --- EJECUCIÓN ---
-biomass_comunidades(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncoms_indiv.csv',
+biomass_comunidades_rizo(
+    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncom12.csv',
     patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=8,      # Ajusta según tu CPU
-    cycles=1000,      # Número de pasos de tiempo
+    cycles=160,      # Número de pasos de tiempo
     mass=5e-8,      # Masa inicial por bacteria
     media=lb,       # Diccionario definido arriba
-    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/syncoms_indiv'
+    folder_resultados='/mnt/data/sur/users/mmontante/04_resultados/rizo/syncom12'
 )
+
 

@@ -1,0 +1,21 @@
+=========================================
+Job started on: Fri Mar 27 13:16:07 CST 2026
+Running on host: node10.cluster
+Working directory: /mnt/data/sur/users/mmontante/SimulacionesMetabolicas
+=========================================
+[INFO] Starting Python script at Fri Mar 27 13:16:10 CST 2026
+Cargando 11 modelos SBML a memoria...
+building empty layout model
+models will need to be added with layout.add_model()
+
+>>> Procesando Comunidad 1...
+Warning: The added metabolite (pydx_e) is not able to be taken up by any of the current models
+
+Running COMETS simulation ...
+
+Debug Here ...
+Falló Comunidad 1: [Errno 2] No such file or directory: '/mnt/data/sur/users/mmontante/SimulacionesMetabolicas/ST00094_prokka.cmd'
+[INFO] Python script finished at Fri Mar 27 13:18:03 CST 2026
+=========================================
+Pipeline done at: Fri Mar 27 13:18:03 CST 2026
+=========================================

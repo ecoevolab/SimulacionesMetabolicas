@@ -49,10 +49,8 @@ comp_params.set_param('maxCycles', 80)
 # Run simulation
 comp_assay = c.comets(test_tube, comp_params)
 comp_assay.run()
-media_df = comp_assay.media_log
+
 ########################
 
-#media = comp_assay.media.copy()
-#media = media[media.conc_mmol<900]
-
-
+# media = comp_assay.media.copy()
+# media = media[media.conc_mmol<900]
