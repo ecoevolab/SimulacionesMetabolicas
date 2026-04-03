@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import glob 
 
-def biomass_comunidades(ruta_csv_syncoms, patron_xml, 
+def comets(ruta_csv_syncoms, patron_xml, 
                              threads, cycles, mass, media, folder_resultados, folder_temp):
                                  
     # --- CAMBIAR DIRECTORIO ----
