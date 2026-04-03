@@ -17,7 +17,7 @@ model_summary_data = []
 sim_params = c.params()
 sim_params.set_param('maxCycles', 240)
 
-path_list = glob.glob('01_data/4c/carveme/*_prokka_carveme_lb_lb.xml')
+path_list = glob.glob('./02_data/rizo/carveme/ST00101_prokka_carveme_lb.xml')
 initial_mass = [0, 0, 1e-8]   
 csv_output_path = '04_resultados/4c/biomasa'
 # ----------------------------
