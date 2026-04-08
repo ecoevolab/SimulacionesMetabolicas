@@ -1,30 +1,6 @@
 =========================================
-Job started on: Wed Mar 25 16:46:03 CST 2026
-Running on host: node11.cluster
+Job started on: Fri Apr  3 12:45:06 CST 2026
+Running on host: node09.cluster
 Working directory: /mnt/data/sur/users/mmontante/SimulacionesMetabolicas
 =========================================
-[INFO] Starting Python script at Wed Mar 25 16:46:05 CST 2026
-building empty layout model
-models will need to be added with layout.add_model()
-Warning: The added metabolite (prbamp_e) is not able to be taken up by any of the current models
-Warning: The added metabolite (cro4_e) is not able to be taken up by any of the current models
-Warning: The added metabolite (nh3_c) is not able to be taken up by any of the current models
-Warning: The added metabolite (pheme) is not able to be taken up by any of the current models
-Warning: The added metabolite (cmp) is not able to be taken up by any of the current models
-Warning: The added metabolite (ump) is not able to be taken up by any of the current models
-Warning: The added metabolite (gmp) is not able to be taken up by any of the current models
-Warning: The added metabolite (pydx) is not able to be taken up by any of the current models
-Warning: The added metabolite (nac) is not able to be taken up by any of the current models
-Warning: The added metabolite (ribflv) is not able to be taken up by any of the current models
-Warning: The added metabolite (pphn) is not able to be taken up by any of the current models
-Warning: The added metabolite (hxan) is not able to be taken up by any of the current models
-
-Running COMETS simulation ...
-
-Debug Here ...
-Done!
-Archivos guardados exitosamente en: /mnt/data/sur/users/mmontante/04_resultados/rizo/
-[INFO] Python script finished at Wed Mar 25 16:47:33 CST 2026
-=========================================
-Pipeline done at: Wed Mar 25 16:47:33 CST 2026
-=========================================
+[INFO] Starting Python script at Fri Apr  3 12:45:06 CST 2026

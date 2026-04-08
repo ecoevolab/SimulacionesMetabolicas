@@ -3,7 +3,7 @@
 #SBATCH --output=%x.log
 #SBATCH --error=%x.error
 #SBATCH --time=240:00:00
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
 
 echo "========================================="
@@ -17,7 +17,7 @@ mamba activate python3
 module load COMETS
 
 echo "[INFO] Starting Python script at $(date)"
-python ecoli_core_2.py
+python prueba_mets_2.py
 echo "[INFO] Python script finished at $(date)"
 
 echo "========================================="
