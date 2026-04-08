@@ -1,6 +1,0 @@
-ModelFileName: ./ST00154.cmd
-ModelFileName: ./ST00060.cmd
-ModelFileName: ./ST00094_prokka.cmd
-ModelFileName: ./ST00110_prokka_carveme_lb.cmd
-ModelFileName: ./ST00143.cmd
-TotalBiomassFileName: totalbiomasslog_0x7f8414c93250
