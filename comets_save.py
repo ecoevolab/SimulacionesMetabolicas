@@ -1,4 +1,5 @@
 from biomass_function_save_4 import  comets
+
 # --- MEDIO LB ---
 dilution_rate = 0.1
 
@@ -29,3 +30,4 @@ comets(
     mass=5e-8,      
     media=lb,
 	newpath='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/newpath')
+
