@@ -1,6 +1,5 @@
 from biomass_function_save_4 import  comets
-
-# --- CONFIGURACIÓN DEL MEDIO LB ---
+# --- MEDIO LB ---
 dilution_rate = 0.1
 
 lb = {
@@ -23,10 +22,10 @@ lb = {
 
 # --- EJECUCION ---
 comets(
-    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncom11.csv',
-    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
+    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms/syncom11.csv',
+    patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=5,      
     cycles=10,      
     mass=5e-8,      
     media=lb,
-	newpath='/mnt/data/sur/users/mmontante/04_resultados/newpath')
+	newpath='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/newpath')
