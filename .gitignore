@@ -1,1 +1,4 @@
 .current_script*
+.current_global*
+.current_layout*
+.current_package*
