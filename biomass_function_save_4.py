@@ -5,10 +5,10 @@ import os
 import glob 
 
 def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
-    # 1. Guardar la ruta donde se ejecuta el script (para poder volver al final)
+    # 1. Guardar la ruta original (donde está tu script)
     original_path = os.getcwd()
     
-    # 2. Crear y entrar a la carpeta principal de resultados (ruta absoluta)
+    # 2. Definir ruta absoluta para evitar errores de permisos en /mnt/sur
     root_path = os.path.abspath(newpath)
     os.makedirs(root_path, exist_ok=True)
     
@@ -49,30 +49,31 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
 
     # --- LOOP DE SIMULACIÓN ---
     for num, lista_nombres in enumerate(comunidades_finales, start=1):
-        # MUY IMPORTANTE: Regresar a la raíz de resultados en cada vuelta
+        # VOLVER A LA RAÍZ de resultados para evitar anidamiento
         os.chdir(root_path)
         
         folder_name = f"Comunidad_{num}"
         os.makedirs(folder_name, exist_ok=True)
         
-        # Entrar a la carpeta de la comunidad actual
+        # ENTRAR a la carpeta de la comunidad actual
         os.chdir(folder_name)
-        current_community_dir = os.getcwd()
         
-        print(f"\n>>> Simulando Comunidad {num} en: {current_community_dir}")
+        print(f"\n>>> Simulando Comunidad {num} en: {os.getcwd()}")
 
         try:
             test_tube = c.layout()
             
-            # Cargar los modelos específicos de esta comunidad
+            # Cargar modelos y guardar sus nombres para las columnas del CSV
+            modelos_agregados = []
             for model_id in lista_nombres:
                 if model_id in modelos_base:
                     cobra_copy = modelos_base[model_id].copy()
                     processed_model = c.model(cobra_copy)
                     processed_model.initial_pop = initial_mass
                     test_tube.add_model(processed_model)
+                    modelos_agregados.append(model_id) # Se guarda para el encabezado del CSV
                 else:
-                    print(f"Advertencia: {model_id} no está en los archivos XML")
+                    print(f"Advertencia: {model_id} no encontrado en archivos XML")
 
             # --- CONFIGURAR MEDIO DE CULTIVO --- 
             for met, conc in media.items():
@@ -95,15 +96,33 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
 
             # --- EJECUTAR COMETS ---
             experiment = c.comets(test_tube, sim_params)
-            
-            # Al haber usado os.chdir(), COMETS escribirá aquí automáticamente
+            # Al haber usado os.chdir(), COMETS escribe aquí por defecto
             experiment.run(delete_files=False)
             
-            print(f"Comunidad {num} finalizada con éxito.")
+            # --- PROCESAR Y GUARDAR RESULTADOS ---
+            final_models = experiment.total_biomass
+
+            if final_models is not None and not final_models.empty:
+                # Calcular tiempo real (ciclos * timeStep)
+                time_step = experiment.parameters.all_params['timeStep']
+                final_models['t'] = final_models['cycle'] * time_step
+                
+                # Ajustar nombres de columnas: 'cycle' + nombres bacterias + 't'
+                final_models.columns = ['cycle'] + modelos_agregados + ['t']
+
+                # Guardar CSV (ya estamos dentro de Comunidad_X)
+                final_models.to_csv(f"comunidad_{num}_biomasa.csv", index=False)
+                print(f"Biomasa guardada exitosamente.")
+            
+            # Guardar metabolitos
+            df_metabolites = experiment.get_metabolite_time_series()
+            if df_metabolites is not None:
+                df_metabolites.to_csv(f"comunidad_{num}_metabolitos.csv", index=False)
+                print(f"Metabolitos guardados exitosamente.")
 
         except Exception as e:
-            print(f"Error en Comunidad {num}: {e}")
+            print(f"Error crítico en Comunidad {num}: {e}")
 
-    # 3. Al terminar todo el loop, volver a la carpeta original del script
+    # 3. Al finalizar, volver a la carpeta donde empezamos
     os.chdir(original_path)
-    print("\nProceso completo. Todos los resultados están en:", root_path)
+    print(f"\nProceso finalizado. Resultados en: {root_path}")
