@@ -30,4 +30,4 @@ comets(
     cycles=10,      
     mass=5e-8,      
     media=lb,
-	newpath='/mnt/sur/data/users/mmontante/04_resultados/newpath')
+	newpath='/mnt/data/sur/users/mmontante/04_resultados/newpath')
