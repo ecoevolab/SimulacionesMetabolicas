@@ -120,6 +120,13 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
                 df_metabolites.to_csv(f"comunidad_{num}_metabolitos.csv", index=False)
                 print(f"Metabolitos guardados exitosamente.")
 
+            # Guardar media log
+            media_log = experiment.media
+
+            if media_log is not None and not media_log.empty:
+                media_log.to_csv(f"comunidad_{num}_media.csv", index=False)
+                print("Media log guardado exitosamente.")
+
         except Exception as e:
             print(f"Error crítico en Comunidad {num}: {e}")
 
