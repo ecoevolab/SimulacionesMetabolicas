@@ -24,7 +24,7 @@ lb = {
 
 # --- EJECUCION ---
 comets(
-    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms/syncom11.csv',
+    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms/syncoms13.csv',
     patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=5,      
     cycles=10,      
