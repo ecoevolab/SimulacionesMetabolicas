@@ -52,7 +52,7 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
         # VOLVER A LA RAÍZ de resultados para evitar anidamiento
         os.chdir(root_path)
         
-        folder_name = f"Comunidad_{num}"
+        folder_name = f"comunidad_{num}"
         os.makedirs(folder_name, exist_ok=True)
         
         # ENTRAR a la carpeta de la comunidad actual
