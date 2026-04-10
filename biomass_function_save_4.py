@@ -8,7 +8,6 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
     # 1. Guardar la ruta original (donde está tu script)
     original_path = os.getcwd()
     
-    # 2. Definir ruta absoluta para evitar errores de permisos en /mnt/sur
     root_path = os.path.abspath(newpath)
     os.makedirs(root_path, exist_ok=True)
     
