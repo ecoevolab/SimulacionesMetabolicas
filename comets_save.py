@@ -24,11 +24,10 @@ lb = {
 
 # --- EJECUCION ---
 comets(
-    ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms/syncoms13.csv',
-    patron_xml='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
+    ruta_csv_syncoms='/mnt/data/sur/users/mmontante/02_data/rizo/syncoms/syncoms13.csv',
+    patron_xml='/mnt/data/sur/users/mmontante/02_data/rizo/carveme/ST*_prokka_carveme_lb.xml',
     threads=5,      
     cycles=10,      
     mass=5e-8,      
     media=lb,
-	newpath='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/newpath')
-
+	newpath='/mnt/data/sur/users/mmontante/04_resultados/newpath')
