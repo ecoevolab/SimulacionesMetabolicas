@@ -47,9 +47,10 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
     for num, lista_nombres in enumerate(comunidades_finales, start=1):    
         # 1. Definir y crear la carpeta específica para la comunidad
         folder_name = f"Comunidad_{num}"
+        os.makedirs(folder_name, exist_ok=True)
         community_path = os.path.join(newpath, folder_name)
-        os.makedirs(community_path, exist_ok=True)
-        
+        os.chdir(community_path)
+
         test_tube = c.layout()
         print(f"\n>>> Procesando Comunidad {num} con {len(lista_nombres)} modelos...")
         print(f"Archivos se guardarán en: {community_path}")
