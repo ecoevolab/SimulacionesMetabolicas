@@ -1,5 +1,6 @@
 from biomass_function_save_4 import  comets
 
+
 # --- MEDIO LB ---
 dilution_rate = 0.1
 

@@ -5,10 +5,8 @@ import os
 import glob 
 
 def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
-    # Asegurar que el path principal existe y movernos ahí
-    root_path = os.path.abspath(newpath) # Usamos ruta absoluta para evitar confusiones
-    os.makedirs(root_path, exist_ok=True)
-    os.chdir(root_path)
+    os.makedirs(newpath, exist_ok=True)
+    os.chdir(newpath)
 
     # --- PARAMETROS ---
     sim_params = c.params()
@@ -47,16 +45,17 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
 
     # --- LOOP SIMULACION ---
     for num, lista_nombres in enumerate(comunidades_finales, start=1):    
-        # 1. Crear carpeta específica para la comunidad
+        # 1. Definir y crear la carpeta específica para la comunidad
         folder_name = f"Comunidad_{num}"
-        community_path = os.path.join(root_path, folder_name)
+        community_path = os.path.join(newpath, folder_name)
         os.makedirs(community_path, exist_ok=True)
         
         test_tube = c.layout()
-        print(f"\n>>> Procesando Comunidad {num} en {folder_name}...")
+        print(f"\n>>> Procesando Comunidad {num} con {len(lista_nombres)} modelos...")
+        print(f"Archivos se guardarán en: {community_path}")
 
         try:
-            # Cargar modelos 
+            # 2. Cargar modelos de la lista_nombres
             for model_id in lista_nombres:
                 if model_id in modelos_base:
                     cobra_copy = modelos_base[model_id].copy()
@@ -64,7 +63,7 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
                     processed_model.initial_pop = initial_mass
                     test_tube.add_model(processed_model)
                 else:
-                    print(f"No se encontró el {model_id}")
+                    print(f"Advertencia: No se encontró el modelo {model_id} en memoria")
 
             # ---------------- MEDIO DE CULTIVO --------------------- 
             for met, conc in media.items():
@@ -87,13 +86,10 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
             experiment = c.comets(test_tube, sim_params)
             
             # El parámetro working_dir hace que COMETS escriba los .txt allí
-            experiment.working_dir = community_path 
             
             experiment.run(delete_files=False)
             
             # 3. Guardar opcionalmente los dataframes como CSV en esa carpeta
-            experiment.total_biomass.to_csv(os.path.join(community_path, "biomass.csv"))
-            experiment.get_metabolite_time_series().to_csv(os.path.join(community_path, "metabolites.csv"))
 
             print(f"Simulación {num} completada exitosamente.")
 
