@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/mnt/data/sur/users/mmontante/SimulacionesMetabolicas/comets_save.py", line 26, in <module>
+    comets(
+    ~~~~~~^
+        ruta_csv_syncoms='/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/syncoms/syncoms13.csv',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        media=lb,
+        ^^^^^^^^^
+    	newpath='/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/newpath')
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/sur/users/mmontante/SimulacionesMetabolicas/biomass_function_save_4.py", line 8, in comets
+    os.makedirs(newpath, exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 226, in makedirs
+  File "<frozen os>", line 226, in makedirs
+  File "<frozen os>", line 226, in makedirs
+  [Previous line repeated 1 more time]
+  File "<frozen os>", line 236, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/abigaylmontantearenas'
