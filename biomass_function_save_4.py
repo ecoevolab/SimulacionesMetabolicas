@@ -5,9 +5,10 @@ import os
 import glob 
 
 def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
-    # Corrección de indentación y variable newpath
-    os.makedirs(newpath, exist_ok=True)
-    os.chdir(newpath)
+    # Asegurar que el path principal existe y movernos ahí
+    root_path = os.path.abspath(newpath) # Usamos ruta absoluta para evitar confusiones
+    os.makedirs(root_path, exist_ok=True)
+    os.chdir(root_path)
 
     # --- PARAMETROS ---
     sim_params = c.params()
@@ -46,19 +47,22 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
 
     # --- LOOP SIMULACION ---
     for num, lista_nombres in enumerate(comunidades_finales, start=1):    
+        # 1. Crear carpeta específica para la comunidad
+        folder_name = f"Comunidad_{num}"
+        community_path = os.path.join(root_path, folder_name)
+        os.makedirs(community_path, exist_ok=True)
+        
         test_tube = c.layout()
-        print(f"\n>>> Procesando Comunidad {num}...")
+        print(f"\n>>> Procesando Comunidad {num} en {folder_name}...")
 
         try:
             # Cargar modelos 
-            modelos_agregados = []
             for model_id in lista_nombres:
                 if model_id in modelos_base:
                     cobra_copy = modelos_base[model_id].copy()
                     processed_model = c.model(cobra_copy)
                     processed_model.initial_pop = initial_mass
                     test_tube.add_model(processed_model)
-                    modelos_agregados.append(model_id)
                 else:
                     print(f"No se encontró el {model_id}")
 
@@ -79,11 +83,19 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
                 test_tube.set_specific_static(i, 1000)
 
             # --- SIMULACION  ---
+            # 2. Pasar el community_path a la simulación
             experiment = c.comets(test_tube, sim_params)
+            
+            # El parámetro working_dir hace que COMETS escriba los .txt allí
+            experiment.working_dir = community_path 
+            
             experiment.run(delete_files=False)
-            print(experiment.run_output)
-            print(experiment.total_biomas)
-            print(experiment.get_metabolite_time_series())
+            
+            # 3. Guardar opcionalmente los dataframes como CSV en esa carpeta
+            experiment.total_biomass.to_csv(os.path.join(community_path, "biomass.csv"))
+            experiment.get_metabolite_time_series().to_csv(os.path.join(community_path, "metabolites.csv"))
+
+            print(f"Simulación {num} completada exitosamente.")
 
         except Exception as e:
             print(f"Error en comunidad {num}: {e}")
