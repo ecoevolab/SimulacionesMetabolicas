@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=results
+#SBATCH --job-name=2results
 #SBATCH --output=%x.log
 #SBATCH --error=%x.error
 #SBATCH --time=100000:00:00
@@ -17,7 +17,7 @@ mamba activate python3
 module load COMETS
 
 echo "[INFO] Starting Python script at $(date)"
-python comets_save.py
+python comets_save_2.py
 echo "[INFO] Python script finished at $(date)"
 
 echo "========================================="
