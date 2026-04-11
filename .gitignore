@@ -2,3 +2,4 @@
 .current_global*
 .current_layout*
 .current_package*
+__pycache__/*
