@@ -132,3 +132,28 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
     # 3. Al finalizar, volver a la carpeta donde empezamos
     os.chdir(original_path)
     print(f"\nProceso finalizado. Resultados en: {root_path}")
+
+def media(name = "lb", dil = 1):
+    if name == "lb":
+       res = {
+            "h2o_e": 100*dil, "o2_e": 10*dil, "pi_e": 10*dil, "zn2_e": 10, 
+            "cobalt2_e": 10*dil, "k_e": 10*dil, "mg2_e": 10*dil, "na1_e": 10*dil, "cd2_e": 10*dil, 
+            "aso4_e": 10*dil, "fe2_e": 10*dil, "fe3_e": 10*dil, "cro4_e": 10*dil, 
+            "pydx_e": 10*dil, "nac_e": 10*dil, "ribflv_e": 10*dil, "ura_e": 0.1*dil,
+            "glu__L_e": 0.1*dil, "gly_e": 0.1*dil,
+            "ala__L_e": 0.1*dil, "lys__L_e": 0.1*dil, 
+            "asp__L_e": 0.1*dil, "so4_e": 0.1*dil,
+            "arg__L_e": 0.1*dil, "ser__L_e": 0.1*dil, 
+            "cu2_e": 0.1*dil, "met__L_e": 0.1*dil, 
+            "trp__L_e": 0.1*dil, "phe__L_e": 0.1*dil, 
+            "h_e": 0.1*dil, "tyr__L_e": 0.1*dil, 
+            "cys__L_e": 0.1*dil, "cl_e": 0.1*dil, 
+            "leu__L_e": 0.1*dil, "his__L_e": 0.1*dil, 
+            "pro__L_e": 0.1*dil, "val__L_e": 0.1*dil, 
+            "thr__L_e": 0.1*dil, "ile__L_e": 0.1*dil
+        }
+    else:
+        raise ValueError("Unrecognized media. Currently only 'lb' is supported.")
+    
+    return res
+       
