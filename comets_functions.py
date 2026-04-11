@@ -157,3 +157,15 @@ def media(name = "lb", dil = 1):
     
     return res
        
+
+def load_strains(layout, models, initial_mass = 1e-8):
+    for strain, gem in models.items():
+        gem_i = cobra.io.read_sbml_model(gem)
+        gem_i = c.model(gem_i)
+        gem_i.id = strain
+        gem_i.initial_pop = initial_mass
+        layout.add_model(gem_i)
+    
+    return layout
+
+    
