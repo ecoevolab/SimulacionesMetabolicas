@@ -160,11 +160,17 @@ def media(name = "lb", dil = 1):
 
 def load_strains(layout, models, initial_mass = 1e-8):
     for strain, gem in models.items():
+        # print(f"==============Cargando modelo para {strain} desde {gem}==============")
         gem_i = cobra.io.read_sbml_model(gem)
+        # print(f"=========================Modelo cargado para {strain}==============")
         gem_i = c.model(gem_i)
+        # print(f"=========================Modelo procesado para {strain}==============")
         gem_i.id = strain
-        gem_i.initial_pop = initial_mass
+        # print(f"=========================ID establecido para {strain}==============")
+        gem_i.initial_pop = [0, 0, initial_mass]
+        # print(f"=========================Biomasa inicial para {strain}==============")
         layout.add_model(gem_i)
+        # print(f"=========================Modelo añadido {strain}==============")
     
     return layout
 
