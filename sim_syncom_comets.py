@@ -1,4 +1,4 @@
-from comets_functions import media, load_strains
+from comets_functions import media, load_strains, set_sim_params
 import cometspy as c
 import os
 # import argparse
@@ -32,5 +32,16 @@ if __name__ == "__main__":
     # Load models into the layout
     layout = load_strains(layout, models, initial_mass=args["initial_mass"])    
 
+    # Create output directory, error if already exists
+    if os.path.exists(args["outdir"]):
+        raise FileExistsError(f"Output directory {args["outdir"]} already exists. Please choose a different name or remove it.") 
+    os.makedirs(args["outdir"])
+
+    # Set simulation parameters
+    sim_params = set_sim_params(args)
 
 
+
+
+
+ 
