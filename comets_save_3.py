@@ -1,4 +1,4 @@
-from biomass_function_save_4 import  comets
+from comets_function import  comets
 
 
 # --- MEDIO LB ---
