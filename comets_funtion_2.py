@@ -3,14 +3,24 @@ import cobra.io
 import pandas as pd
 import os
 import glob 
+import logging
+
+# Configurar logging
 
 def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
-    # 1. Guardar la ruta original 
+    # 1. Guardar la ruta original
     original_path = os.getcwd()
     
     root_path = os.path.abspath(newpath)
     os.makedirs(root_path, exist_ok=True)
-    
+    log_file = os.path.join(root_path, 'comets_simulation.log')
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+
     # --- CARGAR DATOS DE COMUNIDADES ---
     df = pd.read_csv(ruta_csv_syncoms)
     id_bacterias = df.iloc[:, 0].tolist()
@@ -57,7 +67,7 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
         # ENTRAR a la carpeta de la comunidad actual
         os.chdir(folder_name)
         
-        print(f"\n>>> Simulando Comunidad {num} en: {os.getcwd()}")
+        logging.info(f"Simulando Comunidad {num} en: {os.getcwd()}")
 
         try:
             test_tube = c.layout()
@@ -97,11 +107,17 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
             experiment = c.comets(test_tube, sim_params)
             # Al haber usado os.chdir(), COMETS escribe aquí por defecto
             experiment.run(delete_files=False)
+
+            logging.info(f"Simulación terminada para Comunidad {num}")
+
             
             # --- PROCESAR Y GUARDAR RESULTADOS ---
+
+            # Guardar biomasa total
             final_models = experiment.total_biomass
 
             if final_models is not None and not final_models.empty:
+                logging.info(f"Biomasa generada para comunidad_{num})")
                 # Calcular tiempo real (ciclos * timeStep)
                 time_step = experiment.parameters.all_params['timeStep']
                 final_models['t'] = final_models['cycle'] * time_step
@@ -111,23 +127,25 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
 
                 # Guardar CSV (ya estamos dentro de Comunidad_X)
                 final_models.to_csv(f"comunidad_{num}_biomasa.csv", index=False)
-                print(f"Biomasa guardada exitosamente.")
+                logging.info(f"Biomasa guardada de comunidad_{num}")
+            
             
             # Guardar metabolitos
             df_metabolites = experiment.get_metabolite_time_series()
             if df_metabolites is not None:
+                logging.info(f"Metabolitos generados para comunidad_{num}")
                 df_metabolites.to_csv(f"comunidad_{num}_metabolitos.csv", index=False)
-                print(f"Metabolitos guardados exitosamente.")
-
+                logging.info(f"Metabolitos guardados para comunidad_{num}")
             # Guardar media log
             media_log = experiment.media
 
             if media_log is not None and not media_log.empty:
+                logging.info(f"Media log generado para comunidad_{num}")
                 media_log.to_csv(f"comunidad_{num}_media.csv", index=False)
-                print("Media log guardado exitosamente.")
+                logging.info(f"Media log guardado para comunidad_{num}")
 
         except Exception as e:
-            print(f"Error crítico en Comunidad {num}: {e}")
+            logging.error(f"Error crítico en Comunidad {num}")
 
     # 3. Al finalizar, volver a la carpeta donde empezamos
     os.chdir(original_path)

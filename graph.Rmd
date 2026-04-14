@@ -393,125 +393,7 @@ for (input_file in mets_files) {
 }
 ```
 
-
-
-```{r}
-library(tidyverse)
-
-# 1. Load the data
-df <- read_csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/mets/individuales/ST00042_mets.csv")
-
-# 2. Reshape and Plot
-df %>%
-  pivot_longer(cols = -1, names_to = "Metabolite", values_to = "Value") %>%
-  ggplot(aes(x = .[[1]], y = Value, color = Metabolite)) +
-  geom_line() +
-  labs(x = "Time", title = "Metabolite Concentrations") +
-  theme_minimal()
-```
-
-```{r}
-df1 <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/simulaciones/individuales/lb10/ST00042_prokka_carveme_lb_lb10.csv") 
-df1_42 <- df1[2:82, ]
-df2 <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_8/comunidad_1.csv")
-df3 <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_8/comunidad_3.csv")
-df2_42 <- df2$ST00042
-
-
-# 1. Extraer la última fila (la biomasa final)
-final_values <- as.numeric(combined_df[nrow(combined_df), ])
-final_values
-column_names <- c("Individual", "Comunidad 1", "Comunidad 3")
-
-# 2. Crear un nuevo data frame organizado para ggplot
-df_plot <- data.frame(
-  Condicion = column_names,
-  Biomasa = final_values
-)
-
-# 3. Generar la gráfica
-
-ggplot(df_plot, aes(x = Condicion, y = Biomasa, fill = Condicion)) +
-  geom_bar(stat = "identity", color = "black", width = 0.7) +
-  scale_fill_brewer(palette = "Set2") + # Colores profesionales
-  theme_minimal() +
-  labs(
-    title = "Comparación de Biomasa Final: ST00042",
-    subtitle = "Modelos individuales vs. comunidades",
-    x = "Condición de Crecimiento",
-    y = "Biomasa (unidades de flujo)" 
-  ) +
-  theme(legend.position = "none") # Quitamos la leyenda porque el eje X ya lo dice
-#######################################
-# Define the path
-# 1. Update this line to include the full path
-files <- list.files("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass/individuales/lb10/", 
-                    pattern = "\\.csv$", 
-                    full.names = TRUE)
-id <- list()
-# 2. Now your loop will work because 'i' will be the full path
-for (i in files) {
-  name <- basename(i)
-  id <- sub("_.*", "", name)
-  
-  # Now R knows exactly where to find the file
-  temp_data <- read.csv(i)
-  
-  # Just a suggestion: print the ID to see the progress
-  print(paste(id))
-}
-
-id
-for nam in id
-if which(colnames(df) == "target_name"
-         
-#######################
-# 1. Preparar rutas y archivos
-indi_path <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass/individuales/lb10/"
-comm_path <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_8/"
-
-indi_files <- list.files(indi_path, pattern = "\\.csv$", full.names = TRUE)
-comm_files <- list.files(comm_path, pattern = "\\.csv$", full.names = TRUE)
-
-# 2. Crear un objeto vacío para guardar los resultados
-# Usaremos una lista porque es más rápido que "pegar" columnas una por una
-lista_columnas <- list()
-
-for (i in indi_files) {
-  id_archivo <- sub("_.*", "", basename(i))
-  df_ind <- i[[2:82, ]]
-  
-  for (c in comm_files) {
-    df_comm <- read.csv(c)
-    
-    
-    # 3. Si el ID es una columna, guardamos esa columna
-    if (id_archivo %in% colnames(df_comm)) {
-      message("Extrayendo columna: ", id_archivo, " desde ", basename(c))
-      
-      # Guardamos la columna en nuestra lista usando el ID como nombre
-      lista_columnas[[id_archivo]] <- df_comm[[id_archivo]]
-      
-      # Si ya lo encontraste en un archivo de comunidad, 
-      # puedes usar 'break' para no seguir buscando en los demás .csv de comunidad
-      break 
-    }
-  }
-}
-
-# 4. Convertir la lista en un dataframe final
-# Nota: Esto solo funciona si todas las columnas tienen la misma longitud (mismo número de filas)
-df_final <- as.data.frame(lista_columnas)
-
-# Ver el resultado
-head(df_final)
-
-
-
-         
-         
-```
-# BIOMASSA FINAL INVIDIVDUAL VS COMUNIDAD 
+# BIOMASSA FINAL (PRODUCTIVIDAD) INVIDIVDUAL VS COMUNIDAD 
 ```{r}
 
 library(ggplot2)
@@ -520,67 +402,77 @@ library(tidyr)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 
-# 1. Rutas
-path_ind <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass/individuales/lb10/"
-path_com <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_8/"
 
-# 2. Listar archivos
+path_ind <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/simulaciones/individuales/lb10/"
+path_com <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/simulaciones/comunidades/biomasa/"
+
 archivos_individuales <- list.files(path_ind, pattern = "\\.csv$", full.names = TRUE)
 archivos_comunidades  <- list.files(path_com, pattern = "comunidad_.*\\.csv$", full.names = TRUE)
 
-# 3. Ciclo principal: Iterar por cada CEPA (archivo individual)
+
+library(ggplot2)
+library(ggplot2)
+
 for (f_ind in archivos_individuales) {
   
-  # Extraer el ID de la cepa del nombre del archivo (ej. ST00042)
-  # Buscamos el patrón ST seguido de números
-  id_cepa <- regmatches(basename(f_ind), regexpr("ST\\d+", basename(f_ind)))
+  # Extraer ID
+  id_cepa <- sub("_prokka_carveme_lb_lb10.csv", "", basename(f_ind))
   
-  if (length(id_cepa) == 0) next # Saltar si el archivo no tiene formato ST
+  # Leer archivo individual
+  df_indi <- read.csv(f_ind)
   
-  # A. Obtener biomasa individual
-  df_ind <- read.csv(f_ind)
-  val_ind <- as.numeric(tail(df_ind[2:82, 1], n = 1))
+  val_ind <- ifelse(nrow(df_indi) >= 82, df_indi[82, 2], NA)
   
-  # Crear data frame base para la gráfica de esta cepa
+  # Crear base con columna única Biomasa
   resultados_cepa <- data.frame(
+    ID = id_cepa,
     Origen = "Individual",
-    Biomasa = val_ind
+    Biomasa = as.numeric(val_ind)
   )
   
-  # B. Buscar esta cepa en cada archivo de comunidad
-  for (f_com in archivos_comunidades) {
-    df_com <- read.csv(f_com)
-    nombre_com <- gsub(".csv", "", basename(f_com)) # Nombre limpio para la gráfica
-    
-    # Verificar si la cepa existe como columna en esta comunidad
-    if (id_cepa %in% colnames(df_com)) {
-      val_com <- as.numeric(tail(df_com[[id_cepa]], n = 1))
-      
-      # Agregar a la tabla de resultados
-      resultados_cepa <- rbind(resultados_cepa, data.frame(
-        Origen = nombre_com,
-        Biomasa = val_com
-      ))
-    }
-  }
+  # =========================
+  # Buscar en comunidades
+  # =========================
+for (f_com in archivos_comunidades) {
   
-  # 4. Generar la gráfica si se encontraron datos
+  df_com <- read.csv(f_com)
+  id_com <- sub("_biomasa.csv", "", basename(f_com))
+  
+  # Buscar columna que coincida con la cepa
+  col_match <- grep(id_cepa, colnames(df_com), value = TRUE)
+  
+  if (length(col_match) > 0) {
+    
+    val_com <- tryCatch(
+      as.numeric(df_com[nrow(df_com), col_match[1]]),
+      error = function(e) NA
+    )
+    
+    resultados_cepa <- rbind(resultados_cepa, data.frame(
+      ID = id_cepa,
+      Origen = paste("Comunidad", id_com),
+      Biomasa = val_com
+    ))
+  }
+}
+  
+  # =========================
+  # GRAFICA DE BARRAS
+  # =========================
+  
   if (nrow(resultados_cepa) > 1) {
     
-    # Reordenar niveles para que "Individual" aparezca primero
-    resultados_cepa$Origen <- factor(resultados_cepa$Origen, 
-                                     levels = c("Individual", setdiff(resultados_cepa$Origen, "Individual")))
-    
     p <- ggplot(resultados_cepa, aes(x = Origen, y = Biomasa, fill = Origen)) +
-      geom_bar(stat = "identity", color = "black", width = 0.7) +
+      geom_bar(stat = "identity", color = "black", width = 0.6) +
       scale_fill_brewer(palette = "Set3") +
       theme_minimal() +
       labs(
-        title = paste("Desempeño Global de la Cepa:", id_cepa),
-        subtitle = "Comparación: Crecimiento individual vs. diversas comunidades",
-        x = "Condición / Comunidad",
-        y = "Biomasa Final (flujo)"
+        title = paste("Cepa:", id_cepa),
+        subtitle = "Biomasa final (renglón 82)",
+        x = "Condición",
+        y = "Biomasa"
       ) +
       theme(
         axis.text.x = element_text(angle = 45, hjust = 1),
@@ -589,14 +481,91 @@ for (f_ind in archivos_individuales) {
     
     print(p)
     
-    # Opcional: Guardar gráfica
-    # ggsave(paste0("Comparativa_Total_", id_cepa, ".png"), plot = p, width = 8, height = 5)
-    
   } else {
-    message(paste("La cepa", id_cepa, "no fue encontrada en ninguna comunidad."))
+    message(paste("No se encontraron datos de comunidad para:", id_cepa))
   }
 }
+
+```
+# RANKING BIOMASA
+```{r}
+
+library(dplyr)
+
+path_ind <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/simulaciones/individuales/lb10/"
+
+archivos_individuales <- list.files(path_ind, pattern = "\\.csv$", full.names = TRUE)
+
+resultados <- data.frame()
+
+for (f_ind in archivos_individuales) {
+  
+  id_cepa <- sub("_prokka_carveme_lb_lb10.csv", "", basename(f_ind))
+  
+  df_indi <- read.csv(f_ind)
+  
+  # Tomar la ÚLTIMA fila (más robusto)
+  val_ind <- if (nrow(df_indi) > 0) {
+    df_indi[nrow(df_indi), 2]
+  } else {
+    NA
+  }
+  
+  resultados <- rbind(resultados, data.frame(
+    ID = id_cepa,
+    Score = val_ind
+  ))
+}
+
+# Ranking final
+resultados <- resultados %>%
+  arrange(desc(Score)) %>% 
+  mutate(rank = row_number())
+
+print(resultados)
+
+
+
+##################
+
+
 ```
 
+```{r}
+# 1. Configuración de rutas
+path_com <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/simulaciones/comunidades/biomasa/"
+archivos_comunidades <- list.files(path_com, pattern = "comunidad_.*\\.csv$", full.names = TRUE)
+# Usando la lógica de tu loop original pero corregida
+resultados_comunidades <- list()
 
+for (f_com in archivos_comunidades) {
+  df_com <- read.csv(f_com)
+  id_com <- sub("_biomasa.csv", "", basename(f_com))
+  
+  # Extraer la última fila
+  ultima_biomasa <- df_com[nrow(df_com), ]
+  
+  # Crear un data frame de la última fila (transpuesto)
+  df_ranking <- data.frame(
+    ID = names(ultima_biomasa),
+    Score = as.numeric(ultima_biomasa)
+  )
+  
+  # Filtrar solo las que están en tu lista de 'resultados'
+  df_ranking <- df_ranking[df_ranking$ID %in% resultados$ID, ]
+  
+  # Ordenar y añadir el número de rank
+  df_ranking <- df_ranking[order(-df_ranking$Score), ]
+  df_ranking$rank <- 1:nrow(df_ranking)
+  
+  # Guardar en la lista
+  resultados_comunidades[[id_com]] <- df_ranking
+}
 
+print(resultados_comunidades[[1]])
+print(resultados_comunidades[[2]])
+print(resultados_comunidades[[3]])
+print(resultados_comunidades[[4]])
+print(resultados_comunidades[[5]])
+
+```
