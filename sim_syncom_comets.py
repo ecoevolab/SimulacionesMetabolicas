@@ -7,7 +7,8 @@ import os
 
 if __name__ == "__main__":
     args = {"gem_path": '/home/sur/lab/exp/2026/today/gems',
-            "strains": ['ST00042', 'ST00046'],
+            # "strains": ['ST00042', 'ST00046'],
+            "strains": ['ST00060', 'ST00094', 'ST00110', 'ST00164', 'ST00143'],
             "gem_suffix": '.xml',
             "media": 'lb',
             "media_dil": 0.1,
@@ -15,7 +16,7 @@ if __name__ == "__main__":
             "cycles": 20,
             "initial_mass": 1e-8,
             "add_trace_metabolites": True,
-            "outdir": 'output'}
+            "outdir": '/home/sur/lab/exp/2026/today/output'}
     
     # In the future we can do something more fancy with layout
     layout = c.layout()
@@ -38,17 +39,33 @@ if __name__ == "__main__":
     if(args["add_trace_metabolites"]):
         layout.add_typical_trace_metabolites(amount=1000)
         
-    # Set simulation parameters
+    # Set simulation parameters.
     sim_params = set_sim_params(args)
-
+    # print(sim_params.show_params().to_string())
 
     # Create output directory, error if already exists
     if os.path.exists(args["outdir"]):
         raise FileExistsError(f"Output directory {args['outdir']} already exists. Please choose a different name or remove it.") 
     os.makedirs(args["outdir"])
 
-    # Run simulation
-    sim = c.comets(layout, sim_params)
+    # Prepare simulation
+    # print(sim_params.get_param("TotalBiomassLogName"))
+    # print(sim_params.get_param("MediaLogName"))
+
+    sim = c.comets(layout = layout, parameters = sim_params, relative_dir = 'temp/')
+    # Very ugly, but I need to redefine the output filenames
+    # https://github.com/segrelab/cometspy/issues/64
+    sim.parameters.set_param("BiomassLogName", os.path.join(args["outdir"], "biomass.txt"))
+    sim.parameters.set_param("FluxLogName", os.path.join(args["outdir"], "flux.txt"))
+    sim.parameters.set_param("MediaLogName", os.path.join(args["outdir"], "media.txt"))
+    sim.parameters.set_param("TotalBiomassLogName", os.path.join(args["outdir"], "total_biomass.txt"))
+    sim.parameters.set_param("velocityMultiConvLogName", os.path.join(args["outdir"], "velocity.txt"))
+
+    # print(sim.parameters.get_param("TotalBiomassLogName"))
+    # print(sim_params.get_param("TotalBiomassLogName"))
+    # print(sim.parameters.get_param("MediaLogName"))
+    # print(sim_params.get_param("MediaLogName"))
+
     print("Starting simulation...")
     sim.run()
     # print(sim.run_output)
