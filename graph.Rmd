@@ -470,7 +470,7 @@ for (f_com in archivos_comunidades) {
       theme_minimal() +
       labs(
         title = paste("Cepa:", id_cepa),
-        subtitle = "Biomasa final (renglón 82)",
+        subtitle = "Biomasa final",
         x = "Condición",
         y = "Biomasa"
       ) +
