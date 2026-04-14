@@ -136,7 +136,7 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
 def media(name = "lb", dil = 1):
     if name == "lb":
        res = {
-            "h2o_e": 100*dil, "o2_e": 10*dil, "pi_e": 10*dil, "zn2_e": 10, 
+            "h2o_e": 100, "o2_e": 10, "pi_e": 10*dil, "zn2_e": 10, 
             "cobalt2_e": 10*dil, "k_e": 10*dil, "mg2_e": 10*dil, "na1_e": 10*dil, "cd2_e": 10*dil, 
             "aso4_e": 10*dil, "fe2_e": 10*dil, "fe3_e": 10*dil, "cro4_e": 10*dil, 
             "pydx_e": 10*dil, "nac_e": 10*dil, "ribflv_e": 10*dil, "ura_e": 0.1*dil,
