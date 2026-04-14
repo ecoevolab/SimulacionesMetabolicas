@@ -197,7 +197,7 @@ def set_sim_params(args):
     sim_params.set_param("TotalBiomassLogName", os.path.join(args["outdir"], "total_biomass.txt"))
     sim_params.set_param("totalBiomassLogRate", 1)
 
-    sim_params.set_param("writeVelocityMultiConvLog", True) 
+    sim_params.set_param("writeVelocityMultiConvLog", False) 
     sim_params.set_param("velocityMultiConvLogName", os.path.join(args["outdir"], "velocity.txt"))
     sim_params.set_param("velocityMultiConvLogRate", 1)
 

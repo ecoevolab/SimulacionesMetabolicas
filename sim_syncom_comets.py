@@ -51,8 +51,7 @@ if __name__ == "__main__":
     sim = c.comets(layout, sim_params)
     print("Starting simulation...")
     sim.run()
-
-
+    # print(sim.run_output)
 
 
 
