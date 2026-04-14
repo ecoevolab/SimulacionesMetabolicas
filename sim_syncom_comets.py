@@ -44,12 +44,12 @@ if __name__ == "__main__":
 
     # Create output directory, error if already exists
     if os.path.exists(args["outdir"]):
-        raise FileExistsError(f"Output directory {args["outdir"]} already exists. Please choose a different name or remove it.") 
+        raise FileExistsError(f"Output directory {args['outdir']} already exists. Please choose a different name or remove it.") 
     os.makedirs(args["outdir"])
 
     # Run simulation
-    print("Starting simulation...")
     sim = c.comets(layout, sim_params)
+    print("Starting simulation...")
     sim.run()
 
 
