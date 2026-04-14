@@ -13,10 +13,10 @@ if __name__ == "__main__":
             "media": 'lb',
             "media_dil": 0.1,
             "threads": 4,
-            "cycles": 20,
+            "cycles": 1000,
             "initial_mass": 1e-8,
             "add_trace_metabolites": True,
-            "outdir": '/home/sur/lab/exp/2026/today/output'}
+            "outdir": '/home/sur/lab/exp/2026/today2/output'}
     
     # In the future we can do something more fancy with layout
     layout = c.layout()
