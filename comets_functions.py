@@ -132,3 +132,81 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
     # 3. Al finalizar, volver a la carpeta donde empezamos
     os.chdir(original_path)
     print(f"\nProceso finalizado. Resultados en: {root_path}")
+
+def media(name = "lb", dil = 1):
+    if name == "lb":
+       res = {
+            "h2o_e": 100, "o2_e": 10, "pi_e": 10*dil, "zn2_e": 10, 
+            "cobalt2_e": 10*dil, "k_e": 10*dil, "mg2_e": 10*dil, "na1_e": 10*dil, "cd2_e": 10*dil, 
+            "aso4_e": 10*dil, "fe2_e": 10*dil, "fe3_e": 10*dil, "cro4_e": 10*dil, 
+            "pydx_e": 10*dil, "nac_e": 10*dil, "ribflv_e": 10*dil, "ura_e": 0.1*dil,
+            "glu__L_e": 0.1*dil, "gly_e": 0.1*dil,
+            "ala__L_e": 0.1*dil, "lys__L_e": 0.1*dil, 
+            "asp__L_e": 0.1*dil, "so4_e": 0.1*dil,
+            "arg__L_e": 0.1*dil, "ser__L_e": 0.1*dil, 
+            "cu2_e": 0.1*dil, "met__L_e": 0.1*dil, 
+            "trp__L_e": 0.1*dil, "phe__L_e": 0.1*dil, 
+            "h_e": 0.1*dil, "tyr__L_e": 0.1*dil, 
+            "cys__L_e": 0.1*dil, "cl_e": 0.1*dil, 
+            "leu__L_e": 0.1*dil, "his__L_e": 0.1*dil, 
+            "pro__L_e": 0.1*dil, "val__L_e": 0.1*dil, 
+            "thr__L_e": 0.1*dil, "ile__L_e": 0.1*dil
+        }
+    else:
+        raise ValueError("Unrecognized media. Currently only 'lb' is supported.")
+    
+    return res
+       
+
+def load_strains(layout, models, initial_mass = 1e-8):
+    for strain, gem in models.items():
+        # print(f"==============Cargando modelo para {strain} desde {gem}==============")
+        gem_i = cobra.io.read_sbml_model(gem)
+        # print(f"=========================Modelo cargado para {strain}==============")
+        gem_i = c.model(gem_i)
+        # print(f"=========================Modelo procesado para {strain}==============")
+        gem_i.id = strain
+        # print(f"=========================ID establecido para {strain}==============")
+        gem_i.initial_pop = [0, 0, initial_mass]
+        # print(f"=========================Biomasa inicial para {strain}==============")
+        layout.add_model(gem_i)
+        # print(f"=========================Modelo añadido {strain}==============")
+    
+    return layout
+
+    
+def set_sim_params(args):
+    # Def simulation parameters
+    sim_params = c.params()
+    # print(sim_params.show_params().to_string())
+
+    # Set sim parameters
+    sim_params.set_param("writeBiomassLog", True) 
+    sim_params.set_param("BiomassLogName", os.path.join(args["outdir"], "biomass.txt"))
+    sim_params.set_param("BiomassLogRate", 1) 
+
+    sim_params.set_param("writeFluxLog", True) 
+    sim_params.set_param("FluxLogName", os.path.join(args["outdir"], "flux.txt"))
+    sim_params.set_param("FluxLogRate", 1)
+
+    sim_params.set_param("writeMediaLog", True) 
+    sim_params.set_param("MediaLogName", os.path.join(args["outdir"], "media.txt"))
+    sim_params.set_param("MediaLogRate", 1)
+
+    sim_params.set_param("writeTotalBiomassLog", True) 
+    sim_params.set_param("TotalBiomassLogName", os.path.join(args["outdir"], "total_biomass.txt"))
+    sim_params.set_param("totalBiomassLogRate", 1)
+
+    sim_params.set_param("writeVelocityMultiConvLog", False) 
+    sim_params.set_param("velocityMultiConvLogName", os.path.join(args["outdir"], "velocity.txt"))
+    sim_params.set_param("velocityMultiConvLogRate", 1)
+
+    sim_params.set_param("numRunThreads", args["threads"])
+    # sim_params.set_param("randomSeed", args["seed"])
+    sim_params.set_param("timeStep", 0.1) # hr
+    sim_params.set_param("maxCycles", args["cycles"])
+    sim_params.set_param("maxSpaceBiomass", 10) # gr DW
+    sim_params.set_param("minSpaceBiomass", 1e-11) # gr DW
+    sim_params.set_param("spaceWidth", 5) # cm
+
+    return sim_params
