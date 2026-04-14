@@ -1,4 +1,4 @@
-from coments_function import  comets
+from comets_function import  comets
 
 
 # --- MEDIO LB ---
