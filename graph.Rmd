@@ -411,7 +411,7 @@ df %>%
 ```
 
 ```{r}
-df1 <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass/individuales/lb10/ST00042_prokka_carveme_lb_lb10.csv") 
+df1 <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/simulaciones/individuales/lb10/ST00042_prokka_carveme_lb_lb10.csv") 
 df1_42 <- df1[2:82, ]
 df2 <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_8/comunidad_1.csv")
 df3 <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_8/comunidad_3.csv")
@@ -430,7 +430,6 @@ df_plot <- data.frame(
 )
 
 # 3. Generar la gráfica
-library(ggplot2)
 
 ggplot(df_plot, aes(x = Condicion, y = Biomasa, fill = Condicion)) +
   geom_bar(stat = "identity", color = "black", width = 0.7) +
@@ -480,9 +479,11 @@ lista_columnas <- list()
 
 for (i in indi_files) {
   id_archivo <- sub("_.*", "", basename(i))
+  df_ind <- i[[2:82, ]]
   
   for (c in comm_files) {
     df_comm <- read.csv(c)
+    
     
     # 3. Si el ID es una columna, guardamos esa columna
     if (id_archivo %in% colnames(df_comm)) {
@@ -510,7 +511,92 @@ head(df_final)
          
          
 ```
+# BIOMASSA FINAL INVIDIVDUAL VS COMUNIDAD 
+```{r}
 
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# 1. Rutas
+path_ind <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass/individuales/lb10/"
+path_com <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass_comunidad_8/"
+
+# 2. Listar archivos
+archivos_individuales <- list.files(path_ind, pattern = "\\.csv$", full.names = TRUE)
+archivos_comunidades  <- list.files(path_com, pattern = "comunidad_.*\\.csv$", full.names = TRUE)
+
+# 3. Ciclo principal: Iterar por cada CEPA (archivo individual)
+for (f_ind in archivos_individuales) {
+  
+  # Extraer el ID de la cepa del nombre del archivo (ej. ST00042)
+  # Buscamos el patrón ST seguido de números
+  id_cepa <- regmatches(basename(f_ind), regexpr("ST\\d+", basename(f_ind)))
+  
+  if (length(id_cepa) == 0) next # Saltar si el archivo no tiene formato ST
+  
+  # A. Obtener biomasa individual
+  df_ind <- read.csv(f_ind)
+  val_ind <- as.numeric(tail(df_ind[2:82, 1], n = 1))
+  
+  # Crear data frame base para la gráfica de esta cepa
+  resultados_cepa <- data.frame(
+    Origen = "Individual",
+    Biomasa = val_ind
+  )
+  
+  # B. Buscar esta cepa en cada archivo de comunidad
+  for (f_com in archivos_comunidades) {
+    df_com <- read.csv(f_com)
+    nombre_com <- gsub(".csv", "", basename(f_com)) # Nombre limpio para la gráfica
+    
+    # Verificar si la cepa existe como columna en esta comunidad
+    if (id_cepa %in% colnames(df_com)) {
+      val_com <- as.numeric(tail(df_com[[id_cepa]], n = 1))
+      
+      # Agregar a la tabla de resultados
+      resultados_cepa <- rbind(resultados_cepa, data.frame(
+        Origen = nombre_com,
+        Biomasa = val_com
+      ))
+    }
+  }
+  
+  # 4. Generar la gráfica si se encontraron datos
+  if (nrow(resultados_cepa) > 1) {
+    
+    # Reordenar niveles para que "Individual" aparezca primero
+    resultados_cepa$Origen <- factor(resultados_cepa$Origen, 
+                                     levels = c("Individual", setdiff(resultados_cepa$Origen, "Individual")))
+    
+    p <- ggplot(resultados_cepa, aes(x = Origen, y = Biomasa, fill = Origen)) +
+      geom_bar(stat = "identity", color = "black", width = 0.7) +
+      scale_fill_brewer(palette = "Set3") +
+      theme_minimal() +
+      labs(
+        title = paste("Desempeño Global de la Cepa:", id_cepa),
+        subtitle = "Comparación: Crecimiento individual vs. diversas comunidades",
+        x = "Condición / Comunidad",
+        y = "Biomasa Final (flujo)"
+      ) +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none"
+      )
+    
+    print(p)
+    
+    # Opcional: Guardar gráfica
+    # ggsave(paste0("Comparativa_Total_", id_cepa, ".png"), plot = p, width = 8, height = 5)
+    
+  } else {
+    message(paste("La cepa", id_cepa, "no fue encontrada en ninguna comunidad."))
+  }
+}
+```
 
 
 
