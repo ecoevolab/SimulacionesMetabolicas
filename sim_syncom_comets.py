@@ -48,6 +48,8 @@ if __name__ == "__main__":
         raise FileExistsError(f"Output directory {args['outdir']} already exists. Please choose a different name or remove it.") 
     os.makedirs(args["outdir"])
 
+
+
     # Prepare simulation
     # print(sim_params.get_param("TotalBiomassLogName"))
     # print(sim_params.get_param("MediaLogName"))
