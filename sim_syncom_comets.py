@@ -31,12 +31,12 @@ if __name__ == "__main__":
     layout = load_strains(layout, models, initial_mass=args["initial_mass"])    
 
     # Set media
-    for metabolite, amount in media(args["media"], dil = args["media_dil"]).items():
-        layout.set_specific_metabolite(metabolite, amount)
-    
     if(args["add_trace_metabolites"]):
         layout.add_typical_trace_metabolites(amount=1000)
-        
+    
+    for metabolite, amount in media(args["media"], dil = args["media_dil"]).items():
+        layout.set_specific_metabolite(metabolite, amount)
+            
     # Set simulation parameters.
     sim_params = set_sim_params(args)
     # print(sim_params.show_params().to_string())
