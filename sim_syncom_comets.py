@@ -51,7 +51,6 @@ if __name__ == "__main__":
     # Prepare simulation
     # print(sim_params.get_param("TotalBiomassLogName"))
     # print(sim_params.get_param("MediaLogName"))
-    os.makedirs('./temp/', exist_ok=True)
     sim = c.comets(layout = layout, parameters = sim_params, relative_dir = 'temp/')
     # Very ugly, but I need to redefine the output filenames
     # https://github.com/segrelab/cometspy/issues/64
