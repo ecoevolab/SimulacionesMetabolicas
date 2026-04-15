@@ -3,24 +3,14 @@ import cobra.io
 import pandas as pd
 import os
 import glob 
-import logging
-
-# Configurar logging
 
 def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
-    # 1. Guardar la ruta original
+    # 1. Guardar la ruta original 
     original_path = os.getcwd()
     
     root_path = os.path.abspath(newpath)
     os.makedirs(root_path, exist_ok=True)
-    log_file = os.path.join(root_path, 'comets_simulation.log')
-    logging.basicConfig(
-        filename=log_file,
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S"
-    )
-
+    
     # --- CARGAR DATOS DE COMUNIDADES ---
     df = pd.read_csv(ruta_csv_syncoms)
     id_bacterias = df.iloc[:, 0].tolist()
@@ -67,7 +57,7 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
         # ENTRAR a la carpeta de la comunidad actual
         os.chdir(folder_name)
         
-        logging.info(f"Simulando Comunidad {num} en: {os.getcwd()}")
+        print(f"\n>>> Simulando Comunidad {num} en: {os.getcwd()}")
 
         try:
             test_tube = c.layout()
@@ -107,17 +97,11 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
             experiment = c.comets(test_tube, sim_params)
             # Al haber usado os.chdir(), COMETS escribe aquí por defecto
             experiment.run(delete_files=False)
-
-            logging.info(f"Simulación terminada para Comunidad {num}")
-
             
             # --- PROCESAR Y GUARDAR RESULTADOS ---
-
-            # Guardar biomasa total
             final_models = experiment.total_biomass
 
             if final_models is not None and not final_models.empty:
-                logging.info(f"Biomasa generada para comunidad_{num})")
                 # Calcular tiempo real (ciclos * timeStep)
                 time_step = experiment.parameters.all_params['timeStep']
                 final_models['t'] = final_models['cycle'] * time_step
@@ -127,26 +111,102 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
 
                 # Guardar CSV (ya estamos dentro de Comunidad_X)
                 final_models.to_csv(f"comunidad_{num}_biomasa.csv", index=False)
-                logging.info(f"Biomasa guardada de comunidad_{num}")
-            
+                print(f"Biomasa guardada exitosamente.")
             
             # Guardar metabolitos
             df_metabolites = experiment.get_metabolite_time_series()
             if df_metabolites is not None:
-                logging.info(f"Metabolitos generados para comunidad_{num}")
                 df_metabolites.to_csv(f"comunidad_{num}_metabolitos.csv", index=False)
-                logging.info(f"Metabolitos guardados para comunidad_{num}")
+                print(f"Metabolitos guardados exitosamente.")
+
             # Guardar media log
             media_log = experiment.media
 
             if media_log is not None and not media_log.empty:
-                logging.info(f"Media log generado para comunidad_{num}")
                 media_log.to_csv(f"comunidad_{num}_media.csv", index=False)
-                logging.info(f"Media log guardado para comunidad_{num}")
+                print("Media log guardado exitosamente.")
 
         except Exception as e:
-            logging.error(f"Error crítico en Comunidad {num}")
+            print(f"Error crítico en Comunidad {num}: {e}")
 
     # 3. Al finalizar, volver a la carpeta donde empezamos
     os.chdir(original_path)
     print(f"\nProceso finalizado. Resultados en: {root_path}")
+
+def media(name = "lb", dil = 1):
+    if name == "lb":
+       res = {
+            "h2o_e": 100, "o2_e": 10, "pi_e": 10*dil, "zn2_e": 10, 
+            "cobalt2_e": 10*dil, "k_e": 10*dil, "mg2_e": 10*dil, "na1_e": 10*dil, "cd2_e": 10*dil, 
+            "aso4_e": 10*dil, "fe2_e": 10*dil, "fe3_e": 10*dil, "cro4_e": 10*dil, 
+            "pydx_e": 10*dil, "nac_e": 10*dil, "ribflv_e": 10*dil, "ura_e": 0.1*dil,
+            "glu__L_e": 0.1*dil, "gly_e": 0.1*dil,
+            "ala__L_e": 0.1*dil, "lys__L_e": 0.1*dil, 
+            "asp__L_e": 0.1*dil, "so4_e": 0.1*dil,
+            "arg__L_e": 0.1*dil, "ser__L_e": 0.1*dil, 
+            "cu2_e": 0.1*dil, "met__L_e": 0.1*dil, 
+            "trp__L_e": 0.1*dil, "phe__L_e": 0.1*dil, 
+            "h_e": 0.1*dil, "tyr__L_e": 0.1*dil, 
+            "cys__L_e": 0.1*dil, "cl_e": 0.1*dil, 
+            "leu__L_e": 0.1*dil, "his__L_e": 0.1*dil, 
+            "pro__L_e": 0.1*dil, "val__L_e": 0.1*dil, 
+            "thr__L_e": 0.1*dil, "ile__L_e": 0.1*dil
+        }
+    else:
+        raise ValueError("Unrecognized media. Currently only 'lb' is supported.")
+    
+    return res
+       
+
+def load_strains(layout, models, initial_mass = 1e-8):
+    for strain, gem in models.items():
+        # print(f"==============Cargando modelo para {strain} desde {gem}==============")
+        gem_i = cobra.io.read_sbml_model(gem)
+        # print(f"=========================Modelo cargado para {strain}==============")
+        gem_i = c.model(gem_i)
+        # print(f"=========================Modelo procesado para {strain}==============")
+        gem_i.id = strain
+        # print(f"=========================ID establecido para {strain}==============")
+        gem_i.initial_pop = [0, 0, initial_mass]
+        # print(f"=========================Biomasa inicial para {strain}==============")
+        layout.add_model(gem_i)
+        # print(f"=========================Modelo añadido {strain}==============")
+    
+    return layout
+
+    
+def set_sim_params(args):
+    # Def simulation parameters
+    sim_params = c.params()
+    # print(sim_params.show_params().to_string())
+
+    # Set sim parameters
+    sim_params.set_param("writeBiomassLog", True) 
+    sim_params.set_param("BiomassLogName", os.path.join(args.outdir, "biomass.txt"))
+    sim_params.set_param("BiomassLogRate", 1) 
+
+    sim_params.set_param("writeFluxLog", True) 
+    sim_params.set_param("FluxLogName", os.path.join(args.outdir, "flux.txt"))
+    sim_params.set_param("FluxLogRate", 1)
+
+    sim_params.set_param("writeMediaLog", True) 
+    sim_params.set_param("MediaLogName", os.path.join(args.outdir, "media.txt"))
+    sim_params.set_param("MediaLogRate", 1)
+
+    sim_params.set_param("writeTotalBiomassLog", True) 
+    sim_params.set_param("TotalBiomassLogName", os.path.join(args.outdir, "total_biomass.txt"))
+    sim_params.set_param("totalBiomassLogRate", 1)
+
+    sim_params.set_param("writeVelocityMultiConvLog", False) 
+    sim_params.set_param("velocityMultiConvLogName", os.path.join(args.outdir, "velocity.txt"))
+    sim_params.set_param("velocityMultiConvLogRate", 1)
+
+    sim_params.set_param("numRunThreads", args.threads)
+    # sim_params.set_param("randomSeed", args.seed)
+    sim_params.set_param("timeStep", 0.1) # hr
+    sim_params.set_param("maxCycles", args.cycles)
+    sim_params.set_param("maxSpaceBiomass", 10) # gr DW
+    sim_params.set_param("minSpaceBiomass", 1e-11) # gr DW
+    sim_params.set_param("spaceWidth", 5) # cm
+
+    return sim_params
