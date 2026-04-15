@@ -14,6 +14,7 @@ if __name__ == "__main__":
             "initial_mass": 1e-8,
             "add_trace_metabolites": True,
             "outdir": 'output'
+
     }
     # In the future we can do something more fancy with layout
     layout = c.layout()
@@ -45,6 +46,8 @@ if __name__ == "__main__":
         raise FileExistsError(f"Output directory {args['outdir']} already exists. Please choose a different name or remove it.") 
     os.makedirs(args["outdir"])
     os.makedirs("temp")
+
+
 
     # Prepare simulation
     # print(sim_params.get_param("TotalBiomassLogName"))
