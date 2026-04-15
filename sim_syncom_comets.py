@@ -88,23 +88,7 @@ def process_arguments():
 
     return args
 
-
-
-
-
 if __name__ == "__main__":
-    # args = {"gem_path": '/home/sur/lab/exp/2026/2026-04-14.sim_syncom_comets/gems/',
-    #         "strains": ['ST00042', 'ST00046'],
-    #         "gem_suffix": '.xml',
-    #         "media": 'lb',
-    #         "media_dil": 0.1,
-    #         "threads": 4,
-    #         "cycles": 20,
-    #         "initial_mass": 1e-8,
-    #         "add_trace_metabolites": True,
-    #         "outdir": 'output'
-
-    # }
     # Read command line arguments
     args = process_arguments()
 
