@@ -6,9 +6,9 @@ import os
 
 
 if __name__ == "__main__":
-    args = {"gem_path": '/home/sur/lab/exp/2026/today/gems',
+    args = {"gem_path": 'mnt/data/sur/users/mmontante/02_data/rizo/carveme/',
             # "strains": ['ST00042', 'ST00046'],
-            "strains": ['ST00060', 'ST00094', 'ST00110', 'ST00164', 'ST00143'],
+            "strains": ['ST00060_prokka_carveme_lb', 'ST00094_prokka_carveme_lb', 'ST00110_prokka_carveme_lb', 'ST00164_prokka_carveme_lb', 'ST00143_prokka_carveme_lb'],
             "gem_suffix": '.xml',
             "media": 'lb',
             "media_dil": 0.1,
@@ -16,8 +16,8 @@ if __name__ == "__main__":
             "cycles": 1000,
             "initial_mass": 1e-8,
             "add_trace_metabolites": True,
-            "outdir": '/home/sur/lab/exp/2026/today2/output'}
-    
+            "outdir": 'mnt/data/sur/users/mmontante/outputdir'
+    }
     # In the future we can do something more fancy with layout
     layout = c.layout()
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     # Prepare simulation
     # print(sim_params.get_param("TotalBiomassLogName"))
     # print(sim_params.get_param("MediaLogName"))
-
+    os.mkdir('temp', exist_ok=True)  # Create a temporary directory for COMETS output   
     sim = c.comets(layout = layout, parameters = sim_params, relative_dir = 'temp/')
     # Very ugly, but I need to redefine the output filenames
     # https://github.com/segrelab/cometspy/issues/64
