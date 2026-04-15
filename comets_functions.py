@@ -182,29 +182,29 @@ def set_sim_params(args):
 
     # Set sim parameters
     sim_params.set_param("writeBiomassLog", True) 
-    sim_params.set_param("BiomassLogName", os.path.join(args["outdir"], "biomass.txt"))
+    sim_params.set_param("BiomassLogName", os.path.join(args.outdir, "biomass.txt"))
     sim_params.set_param("BiomassLogRate", 1) 
 
     sim_params.set_param("writeFluxLog", True) 
-    sim_params.set_param("FluxLogName", os.path.join(args["outdir"], "flux.txt"))
+    sim_params.set_param("FluxLogName", os.path.join(args.outdir, "flux.txt"))
     sim_params.set_param("FluxLogRate", 1)
 
     sim_params.set_param("writeMediaLog", True) 
-    sim_params.set_param("MediaLogName", os.path.join(args["outdir"], "media.txt"))
+    sim_params.set_param("MediaLogName", os.path.join(args.outdir, "media.txt"))
     sim_params.set_param("MediaLogRate", 1)
 
     sim_params.set_param("writeTotalBiomassLog", True) 
-    sim_params.set_param("TotalBiomassLogName", os.path.join(args["outdir"], "total_biomass.txt"))
+    sim_params.set_param("TotalBiomassLogName", os.path.join(args.outdir, "total_biomass.txt"))
     sim_params.set_param("totalBiomassLogRate", 1)
 
     sim_params.set_param("writeVelocityMultiConvLog", False) 
-    sim_params.set_param("velocityMultiConvLogName", os.path.join(args["outdir"], "velocity.txt"))
+    sim_params.set_param("velocityMultiConvLogName", os.path.join(args.outdir, "velocity.txt"))
     sim_params.set_param("velocityMultiConvLogRate", 1)
 
-    sim_params.set_param("numRunThreads", args["threads"])
-    # sim_params.set_param("randomSeed", args["seed"])
+    sim_params.set_param("numRunThreads", args.threads)
+    # sim_params.set_param("randomSeed", args.seed)
     sim_params.set_param("timeStep", 0.1) # hr
-    sim_params.set_param("maxCycles", args["cycles"])
+    sim_params.set_param("maxCycles", args.cycles)
     sim_params.set_param("maxSpaceBiomass", 10) # gr DW
     sim_params.set_param("minSpaceBiomass", 1e-11) # gr DW
     sim_params.set_param("spaceWidth", 5) # cm
