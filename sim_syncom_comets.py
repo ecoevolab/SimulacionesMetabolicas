@@ -1,7 +1,26 @@
+#!/usr/bin/env python
+# Copyright (C) 2026 Sur Herrera Paredes, Mariana Abigail Montante Arenas
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# To see the GNU General Public License, please visit
+# <http://www.gnu.org/licenses/>.
+
 from comets_functions import media, load_strains, set_sim_params
 import cometspy as c
 import os
-# import argparse
+import argparse
+
+
+
 
 if __name__ == "__main__":
     args = {"gem_path": '/home/sur/lab/exp/2026/2026-04-14.sim_syncom_comets/gems/',
