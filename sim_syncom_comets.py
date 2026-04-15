@@ -8,7 +8,7 @@ import os
 if __name__ == "__main__":
     args = {"gem_path": '/mnt/data/sur/users/mmontante/02_data/rizo/carveme/',
             # "strains": ['ST00042', 'ST00046'],
-            "strains": ['ST00042_prokka_carveme_lb'],
+            "strains": ['ST00046_prokka_carveme_lb'],
             "gem_suffix": '.xml',
             "media": 'lb',
             "media_dil": 0.1,
@@ -16,7 +16,7 @@ if __name__ == "__main__":
             "cycles": 1000,
             "initial_mass": 1e-8,
             "add_trace_metabolites": True,
-            "outdir": '/mnt/data/sur/users/mmontante/output1'
+            "outdir": '/mnt/data/sur/users/mmontante/output46'
     }
     # In the future we can do something more fancy with layout
     layout = c.layout()
