@@ -16,7 +16,7 @@ if __name__ == "__main__":
             "cycles": 10,
             "initial_mass": 1e-8,
             "add_trace_metabolites": True,
-            "outdir": '/mnt/data/sur/users/mmontante/outputdir'
+            "outdir": '/mnt/data/sur/users/mmontante/'
     }
     # In the future we can do something more fancy with layout
     layout = c.layout()
