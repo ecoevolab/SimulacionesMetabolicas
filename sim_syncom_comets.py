@@ -12,8 +12,8 @@ if __name__ == "__main__":
             "gem_suffix": '.xml',
             "media": 'lb',
             "media_dil": 0.1,
-            "threads": 4,
-            "cycles": 1000,
+            "threads": 2,
+            "cycles": 10,
             "initial_mass": 1e-8,
             "add_trace_metabolites": True,
             "outdir": '/mnt/data/sur/users/mmontante/outputdir'
