@@ -45,32 +45,32 @@ if __name__ == "__main__":
     if os.path.exists(args["outdir"]):
         raise FileExistsError(f"Output directory {args['outdir']} already exists. Please choose a different name or remove it.") 
     os.makedirs(args["outdir"])
-    os.makedirs("temp")
-
-
+    os.makedirs(os.path.join(args["outdir"], "sim/"))
 
     # Prepare simulation
-    # print(sim_params.get_param("TotalBiomassLogName"))
-    # print(sim_params.get_param("MediaLogName"))
-    sim = c.comets(layout = layout, parameters = sim_params, relative_dir="temp")
+    sim = c.comets(layout = layout, parameters = sim_params, relative_dir=os.path.join(args["outdir"], "sim/")) # Needs the final '/'!!
     # Very ugly, but I need to redefine the output filenames
     # https://github.com/segrelab/cometspy/issues/64
-    sim.parameters.set_param("BiomassLogName", os.path.join(args["outdir"], "biomass.txt"))
-    sim.parameters.set_param("FluxLogName", os.path.join(args["outdir"], "flux.txt"))
-    sim.parameters.set_param("MediaLogName", os.path.join(args["outdir"], "media.txt"))
-    sim.parameters.set_param("TotalBiomassLogName", os.path.join(args["outdir"], "total_biomass.txt"))
+    # sim.parameters.set_param("BiomassLogName", os.path.join(args["outdir"], "biomass.txt"))
+    # sim.parameters.set_param("FluxLogName", os.path.join(args["outdir"], "flux.txt"))
+    # sim.parameters.set_param("MediaLogName", os.path.join(args["outdir"], "media.txt"))
+    # sim.parameters.set_param("TotalBiomassLogName", os.path.join(args["outdir"], "total_biomass.txt"))
     # sim.parameters.set_param("velocityMultiConvLogName", os.path.join(args["outdir"], "velocity.txt"))
-
-    # print(sim.parameters.get_param("TotalBiomassLogName"))
-    # print(sim_params.get_param("TotalBiomassLogName"))
-    # print(sim.parameters.get_param("MediaLogName"))
-    # print(sim_params.get_param("MediaLogName"))
+    # Even uglier, but the use construction of relative paths by cometspy is really bad
+    sim.parameters.set_param("BiomassLogName", "../biomass.txt")
+    sim.parameters.set_param("FluxLogName", "../flux.txt")
+    sim.parameters.set_param("MediaLogName", "../media.txt")
+    sim.parameters.set_param("TotalBiomassLogName","../total_biomass.txt")
+    sim.parameters.set_param("velocityMultiConvLogName", ".../velocity.txt")
 
     print("Starting simulation...")
     sim.run(delete_files=False)
-    print(sim.run_output)
+    # print(sim.run_output)
+    # print(sim.run_errors)
 
-    # sim.get_species_exchange_fluxes()
+    # Finally, we write the exchange fluxes for all models
+    for model_id in sim.layout.get_model_ids():
+        Fluxes_ex = sim.get_species_exchange_fluxes(model_id)
+        Fluxes_ex.to_csv(os.path.join(args["outdir"], f"{model_id}_exchange_fluxes.tsv"), sep="\t", index=False)
 
-
- 
+    
