@@ -13,7 +13,8 @@ library(readr)
 library(ggplot2)   
 library(dplyr)     
 library(stringr)   
-library(fs)        
+library(fs)     
+library(igraph)
 ```
 # GROWTH MEDIA COMPARASION 
 ```{r}
@@ -111,207 +112,188 @@ for (i in seq_along(biomass_files_lb)) {
     dpi = 300
   )
 }
+
+plot(p)
 ```
 # INDIVIDUAL BIOMASS CURVES
 
 ```{r}
-biomass_files <- sort(
-  list.files(
-    path = "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass/individuales/lb",
-    pattern = "prokka_carveme_lb_lb\\.csv$", 
-    full.names = TRUE
-  )
-)
+library(ggplot2)
+library(stringr)
+library(fs)
 
+# carpeta base
+base_path <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/resultados"
+
+# 🔥 buscar SOLO carpetas que empiezan con "op"
+op_dirs <- list.dirs(base_path, recursive = FALSE)
+op_dirs <- op_dirs[grepl("/op", op_dirs)]
+
+# construir rutas a biomass.txt
+biomass_files <- file.path(op_dirs, "biomass.txt")
+
+# quedarse solo con los que existen
+biomass_files <- biomass_files[file.exists(biomass_files)]
+
+# carpeta de salida
 output_folder <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/graph"
-#output_file <- file.path(output_folder, "individual_growth_curves_lb10.png")
-
-ggsave(
-  filename = output_file,
-  plot = p_total,
-  width = 12,
-  height = 8,
-  dpi = 300
-)
 dir_create(output_folder)
 
-# loop 
-for (input_file in biomass_files) {
+# loop
+for (file_path in biomass_files) {
   
-
-  model_id <- str_extract(basename(input_file), "^[^_]+")
+  op_id <- basename(dirname(file_path))  # ej: op94
   
-  if (!model_id %in% names(colores_bac)) {
-    warning(paste("ID not found in dictionary, skipping:", model_id))
+  df <- read.table(file_path, header = FALSE)
+  
+  if (ncol(df) < 5) {
+    warning(paste("Formato incorrecto:", file_path))
     next
   }
   
-  # data
-  df <- read_csv(input_file, show_col_types = FALSE)
+  colnames(df) <- c("time", "c2", "c3", "model", "biomass")
   
-  growth_data <- tibble(
-    time_h  = seq(0, by = 0.1, length.out = nrow(df)), 
-    biomass = df[[2]]
-  )
+  df$time <- as.numeric(df$time)
+  df$biomass <- as.numeric(df$biomass)
   
-  # graph 
-  p <- ggplot(growth_data, aes(x = time_h, y = biomass)) +
+  model_id <- str_extract(df$model[1], "^[^_]+")
+  
+  if (!model_id %in% names(colores_bac)) {
+    warning(paste("ID not found:", model_id))
+    next
+  }
+  
+  p <- ggplot(df, aes(x = time, y = biomass)) +
     geom_line(
       linewidth = 1.3,
       color = colores_bac[model_id]
     ) +
     labs(
-      title = paste(
-        "Individual Growth Curve",
-        name_bac[model_id]
-      ),
-      x = "Time (h)",
+      title = paste("Growth curve", name_bac[model_id], "-", op_id),
+      x = "Cycles",
       y = expression(paste(italic("Biomass"), " (g)"))
     ) +
-    theme_bw(base_size = 14) +
-    theme(
-      plot.title = element_text(size = 16, face = "bold.italic"),
-      panel.grid.minor = element_blank()
-    )
+    theme_bw(base_size = 14)
   
-  #  save
+  print(p)
+  
   output_file <- file.path(
     output_folder,
-    paste0("individual_growth_", model_id, "prokka_carveme_lb_lb.png")
+    paste0("growth_", model_id, "_", op_id, ".png")
   )
   
-  ggsave(
-    filename = output_file,
-    plot = p,
-    width = 10,
-    height = 7,
-    dpi = 300
-  )
+  ggsave(output_file, p, width = 10, height = 7, dpi = 300)
 }
 ```
 # INDIVIDUAL BIOMASS CURVES (just one graph)
 ocupo seleccionar los renglones correspondiente a las horas, ahorita me esta graficando todos los ciclos
 
 ```{r}
-biomass_files <- sort(
-  list.files(
-    path = "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/biomass/individuales/lb10",
-    pattern = "prokka_carveme_lb_lb10\\.csv$", 
-    full.names = TRUE
-  )
+library(ggplot2)
+library(stringr)
+library(dplyr)
+library(fs)
+
+# diccionarios
+colores_bac <- c(
+  STECOLI = "#00FF00", 
+  ST00060 = "#D4807C", 
+  ST00094 = "#C76662", 
+  ST00101 = "#5F9EAD", 
+  ST00110 = "#B7464C", 
+  ST00164 = "#9E3345", 
+  ST00143 = "#752530", 
+  ST00042 = "#80B6B3", 
+  ST00109 = "#3D788E", 
+  ST00154 = "#26526B", 
+  ST00046 = "#1A3749"
 )
 
-output_folder <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/graph"
-dir_create(output_folder)
+name_bac <- c(
+  STECOLI = "Escherichia coli", 
+  ST00060 = "Arthrobacter sp.",
+  ST00094 = "Rhodococcus erythropolis", 
+  ST00101 = "Pseudomonas sp.",
+  ST00110 = "Variovorax paradoxus", 
+  ST00164 = "Bacillus thuringiensis",
+  ST00143 = "Paenibacillus sp.", 
+  ST00042 = "Pseudomonas umsongensis",
+  ST00109 = "Mycobacterium sp.", 
+  ST00154 = "Agrobacterium sp.",
+  ST00046 = "Bacillus sp."
+)
 
+# carpeta base
+base_path <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/resultados"
 
-all_growth_data <- map_df(biomass_files, function(input_file) {
-  
-  model_id <- str_extract(basename(input_file), "^[^_]+")
-  
-  if (!model_id %in% names(colores_bac)) {
-    warning(paste("ID not found in dictionary, skipping:", model_id))
-    return(NULL) # Salta este archivo si no hay color asignado
-  }
-  
-  df <- read_csv(input_file, show_col_types = FALSE)
-  
-  tibble(
-    time_h   = seq(0, by = 0.1, length.out = nrow(df)), 
-    biomass  = df[[2]],
-    cepa     = model_id,
-    nombre   = name_bac[model_id]
-  )
-})
+# carpetas opXX
+op_dirs <- list.dirs(base_path, recursive = FALSE)
+op_dirs <- op_dirs[grepl("/op[0-9]+$", op_dirs)]
 
+# archivos
+biomass_files <- file.path(op_dirs, "biomass.txt")
+biomass_files <- biomass_files[file.exists(biomass_files)]
 
-p_total <- ggplot(all_growth_data, aes(x = time_h, y = biomass, color = cepa)) +
-  geom_line(linewidth = 1.1, alpha = 0.8) +
-  scale_color_manual(
-    values = colores_bac, 
-    labels = name_bac,
-    name = "Cepas"
-  ) +
+# 🔥 data frame acumulado
+all_data <- data.frame()
+
+# loop
+for (file_path in biomass_files) {
+  
+  op_id <- basename(dirname(file_path))
+  
+  df <- read.table(file_path, header = FALSE)
+  
+  if (ncol(df) < 5) next
+  
+  colnames(df) <- c("time", "c2", "c3", "model", "biomass")
+  
+  df$time <- as.numeric(df$time)
+  df$biomass <- as.numeric(df$biomass)
+  
+  model_id <- str_extract(df$model[1], "^[^_]+")
+  
+  if (is.na(model_id) || !model_id %in% names(colores_bac)) next
+  
+  # agregar info
+  df$model_id <- model_id
+  df$species <- name_bac[model_id]
+  df$op <- op_id
+  
+  # acumular
+  all_data <- bind_rows(all_data, df)
+}
+
+# 🎨 gráfica conjunta
+p <- ggplot(all_data, aes(x = time, y = biomass, group = interaction(model_id, op))) +
+  geom_line(aes(color = model_id), linewidth = 1) +
+  scale_color_manual(values = colores_bac, labels = name_bac) +
+  scale_y_log10() + 
   labs(
-    title = "Growth Curves Comparison (48 h)",
-    x = "Time (h)",
-    y = expression(paste(italic("Biomass"), " (g)"))
+    title = "Growth curves (all simulations)",
+    x = "Cycles",
+    y = expression(paste(italic("Biomass"), " (g)")),
+    color = "Species"
   ) +
   theme_bw(base_size = 14) +
   theme(
-    plot.title = element_text(size = 16, face = "bold"),
-    legend.text = element_text(face = "italic"),
+    plot.title = element_text(face = "bold.italic"),
     panel.grid.minor = element_blank()
   )
 
-output_file <- file.path(output_folder, "individual_growth_curves_lb10.png")
+print(p)
+
+# guardar
+output_folder <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/graph"
+dir_create(output_folder)
 
 ggsave(
-  filename = output_file,
-  plot = p_total,
+  file.path(output_folder, "all_growth_curves.png"),
+  p,
   width = 12,
   height = 8,
   dpi = 300
 )
-```
-# COMPARE MASS INDIVUAL VS COMUNIDAD
-```{r}
-# 1. Asegurarse de que la carpeta de salida exista
-output_folder <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/rizo/graph"
-
-# 1. Asegurarse de que la carpeta de salida exista
-if (!dir.exists(output_folder)) {
-  dir.create(output_folder, recursive = TRUE)
-}
-
-# 2. Bucle de graficación
-for (nombre_col in colnames(df_comunidad)) {
-  
-  if (nombre_col %in% names(individuales_list)) {
-    
-    print(paste("Graficando y guardando:", nombre_col))
-    
-    # Extraer datos
-    bio_comun <- df_comunidad[[nombre_col]]
-    # Asegúrate de que "biomass" sea el nombre exacto de la columna en tus CSV individuales
-    bio_indiv <- individuales_list[[nombre_col]]$biomass 
-    
-    # Crear dataframe temporal
-    plot_data <- data.frame(
-      Valor = c(bio_indiv, bio_comun),
-      Condicion = c(rep("Individual", length(bio_indiv)), 
-                    rep("Comunidad", length(bio_comun)))
-    )
-    
-    # Generar el gráfico
-    p <- ggplot(plot_data, aes(x = Condicion, y = Valor, fill = Condicion)) +
-      geom_boxplot(alpha = 0.7) +
-      geom_jitter(width = 0.1, alpha = 0.5) + # Agregué puntos para ver la distribución mejor
-      theme_minimal() +
-      scale_fill_manual(values = c("Individual" = "#26526B", "Comunidad" = "#B7464C")) +
-      labs(title = paste("Comparación Biomasa:", nombre_col),
-           subtitle = "Modelo LB10 - Resultados de Tesis",
-           y = "Tasa de Crecimiento / Biomasa",
-           x = "Condición")
-    
-    # 3. Definir nombre del archivo dinámicamente
-    # Esto creará archivos como "biomasa_Bacteroides.png"
-    output_file <- file.path(output_folder, paste0("biomasa_", nombre_col, ".png"))
-
-    # 4. Guardar usando el objeto correcto 'p'
-    ggsave(
-      filename = output_file,
-      plot = p,
-      width = 8,   # Un ancho de 8 suele ser mejor para boxplots individuales
-      height = 6,
-      dpi = 300
-    )
-    
-    # Mostrar en la consola de RStudio
-    print(p) 
-  }
-}
-
 
 
 
@@ -567,5 +549,116 @@ print(resultados_comunidades[[2]])
 print(resultados_comunidades[[3]])
 print(resultados_comunidades[[4]])
 print(resultados_comunidades[[5]])
+
+```
+
+```{r}
+colores_bac <- c(
+  ST00060 = "#D4807C", 
+  ST00094 = "#C76662", 
+  ST00101 = "#5F9EAD", 
+  ST00110 = "#B7464C", 
+  ST00164 = "#9E3345", 
+  ST00143 = "#752530", 
+  ST00042 = "#80B6B3", 
+  ST00109 = "#3D788E", 
+  ST00154 = "#26526B", 
+  ST00046 = "#1A3749"
+)
+
+name_bac <- c(
+  ST00060 = "Arthrobacter sp.",
+  ST00094 = "Rhodococcus erythropolis", 
+  ST00101 = "Pseudomonas sp.",
+  ST00110 = "Variovorax paradoxus", 
+  ST00164 = "Bacillus thuringiensis",
+  ST00143 = "Paenibacillus sp.", 
+  ST00042 = "Pseudomonas umsongensis",
+  ST00109 = "Mycobacterium sp.", 
+  ST00154 = "Agrobacterium sp.",
+  ST00046 = "Bacillus sp."
+)
+
+mcompetition_path <- '/home/abigaylmontantearenas/Documents/proyecto_tesis/phylomint/mcompetition.csv'
+
+mcompetition <- read.csv(mcompetition_path, header=TRUE, row.names=1, check.names=FALSE)
+mcompetition <- data.matrix(mcompetition)
+
+# Convert matrix to dataframe
+data_df <- as.data.frame(as.table(mcompetition))
+
+# Asiganr nombres
+data_df$Var1 <- name_bac[as.character(data_df$Var1)]
+data_df$Var2 <- name_bac[as.character(data_df$Var2)]
+# Plot heatmap
+heatmap_plot <- ggplot(data_df, aes(x = Var1, y = Var2, fill = Freq)) +
+  geom_tile(color = "white") + # Create heatmap
+  scale_fill_gradient(low = "white", high = "steelblue") + # Set color gradient
+  theme_minimal() + # Set theme
+  labs(x = 'strains' , y = 'strains' , title = "Heatmap with Values") + # Labels
+  labs(fill = "competition index") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Rotate x-axis labels
+
+# Add values to the heatmap
+plot(heatmap_plot)
+
+##################
+g_competition <- graph_from_adjacency_matrix(
+  mcompetition,
+  mode = "directed",
+  weighted = TRUE
+  
+)
+
+E(g_competition)$weight
+mcompetition[mcompetition < 0.7] <- 0
+V(g_competition)$color <- colores_bac[V(g_competition)$name]
+V(g_competition)$label <- name_bac[V(g_competition)$name]
+
+
+plot(g_competition, edge.width = E(g_competition)$weight * 3)
+###########################
+mcomplementary_path <- '/home/abigaylmontantearenas/Documents/proyecto_tesis/phylomint/mcomplemetary.csv'
+mcomplementary <- read.csv(mcomplementary_path, header=TRUE, row.names=1, check.names=FALSE)
+mcomplementary <- data.matrix(mcomplementary)
+
+
+# Convert matrix to dataframe
+data_mcomplem <- as.data.frame(as.table(mcomplementary))
+
+# Asiganr nombres
+data_mcomplem$Var1 <- name_bac[as.character(data_mcomplem$Var1)]
+data_mcomplem$Var2 <- name_bac[as.character(data_mcomplem$Var2)]
+# Plot heatmap
+heatmap_complem <- ggplot(data_mcomplem, aes(x = Var1, y = Var2, fill = Freq)) +
+  geom_tile(color = "white") + # Create heatmap
+  scale_fill_gradient(low = "white", high = "hotpink") + # Set color gradient
+  theme_minimal() + # Set theme
+  labs(x = 'strains' , y = 'strains' , title = "Heatmap with Values") + # Labels
+  labs(fill = "complementary index") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Rotate x-axis labels
+
+plot(heatmap_complem)
+
+
+####################
+mcomplementary <- data.matrix(mcomplementary)
+mcomplementary
+#mcomplementary[mcomplementary < 0.000001] <- 0
+#mcomplementary
+g_complementary <- graph_from_adjacency_matrix(
+  mcomplementary,
+  mode = "directed",
+  weighted = TRUE
+  
+)
+E(g_complementary)$weight
+V(g_complementary)$color <- colores_bac[V(g_complementary)$name]
+V(g_complementary)$label <- name_bac[V(g_complementary)$name]
+
+
+plot(g_complementary, edge.width = E(g_complementary)$weight * 3)
+######################
+setdiff(unique(rownames(mcomplementary)), names(name_bac))
 
 ```
