@@ -2,7 +2,7 @@ import pandas as pd
 
 data_url = "http://bigg.ucsd.edu/static/namespace/bigg_models_metabolites.txt"
 # You can now mix common names and chemical formulas
-medio_names = ['glucose', 'ethanol', 'o2', 'h2o', 'phosphate']
+medio_names = ['glucose', 'ethanol', '-', 'h2o', 'phosphate']
 
 def defmedio(url, name_mets):
     df = pd.read_csv(url, sep="\t")
