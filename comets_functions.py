@@ -152,6 +152,9 @@ def media(name = "lb", dil = 1):
             "pro__L_e": 0.1*dil, "val__L_e": 0.1*dil, 
             "thr__L_e": 0.1*dil, "ile__L_e": 0.1*dil
         }
+    elif name == "lb+ribose":
+       res = media("lb", dil)
+       res["2dr5p_e"] = 0.1*dil # Same as glucose
     else:
         raise ValueError("Unrecognized media. Currently only 'lb' is supported.")
     
