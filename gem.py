@@ -1,61 +1,18 @@
-from gemsembler import (
-    GatheredModels,  # Object to collect input models and build a supermodel
-    read_supermodel_from_json,  # Function to read a save supermodel
-    get_models_with_all_confidence_levels,  # creates cobrapy models at all confidence levels
-    get_model_of_interest  # creates one cobrapy model
-)
+import cobra
 
-from gemsembler.downstream import (
-    glycolysis,  # returns table and/or interactive maps of glycolysis 
-    pentose_phosphate,  # returns table and/or interactive maps of pentose phosphate
-    tca,  # # returns table and/or interactive maps of TCA
-    # table_reactions_confidence,  # returns a pandas dataframe with reaction IDs, confidence and additional info
-    # calc_dist_for_synt_path,
-    biomass, 
-    get_met_neighborhood,
-    # run_metquest_results_analysis, 
-    run_growth_full_flux_analysis, 
-    # write_metabolites_production_output, 
-    pathway_of_interest, 
-    # get_met_neighborhood, 
-    GLYCOLYSIS_GLOBAL, 
-    PENTOSE_PHOSPHATE_PATHWAY_GLOBAL, 
-    TCA_GLOBAL, 
-    COFACTORS_GLOBAL
-)
+model = cobra.io.read_sbml_model("/home/abigaylmontantearenas/Documents/proyecto_tesis/04_resultados/gemsembler_output/60_core3.xml")
 
+# ejecucion FBA
+solution = model.optimize()
 
-from gemsembler.drawing import draw_one_synt_path, MET_NOT_INT_GLOBAL
-from cobra.io import read_sbml_model, write_sbml_model
-
-from gemsembler import lp_example
-
-lp_example
-
-print(lp_example)
-
-
-gathered = GatheredModels()
-for model in lp_example:
-    gathered.add_model(**model)
-gathered.run()
-
-supermodel_lp = gathered.assemble_supermodel("./gemsembler_output/", assembly_id = "GCF_000203855.3") 
-supermodel_lp_mix = gathered.assemble_supermodel("./gemsembler_output/", assembly_id = "GCF_000203855.3", do_mix_conv_notconv=True) 
-supermodel_lp.write_supermodel_to_json("./gemsembler_output/lp_supermodel.json") 
-supermodel_lp = read_supermodel_from_json("./gemsembler_output/lp_supermodel.json") 
-supermodel_lp.at_least_in(2) 
-core2 = get_model_of_interest(supermodel_lp, "core2") 
-core2 = get_model_of_interest(supermodel_lp, "core2", "./gemsembler_output/lp_core2.xml") 
-supermodel_lp.get_all_confidence_levels() 
-lp_gems_conflev = get_models_with_all_confidence_levels(
-    supermodel_lp, 
-    "./gemsembler_output/output_gems_confidence_levels/"
-)
-lp_model_list = ["core4", "core3", "core2", "assembly", "carveme_LP", "gapseq_LP", "modelseed_LP", "agora_LP"]
-lp_gems_conflev = {
-    model: read_sbml_model(f"./gemsembler_output/output_gems_confidence_levels/{model}.xml")
-    for model in lp_model_list
-}
+# optimal se refiere a si el software encontró una solución que maximiza la función objetivo (en este caso, la tasa de crecimiento) dentro de las restricciones del modelo. Si el estado es 'optimal', significa que se encontró una solución óptima para el problema de optimización planteado por el modelo metabólico.
+# objective_value valor numerico de tasa de crecimiento
+# .4f decimales que quiero qeu muetre
+# h^-1 unidades tasa crecimiento
+if solution.status == 'optimal':
+    print(f"Tasa de crecimiento: {solution.objective_value:.4f} h^-1")
+else:
+    print(f"El modelo NO es funcional. Estado: {solution.status}")
+        
 
 
