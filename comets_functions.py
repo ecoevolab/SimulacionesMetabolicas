@@ -133,30 +133,150 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
     os.chdir(original_path)
     print(f"\nProceso finalizado. Resultados en: {root_path}")
 
-def media(name = "lb", dil = 1):
+def media(name = "lb", dil = 0.1):
     if name == "lb":
        res = {
-            "h2o_e": 100, "o2_e": 10, "pi_e": 10*dil, "zn2_e": 10, 
-            "cobalt2_e": 10*dil, "k_e": 10*dil, "mg2_e": 10*dil, "na1_e": 10*dil, "cd2_e": 10*dil, 
-            "aso4_e": 10*dil, "fe2_e": 10*dil, "fe3_e": 10*dil, "cro4_e": 10*dil, 
-            "pydx_e": 10*dil, "nac_e": 10*dil, "ribflv_e": 10*dil, "ura_e": 0.1*dil,
-            "glu__L_e": 0.1*dil, "gly_e": 0.1*dil,
-            "ala__L_e": 0.1*dil, "lys__L_e": 0.1*dil, 
-            "asp__L_e": 0.1*dil, "so4_e": 0.1*dil,
-            "arg__L_e": 0.1*dil, "ser__L_e": 0.1*dil, 
-            "cu2_e": 0.1*dil, "met__L_e": 0.1*dil, 
-            "trp__L_e": 0.1*dil, "phe__L_e": 0.1*dil, 
-            "h_e": 0.1*dil, "tyr__L_e": 0.1*dil, 
-            "cys__L_e": 0.1*dil, "cl_e": 0.1*dil, 
-            "leu__L_e": 0.1*dil, "his__L_e": 0.1*dil, 
-            "pro__L_e": 0.1*dil, "val__L_e": 0.1*dil, 
-            "thr__L_e": 0.1*dil, "ile__L_e": 0.1*dil
-        }
+    "na1_e": 0.186931246*dil,
+    "cl_e": 0.171820893*dil,
+    "ca2_e": 8.00938E-05*dil,
+    "fe2_e": 4.56128E-05*dil,
+    "fe3_e": 4.56128E-05*dil,
+    "so4_e": 0.000390397*dil,
+    "pi_e": 0.004438244*dil,
+    "mg2_e": 0.001746966*dil,
+    "k_e": 0.002579814*dil,
+    "ala__L_e": 0.00673446*dil,
+    "asp__L_e": 0.005897688*dil,
+    "asn__L_e": 0.000832583*dil,
+    "glu__L_e": 0.013457487*dil,
+    "gln__L_e": 0.000136849*dil,
+    "gly_e": 0.004262859*dil,
+    "his__L_e": 0.1643497*dil,
+    "ile__L_e": 0.005336383*dil,
+    "leu__L_e": 0.007280351*dil,
+    "lys__L_e": 0.005814351*dil,
+    "met__L_e": 0.001675513*dil,
+    "phe__L_e": 0.003934815*dil,
+    "pro__L_e": 0.006601119*dil,
+    "ser__L_e": 0.002854614*dil,
+    "thr__L_e": 0.002182673*dil,
+    "trp__L_e": 0.000514129*dil,
+    "tyr__L_e": 0.001048617*dil,
+    "val__L_e": 0.006530201*dil,
+    "arg__L_e": 0.00361645*dil,
+    "cys__L_e": 0.000332928*dil,
+    "cd2_e": 6.67176686E-08*dil,
+    "cobalt2_e": 2.96947381E-07*dil,
+    "cu_e": 5.2891188E-06*dil,
+    "cu2_e": 5.2891188E-06*dil,
+    "mn2_e": 1.10323638E-05*dil,
+    "ni2_e": 2.07757313E-06*dil,
+    "zn2_e": 0.000493722*dil,
+    "ade_e": 0.000327092*dil,
+    "gua_e": 0.00030603*dil,
+    "csn_e": 0.000196213*dil,
+    "ura_e": 0.000281475*dil,
+    "nh4_e": 0.002301592*dil,
+    "man_e": 0.001271121*dil,
+    "pnto__R_e": 2.41749721E-06*dil,
+    "btn_e": 2.75720165E-08*dil,
+    "ascb__L_e": 8.51692028E-08*dil,
+    "thm_e": 2.07077178E-06*dil,
+    "nac_e": 1.63268622E-05*dil,
+    "pydx_e": 4.43314813E-07*dil,
+    "chol_e": 1.53595085E-05*dil,
+    "adocbl_e": 2.58226354E-12*dil,
+    "o2_e": 0.0182,
+    "h2o_e": 55.50929781,
+    "h_e": 1E-07
+}
     elif name == "lb+ribose":
        res = media("lb", dil)
        res["2dr5p_e"] = 0.1*dil # Same as glucose
     else:
         raise ValueError("Unrecognized media. Currently only 'lb' is supported.")
+    
+    return res
+
+
+def media(name = "marine"):
+    if name == "marine":
+       res = {
+    "na1_e": 0.895059287633637,
+    "cl_e": 0.734866026900668,
+    "so4_e": 0.345797458779573,
+    "ca2_e": 0.028837264148495,
+    "k_e": 0.089116996725451,
+    "co3_e": 27.1819458806657,
+    "br_e": 0.067226890756303,
+    "f_e": 0.009587727708533,
+    "mg2_e": 0.066795742959209,
+    "fe2_e": 1.742E-05,
+    "fe3_e": 0.056698299480836,
+    "pi_e": 0.019990004997501,
+    "nh4_e": 0.019990004997501,
+    "no3_e": 0.00063108,
+    "ala__L_e": 0.000398,
+    "asp__L_e": 7.56E-05,
+    "asn__L_e": 0.000638,
+    "glu__L_e": 1.368E-05,
+    "gln__L_e": 0.0004,
+    "gly_e": 8.38E-05,
+    "his__L_e": 0.000228,
+    "ile__L_e": 0.000312,
+    "leu__L_e": 0.000314,
+    "lys__L_e": 5.36E-05,
+    "met__L_e": 0.0001574,
+    "phe__L_e": 0.0001738,
+    "pro__L_e": 0.0001522,
+    "ser__L_e": 0.0001344,
+    "thr__L_e": 2.44E-05,
+    "trp__L_e": 6.62E-05,
+    "val__L_e": 0.000298,
+    "arg__L_e": 0.0001492,
+    "cystin_e": 8.32E-06,
+    "al3_e": 1.148E-07,
+    "ba2_e": 9.46E-09,
+    "cd2_e": 1.334E-08,
+    "cobalt2_e": 5.94E-08,
+    "cr3_e": 1.186E-07,
+    "ga3_e": 1.29E-09,
+    "cu2_e": 9.9E-07,
+    "mn2_e": 9.6E-07,
+    "ni2_e": 1.09E-07,
+    "pb2_e": 1.678E-09,
+    "sr2_e": 1.256E-08,
+    "vanad_e": 8.58E-07,
+    "sn2_e": 7.58E-10,
+    "zn2_e": 5.66E-05,
+    "ti4_e": 6.26E-08,
+    "mobd_e": 6.14E-08,
+    "ade_e": 6.54E-05,
+    "gua_e": 6.12E-05,
+    "cyt_e": 3.92E-05,
+    "ura_e": 5.62E-05,
+    "nh3_e": 0.000488,
+    "cellb_e": 2.04E-06,
+    "man_e": 0.000254,
+    "fol_e": 5.08E-08,
+    "pnto__R_e": 4.84E-07,
+    "btn_e": 5.48E-09,
+    "sel_e": 1.098E-09,
+    "ascb__L_e": 1.704E-08,
+    "thm_e": 4.14E-07,
+    "ribflv_e": 1.062E-07,
+    "nac_e": 3.26E-06,
+    "pydxn_e": 8.86E-08,
+    "cbl1_e": 5.16E-13,
+    "o2": 0.0182,
+    "h2o": 55.5092978073827,
+    "h": 1E-07
+}
+    elif name == "marine+ribose":
+       res = media("marine")
+       res["2dr5p_e"] = 0.1 # Same as glucose
+    else:
+        raise ValueError("Unrecognized media. Currently only 'marine' is supported.")
     
     return res
        
