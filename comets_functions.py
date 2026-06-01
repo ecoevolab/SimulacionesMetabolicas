@@ -133,7 +133,7 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
     os.chdir(original_path)
     print(f"\nProceso finalizado. Resultados en: {root_path}")
 
-def media(name = "lb", dil = 0.1):
+def media(name = "lb", dil = 1):
     if name == "lb":
        res = {
     "na1_e": 0.186931246*dil,
@@ -194,87 +194,86 @@ def media(name = "lb", dil = 0.1):
        res = media("lb", dil)
        res["2dr5p_e"] = 0.1*dil # Same as glucose
     else:
-        raise ValueError("Unrecognized media. Currently only 'lb' is supported.")
-    
+        raise ValueError("Unrecognized media. Currently only 'lb' is supported.")  
     return res
 
 
-def media(name = "marine"):
+def media(name = "marine", dil = 1):
     if name == "marine":
        res = {
-    "na1_e": 0.895059287633637,
-    "cl_e": 0.734866026900668,
-    "so4_e": 0.345797458779573,
-    "ca2_e": 0.028837264148495,
-    "k_e": 0.089116996725451,
-    "co3_e": 27.1819458806657,
-    "br_e": 0.067226890756303,
-    "f_e": 0.009587727708533,
-    "mg2_e": 0.066795742959209,
-    "fe2_e": 1.742E-05,
-    "fe3_e": 0.056698299480836,
-    "pi_e": 0.019990004997501,
-    "nh4_e": 0.019990004997501,
-    "no3_e": 0.00063108,
-    "ala__L_e": 0.000398,
-    "asp__L_e": 7.56E-05,
-    "asn__L_e": 0.000638,
-    "glu__L_e": 1.368E-05,
-    "gln__L_e": 0.0004,
-    "gly_e": 8.38E-05,
-    "his__L_e": 0.000228,
-    "ile__L_e": 0.000312,
-    "leu__L_e": 0.000314,
-    "lys__L_e": 5.36E-05,
-    "met__L_e": 0.0001574,
-    "phe__L_e": 0.0001738,
-    "pro__L_e": 0.0001522,
-    "ser__L_e": 0.0001344,
-    "thr__L_e": 2.44E-05,
-    "trp__L_e": 6.62E-05,
-    "val__L_e": 0.000298,
-    "arg__L_e": 0.0001492,
-    "cystin_e": 8.32E-06,
-    "al3_e": 1.148E-07,
-    "ba2_e": 9.46E-09,
-    "cd2_e": 1.334E-08,
-    "cobalt2_e": 5.94E-08,
-    "cr3_e": 1.186E-07,
-    "ga3_e": 1.29E-09,
-    "cu2_e": 9.9E-07,
-    "mn2_e": 9.6E-07,
-    "ni2_e": 1.09E-07,
-    "pb2_e": 1.678E-09,
-    "sr2_e": 1.256E-08,
-    "vanad_e": 8.58E-07,
-    "sn2_e": 7.58E-10,
-    "zn2_e": 5.66E-05,
-    "ti4_e": 6.26E-08,
-    "mobd_e": 6.14E-08,
-    "ade_e": 6.54E-05,
-    "gua_e": 6.12E-05,
-    "cyt_e": 3.92E-05,
-    "ura_e": 5.62E-05,
-    "nh3_e": 0.000488,
-    "cellb_e": 2.04E-06,
-    "man_e": 0.000254,
-    "fol_e": 5.08E-08,
-    "pnto__R_e": 4.84E-07,
-    "btn_e": 5.48E-09,
-    "sel_e": 1.098E-09,
-    "ascb__L_e": 1.704E-08,
-    "thm_e": 4.14E-07,
-    "ribflv_e": 1.062E-07,
-    "nac_e": 3.26E-06,
-    "pydxn_e": 8.86E-08,
-    "cbl1_e": 5.16E-13,
+    "na1_e": 0.895059287633637*dil,
+    "cl_e": 0.734866026900668*dil,
+    "so4_e": 0.345797458779573*dil,
+    "ca2_e": 0.028837264148495*dil,
+    "k_e": 0.089116996725451*dil,
+    "co3_e": 27.1819458806657*dil,
+    "br_e": 0.067226890756303*dil,
+    "f_e": 0.009587727708533*dil,
+    "mg2_e": 0.066795742959209*dil,
+    "fe2_e": 1.742E-05*dil,
+    "fe3_e": 0.056698299480836*dil,
+    "pi_e": 0.019990004997501*dil,
+    "nh4_e": 0.019990004997501*dil,
+    "no3_e": 0.00063108*dil,
+    "ala__L_e": 0.000398*dil,
+    "asp__L_e": 7.56E-05*dil,
+    "asn__L_e": 0.000638*dil,
+    "glu__L_e": 1.368E-05*dil,
+    "gln__L_e": 0.0004*dil,
+    "gly_e": 8.38E-05*dil,
+    "his__L_e": 0.000228*dil,
+    "ile__L_e": 0.000312*dil,
+    "leu__L_e": 0.000314*dil,
+    "lys__L_e": 5.36E-05*dil,
+    "met__L_e": 0.0001574*dil,
+    "phe__L_e": 0.0001738*dil,
+    "pro__L_e": 0.0001522*dil,
+    "ser__L_e": 0.0001344*dil,
+    "thr__L_e": 2.44E-05*dil,
+    "trp__L_e": 6.62E-05*dil,
+    "val__L_e": 0.000298*dil,
+    "arg__L_e": 0.0001492*dil,
+    "cystin_e": 8.32E-06*dil,
+    "al3_e": 1.148E-07*dil,
+    "ba2_e": 9.46E-09*dil,
+    "cd2_e": 1.334E-08*dil,
+    "cobalt2_e": 5.94E-08*dil,
+    "cr3_e": 1.186E-07*dil,
+    "ga3_e": 1.29E-09*dil,
+    "cu2_e": 9.9E-07*dil,
+    "mn2_e": 9.6E-07*dil,
+    "ni2_e": 1.09E-07*dil,
+    "pb2_e": 1.678E-09*dil,
+    "sr2_e": 1.256E-08*dil,
+    "vanad_e": 8.58E-07*dil,
+    "sn2_e": 7.58E-10*dil,
+    "zn2_e": 5.66E-05*dil,
+    "ti4_e": 6.26E-08*dil,
+    "mobd_e": 6.14E-08*dil,
+    "ade_e": 6.54E-05*dil,
+    "gua_e": 6.12E-05*dil,
+    "cyt_e": 3.92E-05*dil,
+    "ura_e": 5.62E-05*dil,
+    "nh3_e": 0.000488*dil,
+    "cellb_e": 2.04E-06*dil,
+    "man_e": 0.000254*dil,
+    "fol_e": 5.08E-08*dil,
+    "pnto__R_e": 4.84E-07*dil,
+    "btn_e": 5.48E-09*dil,
+    "sel_e": 1.098E-09*dil,
+    "ascb__L_e": 1.704E-08*dil,
+    "thm_e": 4.14E-07*dil,
+    "ribflv_e": 1.062E-07*dil,
+    "nac_e": 3.26E-06*dil,
+    "pydxn_e": 8.86E-08*dil,
+    "cbl1_e": 5.16E-13*dil,
     "o2": 0.0182,
     "h2o": 55.5092978073827,
     "h": 1E-07
 }
     elif name == "marine+ribose":
        res = media("marine")
-       res["2dr5p_e"] = 0.1 # Same as glucose
+       res["2dr5p_e"] = 0.1*dil # Same as glucose
     else:
         raise ValueError("Unrecognized media. Currently only 'marine' is supported.")
     
@@ -330,6 +329,6 @@ def set_sim_params(args):
     sim_params.set_param("maxCycles", args.cycles)
     sim_params.set_param("maxSpaceBiomass", 10) # gr DW
     sim_params.set_param("minSpaceBiomass", 1e-11) # gr DW
-    sim_params.set_param("spaceWidth", 5) # cm
+    sim_params.set_param("spaceWidth", 3.107233) # cm
 
     return sim_params
