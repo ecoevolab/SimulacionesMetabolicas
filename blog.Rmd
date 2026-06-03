@@ -650,12 +650,11 @@ def comets(ruta_csv_syncoms, patron_xml, threads, cycles, mass, media, newpath):
 
 ```
 
-# SCRIPS FUNCIONALES
+## instacione de dockers
 
-```{}
-```
+seguí las instrucciones de la pagina web: [dockers](https://docs.docker.com/engine/install/ubuntu/)
  
- 
+
  
  
  
