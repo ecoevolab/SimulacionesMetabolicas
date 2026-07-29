@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=ecoli
-#SBATCH --output=%x.log
-#SBATCH --error=%x.error
-#SBATCH --time=240:00:00
+#SBATCH --job-name=combos
+#SBATCH --output=/mnt/data/sur/users/mmontante/02_resultados/logs/%x.log
+#SBATCH --error=/mnt/data/sur/users/mmontante/02_resultados/logs/%x.error
+#SBATCH --time=1000:00:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
 
@@ -17,9 +17,13 @@ mamba activate python3
 module load COMETS
 
 echo "[INFO] Starting Python script at $(date)"
-python prueba_mets_2.py
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/combos.py
+
+
 echo "[INFO] Python script finished at $(date)"
 
 echo "========================================="
 echo "Pipeline done at: $(date)"
 echo "========================================="
+
