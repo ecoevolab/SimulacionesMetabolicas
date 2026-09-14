@@ -708,8 +708,8 @@ library(dplyr)
 library(ggplot2)
 library(fs)
 
-indi_path <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/03092/"
-output_folder <- file.path(indi_path, "plots_individuales")
+indi_path <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/0909_biomass/biomass/"
+output_folder <- file.path(indi_path, "log")
 dir_create(output_folder)
 
 # 1. Comprobar búsqueda de archivos
@@ -747,7 +747,7 @@ for (i in seq_along(all_mass)) {
   
   colnames(df)[1:5] <- c("time", "c2", "c3", "model_id", "biomass")
   #biomass <- df$biomass[1:250]
-  df <- df[1:600,]
+   df <- df[1:1000,]
 
 
   df <- df %>% 
@@ -760,7 +760,7 @@ for (i in seq_along(all_mass)) {
       model_id = sub(".*_mm_", "", model_id),
       model_id = sub("_[a-zA-Z]\\.cmd$", "", model_id),
       sim_id = op_id,
-      time = time * 0.1
+      time = time * 0.01
     ) %>% 
     filter(!is.na(biomass)) %>% 
     arrange(time)
@@ -775,8 +775,8 @@ for (i in seq_along(all_mass)) {
     labs(
       title = paste("Crecimiento:", bac_key),
       subtitle = paste("Simulación:", op_id),
-      x = "Tiempo (h)",
-      y = expression(log[10] * " Biomass (g)")
+      x = "tiempo (h)",
+      y = "log Biomass (g)"
     ) +
     theme_bw(base_size = 13) +
     theme(panel.grid.minor = element_blank())
@@ -790,11 +790,11 @@ if (nrow(data_indi) > 0) {
 
   p_all <- ggplot(data_indi, aes(x = time, y = biomass, color = model_id, group = interaction(model_id, sim_id))) +
     geom_line(linewidth = 0.8, alpha = 0.8) +
-    #scale_y_log10() +
+    scale_y_log10() +
     labs(
-      title = "Crecimiento Individual de Todas las Cepas",
-      x = "Tiempo (h)",
-      y = expression(log[10] * " Biomass (g)"),
+      #title = "Crecimiento Individual de Todas las Cepas",
+      x = "tiempo (h)",
+      y = "log Biomass (g)",
       color = "Cepa"
     ) +
     theme_bw(base_size = 13) +
@@ -811,6 +811,23 @@ if (nrow(data_indi) > 0) {
 ```
 
 ```{r}
+library(growthcurver)
+
+# 2. Create or load sample data (Time vs OD)
+# Note: growthcurver expects a column named 'time' and subsequent columns for samples
+df <- data.frame(
+  time = c(0, 2, 4, 6, 8, 10, 12, 14, 16),
+  sample_A = c(0.05, 0.08, 0.15, 0.35, 0.65, 0.82, 0.88, 0.90, 0.90)
+)
+
+# 3. Fit the growth curve for a single sample
+gc_fit <- SummarizeGrowth(df$time, df$sample_A)
+
+# 4. Extract the AUC values
+cat("Empirical AUC:", gc_fit$vals$auc_e, "\n")
+cat("Logistic Fit AUC:", gc_fit$vals$auc_l, "\n")
+
+
 
 ```
 
