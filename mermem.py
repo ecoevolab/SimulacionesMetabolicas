@@ -20,9 +20,9 @@
 
 from functions import variables_totales
 variables_totales(
-    gem_path="/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/2008_ecoli/iJ1366/iJO1366.xml",
-    output_dir="/home/abigaylmontantearenas/Documents/proyecto_tesis",
-    output_filename="1006_ecoli_variables_totales.csv"
+    gem_path="/media/abigaylmontantearenas/KINGSTON/models/rz",
+    output_dir="/media/abigaylmontantearenas/KINGSTON/models/rz",
+    output_filename="1109_rz_variables_totales.csv"
 )
 
 

@@ -115,7 +115,7 @@ if __name__ == "__main__":
     if not args.ignore_trace_metabolites:
         layout.add_typical_trace_metabolites(amount=1000)
     
-    for metabolite, amount in media(args.media, dil = args.media_dil, vol=args.media_vol).items():
+    for metabolite, amount in media(args.media, dil = args.media_dil, vol = args.media_vol).items():
         layout.set_specific_metabolite(metabolite, amount)
             
     # Set simulation parameters.

@@ -2122,11 +2122,196 @@ variables: solo, dil, vol, vo_dil
 parametros: defaultVmax, defaultKm
 
 
-## medio experimental
-python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb1 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0409_results/lb1
-python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb1 --media_vol 1 --outdir ./e_coli_core/0409_results/lb1_dil
-python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb1 --media_dil 1 --outdir ./e_coli_core/0409_results/lb1_vol
-python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb1 --outdir ./e_coli_core/0409_results/lb1_vol_dil
+## medio lb1
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0409_results/lb
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_vol 1 --outdir ./e_coli_core/0409_results/lb_dil
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_dil 1 --outdir ./e_coli_core/0409_results/lb_vol
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --outdir ./e_coli_core/0409_results/lb_vol_dil
+
+## medio lb2
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0409_results/lb2
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_vol 1 --outdir ./e_coli_core/0409_results/lb2_dil
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --outdir ./e_coli_core/0409_results/lb2_vol
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir ./e_coli_core/0409_results/lb2_vol_dil
+
+
+
+## medio lb3
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0409_results/lb3
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_vol 1 --outdir ./e_coli_core/0409_results/lb3_dil
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_dil 1 --outdir ./e_coli_core/0409_results/lb3_vol
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --outdir ./e_coli_core/0409_results/lb3_vol_dil
+
+
+
+#agregado parametros 
+
+## medio lb1
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0409_results/lb_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_vol 1 --outdir ./e_coli_core/0409_results/lb_dil_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_dil 1 --outdir ./e_coli_core/0409_results/lb_vol_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --outdir ./e_coli_core/0409_results/lb_vol_dil_vk
+
+## medio lb2
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0409_results/lb2_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_vol 1 --outdir ./e_coli_core/0409_results/lb2_dil_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --outdir ./e_coli_core/0409_results/lb2_vol_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir ./e_coli_core/0409_results/lb2_vol_dil_vk
+
+
+
+## medio lb3
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0409_results/lb3_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_vol 1 --outdir ./e_coli_core/0409_results/lb3_dil_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_dil 1 --outdir ./e_coli_core/0409_results/lb3_vol_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --outdir ./e_coli_core/0409_results/lb3_vol_dil_vk
+
+
+
+##
+
+eval "$(mamba shell hook --shell bash)"
+mamba activate python3
+module load COMETS
+
+
+## medio mm
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0709_results/mm_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_vol 1 --outdir ./e_coli_core/0709_results/mm_dil_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_dil 1 --outdir ./e_coli_core/0709_results/mm_vol_vk
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --outdir ./e_coli_core/0709_results/mm_vol_dil_vk
+
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0709_results/mm
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_vol 1 --outdir ./e_coli_core/0709_results/mm_dil
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_dil 1 --outdir ./e_coli_core/0709_results/mm_vol
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --outdir ./e_coli_core/0709_results/mm_vol_dil
+
+
+
+
+#######################################
+## medio lb1
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0709_results/lb_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_vol 1 --outdir ./e_coli_core/0709_results/lb_dil_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --media_dil 1 --outdir ./e_coli_core/0709_results/lb_vol_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb --outdir ./e_coli_core/0709_results/lb_vol_dil_k
+
+## medio lb2
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0709_results/lb2_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_vol 1 --outdir ./e_coli_core/0709_results/lb2_dil_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --outdir ./e_coli_core/0709_results/lb2_vol_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir ./e_coli_core/0709_results/lb2_vol_dil_k
+
+## medio lb3
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0709_results/lb3_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_vol 1 --outdir ./e_coli_core/0709_results/lb3_dil_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --media_dil 1 --outdir ./e_coli_core/0709_results/lb3_vol_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb3 --outdir ./e_coli_core/0709_results/lb3_vol_dil_v_k
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0709_results/mm_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_vol 1 --outdir ./e_coli_core/0709_results/mm_dil_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --media_dil 1 --outdir ./e_coli_core/0709_results/mm_vol_k
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media mm --outdir ./e_coli_core/0709_results/mm_vol_dil_k
+
+# =====================================             0809           =========================================
+ls 02 
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0809_results/test/lb2_vk
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_vol 1 --outdir ./e_coli_core/0809_results/test/lb2_dil_vk
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir ./e_coli_core/0809_results/test/lb2_vol_dil_vk
+
+python /mnt/data/sur/users/test/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir ./e_coli_core/0809_results/test/lb2_vol_dil_vk
+
+#################################################################
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0809_results/test/lb2
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_vol 1 --outdir ./e_coli_core/0809_results/test/lb2_dil
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --outdir ./e_coli_core/0809_results/test/lb2_vol
+
+python /mnt/data/sur/users/test/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir ./e_coli_core/0809_results/test/lb2_vol_dil
+
+##########################
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0809_results/test/lb2_v
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_vol 1 --outdir ./e_coli_core/0809_results/test/lb2_dil_v
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --outdir ./e_coli_core/0809_results/test/lb2_vol_v
+
+python /mnt/data/sur/users/test/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir ./e_coli_core/0809_results/test/lb2_vol_dil_v 
+
+################################
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --media_vol 1 --outdir ./e_coli_core/0809_results/test/lb2_k
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_vol 1 --outdir ./e_coli_core/0809_results/test/lb2_dil_k
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --outdir ./e_coli_core/0809_results/test/lb2_vol_k
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path ./e_coli_core --strains ecoli --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir ./e_coli_core/0809_results/test/lb2_vol_dil_k 
+
+# =========================================
+for m in 02_resultados/ecoli/models/gp/*.xml; do id=$(basename "$m" .xml); out="./e_coli_core/0809_results/gp/lb2_vk/$id"; python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path 02_resultados/ecoli/models/gp --strains "$id" --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --media_vol 1 --outdir "$out"; done
+
+for m in 02_resultados/ecoli/models/gp/*.xml; do id=$(basename "$m" .xml); out="./e_coli_core/0809_results/gp/lb2_dil_vk/$id"; python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path 02_resultados/ecoli/models/gp --strains "$id" --cycles 10000 --initial_mass 5e-6 --media lb2 --media_vol 1 --outdir "$out"; done
+
+for m in 02_resultados/ecoli/models/gp/*.xml; do id=$(basename "$m" .xml); out="./e_coli_core/0809_results/gp/lb2_vol_vk/$id"; python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path 02_resultados/ecoli/models/gp --strains "$id" --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --outdir "$out"; done
+
+for m in 02_resultados/ecoli/models/gp/*.xml; do id=$(basename "$m" .xml); out="./e_coli_core/0809_results/gp/lb2_vol_dil_vk/$id"; python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path 02_resultados/ecoli/models/gp --strains "$id" --cycles 10000 --initial_mass 5e-6 --media lb2 --outdir "$out"; done
+
+################
+
+# 1. Define your main directory
+main_folder <- "path/to/your/main/folder"
+
+# 2. Find ALL files inside the subfolders
+# 'recursive = TRUE' forces R to look inside every subfolder automatically
+all_files <- list.files(
+  path = main_folder, 
+  pattern = "\\.csv$",      # Change this to your file extension (e.g., "\\.txt$", "\\.xlsx$")
+  recursive = TRUE,         # This dives into the subfolders!
+  full.names = TRUE         # Gives you the exact path needed to open the file
+)
+
+# 3. Loop through the detected files
+for (file_path in all_files) {
+  # This prints the path so you can see exactly which subfolder the file came from
+  cat("Found file in subfolder:", file_path, "\n")
+  
+  # Your processing code goes here:
+  # data <- read.csv(file_path)
+}
+
+
+########### 090926 ########################
+
+for m in 02_resultados/ecoli/models/gp/*.xml; do id=$(basename "$m" .xml); out="./e_coli_core/0809_results/gp/lb2_vol_vk/$id"; python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path 02_resultados/ecoli/models/gp --strains "$id" --cycles 10000 --initial_mass 5e-6 --media lb2 --media_dil 1 --outdir "$out"; done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
