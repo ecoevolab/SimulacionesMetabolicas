@@ -22,9 +22,12 @@ process COMETS_RUN {
     python ${params.comets_script} \\
       --gem_path ${params.gem_path} \\
       --strains ${strain} \\
+      --initial_mass ${params.mass} \\
       --media ${params.media} \\
+      --media_vol ${params.media_vol} \\
+      --media_dil ${params.media_dil} \\
       --cycles ${params.cycles} \\
-      --outdir out_${strain}
+      --outdir out_${strain} 
     """
 }
 

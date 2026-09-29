@@ -354,7 +354,7 @@ def media(name="lb", dil=0.1, vol=0.03):
     return res
 
 
-def load_strains(layout, models, initial_mass = 1e-8):
+def load_strains(layout, models, initial_mass = 5e-6):
     for strain, gem in models.items():
         # print(f"==============Cargando modelo para {strain} desde {gem}==============")
         gem_i = cobra.io.read_sbml_model(gem)
@@ -411,7 +411,7 @@ def set_sim_params(args):
     sim_params.set_param("maxSpaceBiomass", 10) # gr DW
     sim_params.set_param("minSpaceBiomass", 1e-11) # gr DW
     sim_params.set_param("spaceWidth", 3.107233) # cm
-    sim_params.set_param('defaultVmax', 18.5)
-    sim_params.set_param('defaultKm', 0.000015)
+    sim_params.set_param('defaultVmax', 10)
+    sim_params.set_param('defaultKm', 0.01)
 
     return sim_params
