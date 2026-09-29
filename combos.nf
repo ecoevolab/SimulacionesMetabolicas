@@ -20,8 +20,9 @@ process COMBO_RUN {
     module load COMETS
 
     python3 ${params.comets_script} \\
-      --gem_path ${params.gem_path} \\
+      --gem_path ${params.gem_path_final} \\
       --strains ${strains_args} \\
+      --initial_mass ${params.mass} \\
       --cycles ${params.cycles} \\
       --media ${params.media} \\
       --media_dil ${params.media_dil} \\

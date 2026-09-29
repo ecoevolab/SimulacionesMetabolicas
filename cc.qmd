@@ -1,0 +1,2467 @@
+## GEMS
+### variables 
+
+```{r}
+
+library(tidyverse)
+
+variables_file <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/cc_final/variables_totales.csv"
+df_variables <- read_csv(variables_file, show_col_types = FALSE)
+
+# Corrección aquí: names(df_variables)
+names(df_variables) <- trimws(names(df_variables))
+
+df_variables$Method <- factor(
+  df_variables$Method,
+  levels = c("CV", "KB", "GP")
+)
+
+df_long <- df_variables %>%
+  pivot_longer(
+    cols = c(
+      Reactions,
+      Metabolites,
+      Genes
+    ),
+    names_to = "Variable",
+    values_to = "Value"
+  )
+
+general <- ggplot(
+  df_long,
+  aes(
+    x = Variable,
+    y = Value,
+    fill = Method
+  )
+) +
+  geom_boxplot(
+    alpha = 0.4,
+    outlier.shape = NA,
+    position = position_dodge(width = 0.8)
+  ) +
+  coord_cartesian(ylim = c(0, 3000)) +
+  geom_jitter(
+    aes(color = Method),
+    position = position_jitterdodge(
+      jitter.width = 0.15,
+      dodge.width = 0.8
+    ),
+    size = 2,
+    alpha = 0.9
+  ) +
+  scale_fill_manual(
+    values = c(
+      CV = "#79CDCD",
+      KB = "#BCEE68",
+      GP = "#FFC0CB"
+    ),
+    labels = c(
+      CV = "CarveMe",
+      KB = "KBase",
+      GP = "gapseq"
+    )
+  ) +
+  scale_color_manual(
+    values = c(
+      CV = "#528B8B",
+      KB = "#6E8B3D",
+      GP = "#C71585"
+    ),
+    labels = c(
+      CV = "CarveMe",
+      KB = "KBase",
+      GP = "gapseq"
+    )
+  ) +
+  labs(
+    fill = "Method",
+    color = "Method",
+    x = "",
+    y = "Count"
+  ) +
+  guides(color = "none") +
+  theme_bw()
+
+ggsave(
+  filename = "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/cc_final/variables_totales.png", 
+  plot = general, 
+  width = 18,           
+  height = 7,           
+  units = "in",         
+  dpi = 600             
+)
+
+print(general)
+
+
+```
+
+```{r}
+
+variables_file <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/cc_final/variables_totales.csv"
+df_variables <- read_csv(variables_file)
+
+df_long <- df_variables %>%
+  pivot_longer(
+    cols = c(
+      Reactions,
+      Metabolites,
+      Genes
+    ),
+    names_to = "Variable",
+    values_to = "Value"
+  )
+
+df_long_cv <- df_long %>%
+  filter(Reconstruction %in% c("CV", "CV_LB", "CV_MM", "CV_LB_MM", "PK_CV", "PK_CV_LB", "PK_CV_MM", "PK_CV_LB_MM"))
+
+# Definir el orden de los grupos
+df_long_cv$Reconstruction <- factor(
+  df_long_cv$Reconstruction,
+  levels = c("CV", "CV_LB", "CV_MM", "CV_LB_MM", "PK_CV", "PK_CV_LB", "PK_CV_MM", "PK_CV_LB_MM")
+)
+
+# Paleta de colores unificada
+colores_carve <- c(
+  CV       = "#000080",  
+  CV_LB    = "#48AAAD",
+  CV_MM    = "#10AAAD",
+  CV_LB_MM = "#1069E1",
+  PK_CV    = "#4169E1",
+  PK_CV_LB = "#016064",
+  PK_CV_MM = "#406066",
+  PK_CV_LB_MM = "#506950"
+)
+
+etiquetas_carve <- c(
+  "CarveMe",
+  "CarveMe + LB",
+  "CarveMe + MM", 
+  "CarveMe + LB_MM",
+  "Prokka + CarveMe",
+  "Prokka + CarveMe + LB",
+  "Prokka + CarveMe + MM",
+  "Prokka + CarveMe + LB_MM"
+
+)
+
+# Creación de la gráfica
+carve <- ggplot(
+  df_long_cv, # Usar el dataframe filtrado
+  aes(
+    x = Variable,
+    y = Value,
+    fill = Reconstruction
+  )
+) +
+  geom_boxplot(
+    alpha = 0.4,
+    outlier.shape = NA,
+    position = position_dodge(width = 0.8)
+) +
+  coord_cartesian(ylim = c(0, 3000)) +
+  geom_jitter(
+    aes(color = Reconstruction),
+    position = position_jitterdodge(
+      jitter.width = 0.15,
+      dodge.width = 0.8
+    ),
+    size = 2.5,
+    alpha = 0.8
+  ) +
+  scale_fill_manual(
+    values = colores_carve,
+    labels = etiquetas_carve
+  ) +
+  scale_color_manual(
+    values = colores_carve,
+    labels = etiquetas_carve
+  ) +
+  labs(
+    x = "",
+    y = "Count",
+    fill = "Reconstruction",
+    color = "Reconstruction"
+  ) +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    legend.position = "top",
+    axis.text.x = element_text(
+      size = 12,
+      face = "bold"
+    )
+  )
+
+ggsave(
+  filename = "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/cc_final/cc_carveme.png", 
+  plot = carve, 
+  width = 18,           
+  height = 7,           
+  units = "in",         
+  dpi = 600             
+)
+
+# Mostrar la gráfica
+print(carve)
+
+# KBASE
+# Filtrar únicamente los métodos de KBase
+df_long_kb<- df_long %>%
+  filter(Reconstruction %in% c("KB", "KB_LB", "KB_MM", "PK_KB", "PK_KB_LB", "PK_KB_MM"))
+
+# Definir el orden de los grupos
+df_long_kb$Reconstruction <- factor(
+  df_long_kb$Reconstruction,
+  levels = c("KB", "KB_LB", "KB_MM", "PK_KB", "PK_KB_LB", "PK_KB_MM")
+)
+
+# Paleta de colores unificada
+colores_kb <- c(
+  KB       = "#2E8B57",
+  KB_LB    = "#98FB98",
+  KB_MM    = "#60FB98",
+  PK_KB    = "#98FA35",
+  PK_KB_LB = "#1E5631",
+  PK_KB_MM = "#2E6020"
+)
+etiquetas_kb <- c(
+  "KBase",
+  "KBase + LB",
+  "KBase + MM",
+  "Prokka + KBase",
+  "Prokka + KBase + LB",
+  "Prokka + KBase + MM"
+
+)
+# Creación de la gráfica
+kbase <- ggplot(
+  df_long_kb, # Usar el dataframe filtrado
+  aes(
+    x = Variable,
+    y = Value,
+    fill = Reconstruction
+  )
+) +
+  geom_boxplot(
+    alpha = 0.5,
+    outlier.shape = NA,
+    position = position_dodge(width = 0.8),
+    width = 0.7
+  ) +
+  coord_cartesian(ylim = c(0, 3000)) +
+  geom_jitter(
+    aes(color = Reconstruction),
+    position = position_jitterdodge(
+      jitter.width = 0.15,
+      dodge.width = 0.8
+    ),
+    size = 2.5,
+    alpha = 0.8
+  ) +
+  scale_fill_manual(
+    values = colores_kb,
+    labels = etiquetas_kb
+  ) +
+  scale_color_manual(
+    values = colores_kb,
+    labels = etiquetas_kb
+  ) +
+  labs(
+    x = "",
+    y = "Count",
+    fill = "Reconstruction",
+    color = "Reconstruction"
+  ) +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    legend.position = "top",
+    axis.text.x = element_text(
+      size = 12,
+      face = "bold"
+    )
+  )
+
+# Mostrar la gráfica
+print(kbase)
+
+# Guardar la gráfica en disco
+ggsave(
+  filename = "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/cc_final/cc_kbase.png", 
+  plot = kbase, 
+  width = 18, 
+  height = 7, 
+  units = "in", 
+  dpi = 600 
+)
+
+
+#########
+
+# Filtrar únicamente los métodos de KBase
+df_long_gp<- df_long %>%
+  filter(Reconstruction %in% c("GP", "GP_LB", "GP_MM", "PK_GP", "PK_GP_LB", "PK_GP_MM"))
+
+# Definir el orden de los grupos
+df_long_gp$Reconstruction <- factor(
+  df_long_gp$Reconstruction,
+  levels = c("GP", "GP_LB", "GP_MM", "PK_GP", "PK_GP_LB", "PK_GP_MM")
+)
+
+# Paleta de colores unificada
+colores_gp <- c(
+  "GP"    = "#C71585",
+  "GP_LB" = "#c71605",
+  "GP_MM" = "#C80585",
+  "PK_GP" = "#FFB6C1",
+  "PK_GP_LB" = "#FFB7A1",
+  "PK_GP_MM" = "#FFB6F1"
+  )
+etiquetas_gp <- c(
+  "GapSeq ",
+  "GapSeq + LB",
+  "GapSeq + MM",
+  "Prokka + GapSeq ",
+  "Prokka + GapSeq + LB",
+  "Prokka + GapSeq + MM"
+)
+# Creación de la gráfica
+gapseq <- ggplot(
+  df_long_gp, 
+  aes(
+    x = Variable,
+    y = Value,
+    fill = Reconstruction
+  )
+) +
+  geom_boxplot(
+    alpha = 0.5,
+    outlier.shape = NA,
+    position = position_dodge(width = 0.8),
+    width = 0.7
+  ) +
+  coord_cartesian(ylim = c(0, 3000)) +
+  geom_jitter(
+    aes(color = Reconstruction),
+    position = position_jitterdodge(
+      jitter.width = 0.15,
+      dodge.width = 0.8
+    ),
+    size = 2.5,
+    alpha = 0.8
+  ) +
+  scale_fill_manual(
+    values = colores_gp,
+    labels = etiquetas_gp
+  ) +
+  scale_color_manual(
+    values = colores_gp,
+    labels = etiquetas_gp
+  ) +
+  labs(
+    x = "",
+    y = "Count",
+    fill = "Reconstruction",
+    color = "Reconstruction"
+  ) +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    legend.position = "top",
+    axis.text.x = element_text(
+      size = 12,
+      face = "bold"
+    )
+  )
+
+# Mostrar la gráfica
+print(gapseq)
+
+# Guardar la gráfica en disco
+ggsave(
+  filename = "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/cc_final/cc_gapseq.png", 
+  plot = gapseq, 
+  width = 18, 
+  height = 7, 
+  units = "in", 
+  dpi = 600 
+)
+```
+
+```{r}
+
+variables_file <- "/media/abigaylmontantearenas/KINGSTON/models/cc/mergem/models/2109_cc_gemsembler_variables_totales.csv"
+df_variables <- read_csv(variables_file)
+
+df_long <- df_variables %>%
+  pivot_longer(
+    cols = c(
+      Reactions,
+      Metabolites,
+      Genes
+    ),
+    names_to = "Variable",
+    values_to = "Value"
+  )
+
+df_long_cv <- df_long %>%
+  filter(Method %in% c("core1", "core2", "core3"))
+
+# Definir el orden de los grupos
+df_long_cv$Method <- factor(
+  df_long_cv$Method,
+  levels =  c("core1", "core2", "core3")
+)
+
+# Paleta de colores unificada
+colores_carve <- c(
+  core1 = "#800080",
+  core2 = "#8F00FF",
+  core3 = "#9370DB"
+)
+
+etiquetas_carve <- c(
+  "core1",
+  "core2",
+  "core3"
+
+)
+
+# Creación de la gráfica
+mergem <- ggplot(
+  df_long_cv, # Usar el dataframe filtrado
+  aes(
+    x = Variable,
+    y = Value,
+    fill = Method
+  )
+) +
+  geom_boxplot(
+    alpha = 0.4,
+    outlier.shape = NA,
+    position = position_dodge(width = 0.8)
+) +
+  coord_cartesian(ylim = c(0, 5000)) +
+  geom_jitter(
+    aes(color = Method),
+    position = position_jitterdodge(
+      jitter.width = 0.15,
+      dodge.width = 0.8
+    ),
+    size = 2.5,
+    alpha = 0.8
+  ) +
+  scale_fill_manual(
+    values = colores_carve,
+    labels = etiquetas_carve
+  ) +
+  scale_color_manual(
+    values = colores_carve,
+    labels = etiquetas_carve
+  ) +
+  labs(
+    x = "",
+    y = "Count",
+    fill = "Reconstruction",
+    color = "Reconstruction"
+  ) +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    legend.position = "top",
+    axis.text.x = element_text(
+      size = 12,
+      face = "bold"
+    )
+  )
+
+#ggsave(
+  #filename = "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/cc_final/cc_carveme.png", 
+  #plot = carve, 
+  #width = 18,           
+  #height = 7,           
+  #units = "in",         
+  #dpi = 600             
+#)
+
+# Mostrar la gráfica
+print(mergem)
+
+
+```
+
+
+### velocidad
+```{r}
+
+directorio <- "/media/abigaylmontantearenas/KINGSTON/models/cc/mergem/biomass/"  
+archivos <- list.files(path = directorio, pattern = "\\.txt$", full.names = TRUE)
+
+# 3. Función para procesar un solo archivo
+procesar_archivo <- function(ruta_archivo) {
+  # Leer el archivo delimitado por espacios/tabulaciones
+  # Las columnas esperadas según tu ejemplo son: tiempo, x, y, simulation_id, biomass
+  datos <- read.table(ruta_archivo, header = FALSE, stringsAsFactors = FALSE, fill = TRUE)
+  
+  # Asignamos nombres a las columnas (ajusta según el número exacto de columnas)
+  colnames(datos)[c(1, 4, 5)] <- c("time", "simulation", "biomass")
+  
+  # Limpiar el nombre de la simulación (quitar la extensión .cmd si es necesario)
+  nombre_sim <- gsub("\\.cmd$", "", datos$simulation[1])
+  
+  # Obtener el primer y último valor de biomasa (asegurando tipo numérico)
+  initial_mass <- as.numeric(head(na.omit(datos$biomass), 1))
+  final_mass   <- as.numeric(tail(na.omit(datos$biomass), 1))
+  
+  # Si el tiempo total es necesario para calcular la tasa/velocidad:
+  t_inicial <- head(datos$time, 1)
+  t_final   <- tail(datos$time, 1)
+  dt <- t_final - t_inicial
+  
+  # Calcular la diferencia absoluta o velocidad
+  # Si es solo la diferencia: final_mass - initial_mass
+  # Si es velocidad por unidad de tiempo: (final_mass - initial_mass) / dt
+  velocity <- ifelse(dt > 0, (final_mass - initial_mass) / dt, final_mass - initial_mass)
+  
+  # Retornar una fila con los resultados
+  tibble(
+    simulation   = nombre_sim,
+    initial_mass = initial_mass,
+    final_mass   = final_mass,
+    velocity     = velocity
+  )
+}
+
+# 4. Aplicar la función a todos los archivos y combinar en un solo DataFrame
+tabla_resultados <- map_df(archivos, procesar_archivo)
+
+# 5. Visualizar la tabla resultante
+print(tabla_resultados)
+
+# 6. Guardar el resultado en un archivo CSV o TXT
+write.csv(tabla_resultados, "/media/abigaylmontantearenas/KINGSTON/models/cc/mergem/cambio_biomasa.csv", row.names = FALSE)
+```
+
+
+```{r}
+# 1. Cargar datos
+data <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/1708/1708_mm2_biomass/cambio_biomasas.csv")
+
+# 2. Prefijos ordenados por longitud descendente
+mis_prefijos <- c(
+  "cc_na_cv_lb_mm", "cc_pk_cv_lb_mm", 
+  "cc_na_kb_rt_na", "cc_na_kb_rt_lb", "cc_na_kb_rt_mm",
+  "cc_pk_kb_rt_na", "cc_pk_kb_rt_lb", "cc_pk_kb_rt_mm",
+  "cc_na_cv_na", "cc_na_cv_lb", "cc_na_cv_mm",
+  "cc_pk_cv_na", "cc_pk_cv_lb", "cc_pk_cv_mm",
+  "cc_na_gp_na", "cc_na_gp_lb", "cc_na_gp_mm",
+  "cc_pk_gp_na", "cc_pk_gp_lb", "cc_pk_gp_mm"
+)
+mis_prefijos <- mis_prefijos[order(nchar(mis_prefijos), decreasing = TRUE)]
+
+# 3. Asignar Condition, ID, Grupo (_cv_, _gp_, _kb_) y Color_Group
+data_clean <- data %>%
+  rowwise() %>%
+  mutate(
+    Condition = mis_prefijos[sapply(mis_prefijos, function(p) str_starts(simulation, p))][1],
+    ID = str_remove(simulation, paste0("^", Condition, "_?")) %>% 
+         str_remove("_biomass$")
+  ) %>%
+  ungroup() %>%
+  mutate(
+    Grupo = case_when(
+      str_detect(Condition, "_cv_") ~ "CV",
+      str_detect(Condition, "_gp_") ~ "GP",
+      str_detect(Condition, "_kb_") ~ "KB",
+      TRUE ~ "Otros"
+    ),
+    Color_Group = if_else(velocity == 0, "Cero (Sin crecimiento)", "Crecimiento (>0)")
+  ) %>%
+  filter(!is.na(Condition))
+
+# 4. Directorio de salida
+plots_dir <- "/home/abigaylmontantearenas/Documents/proyecto_tesis/02_resultados/1708/1708_mm2_biomass"
+dir.create(plots_dir, showWarnings = FALSE, recursive = TRUE)
+
+# 5. Generar, mostrar y guardar gráficas por grupo
+for (grp in c("CV", "GP", "KB")) {
+  df_grp <- data_clean %>% filter(Grupo == grp)
+  
+  if (nrow(df_grp) == 0) next
+  
+  p <- ggplot(df_grp, aes(x = ID, y = velocity, color = Color_Group)) +
+    geom_point(size = 2.5, alpha = 0.8) +
+    scale_color_manual(values = c("Cero (Sin crecimiento)" = "red", "Crecimiento (>0)" = "#2b5c8f")) +
+    scale_y_continuous(trans = pseudo_log_trans(base = 10)) +
+    facet_wrap(~ Condition, scales = "free_x") +
+    theme_bw() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
+      plot.title = element_text(face = "bold", size = 12),
+      strip.background = element_rect(fill = "#e0e0e0"),
+      strip.text = element_text(face = "bold", size = 8),
+      legend.position = "bottom"
+    ) +
+    labs(
+      title = paste("Velocidad de Crecimiento - Grupo:", grp),
+      x = "ID",
+      y = "Velocidad",
+      color = "Estado"
+    )
+  
+  print(p)
+  
+  ggsave(
+    filename = file.path(plots_dir, paste0("velocidades_grupo_", grp, ".png")),
+    plot = p,
+    width = 12,
+    height = 8,
+    dpi = 300
+  )
+}
+```
+
+## Individual
+### biomasas
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(fs)
+
+indi_path     <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/biomass"
+output_folder <- "/media/abigaylmontantearenas/KINGSTON/septiembre/graficas/cc/individuales/logxy"
+dir_create(output_folder)
+
+colores_bac <- c(
+  baltitudinis_biomass    = "#455866",
+  corynebacterium_biomass = "#436FA6",
+  sarlettae_biomass       = "#5CBDB8",
+  bthuringiensis_biomass  = "#5A8CB5",
+  sshinii_biomass         = "#B3C5D3",
+  batrophaeus_biomass     = "#7C4146",
+  mluteus_biomass         = "#BC525D",
+  binfantis_biomass       = "#D75454",
+  pmegaterium_biomass     = "#C56E66",
+  mindicus_biomass        = "#C79786"
+)
+
+name_bac <- c(
+  baltitudinis_biomass    = "Bacillus altitudinis",
+  corynebacterium_biomass = "Corynebacterium sp.",
+  sarlettae_biomass       = "Staphylococcus arlettae",
+  bthuringiensis_biomass  = "Bacillus thuringiensis",
+  sshinii_biomass         = "Staphylococcus shinii",
+  batrophaeus_biomass     = "Bacillus atrophaeus",
+  mluteus_biomass         = "Micrococcus luteus",
+  binfantis_biomass       = "Bacillus infantis",
+  pmegaterium_biomass     = "Priestia megaterium",
+  mindicus_biomass        = "Metabacillus indicus"
+)
+
+all_mass  <- list.files(path = indi_path, pattern = "biomass", recursive = TRUE, full.names = TRUE)
+all_mass  <- all_mass[!dir.exists(all_mass)]
+data_indi <- data.frame()
+
+# 1. Gráficas individuales
+for (i in seq_along(all_mass)) {
+  file_path <- all_mass[i]
+  
+  bac_key <- tools::file_path_sans_ext(basename(file_path))
+  op_id   <- basename(dirname(file_path))
+  
+  df <- read.table(file_path, header = FALSE, fill = TRUE, comment.char = "")
+  if (ncol(df) < 5) next
+  colnames(df)[1:5] <- c("time", "c2", "c3", "model_raw", "biomass")
+  df <- df[1:min(400, nrow(df)), ]
+
+  df <- df %>% 
+    mutate(
+      time     = as.numeric(time) * 0.1,
+      biomass  = as.numeric(biomass),
+      model_id = bac_key,
+      sim_id   = op_id
+    ) %>% 
+    arrange(time)
+  
+  data_indi <- bind_rows(data_indi, df)
+  
+  color_individual <- ifelse(bac_key %in% names(colores_bac), colores_bac[bac_key], "#2b5c8f")
+  nombre_limpio    <- ifelse(bac_key %in% names(name_bac), name_bac[bac_key], bac_key)
+
+  p_single <- ggplot(df, aes(x = time, y = biomass)) +
+    geom_line(color = color_individual, linewidth = 1) +
+    scale_y_log10() +
+        scale_x_log10() +
+    labs(
+      subtitle = nombre_limpio,   
+      x        = "Tiempo (h)",
+      y        = "Biomasa (g)"
+    ) +
+    theme_bw(base_size = 13) +
+    theme(
+      plot.title       = element_text(face = "bold", size = 13),
+      plot.subtitle    = element_text(face = "italic", size = 11.5, color = "gray20"), #
+      panel.grid.minor = element_blank()
+    )
+  
+  print(p_single)
+  
+  out_name <- file.path(output_folder, paste0(bac_key, ".png"))
+  ggsave(out_name, p_single, width = 7, height = 5, dpi = 300)
+}
+
+# 2. Cálculo de métricas
+metrics_summary <- data_indi %>%
+  group_by(model_id) %>%
+  arrange(time) %>%
+  summarise(
+    biomass_final   = last(biomass),
+    auc             = sum(diff(time) * (head(biomass, -1) + tail(biomass, -1)) / 2),
+    order_magnitude = ifelse(last(biomass) > 0, floor(log10(last(biomass))), NA_real_),
+    .groups         = "drop"
+  ) %>%
+  arrange(desc(biomass_final)) %>%
+  mutate(
+    clean_name   = ifelse(model_id %in% names(name_bac), name_bac[model_id], model_id),
+    label_legend = clean_name
+  )
+write.csv(metrics_summary, file.path(output_folder, "metricas_individual.csv"), row.names = FALSE)
+
+# ordenado por biomasa de mayor a menor
+data_indi <- data_indi %>%
+  mutate(
+    model_id = factor(
+      model_id, 
+      levels = metrics_summary$model_id,
+      labels = metrics_summary$label_legend
+    )
+  )
+
+colores_mapeados <- setNames(
+  colores_bac[metrics_summary$model_id], 
+  metrics_summary$label_legend
+)
+
+p_all <- ggplot(data_indi, aes(x = time, y = biomass, color = model_id, group = interaction(model_id, sim_id))) +
+  geom_line(linewidth = 0.85, alpha = 0.85) +
+  scale_color_manual(values = colores_mapeados) +
+      scale_y_log10() +
+          scale_x_log10() +
+  labs(
+    title    = "Crecimiento Comparativo de Cepas Individuales",
+    x        = "Tiempo (h)",
+    y        = "Biomasa (g)",
+    color    = "Especie"
+  ) +
+  theme_bw(base_size = 12) +
+  theme(
+    plot.title       = element_text(face = "bold", size = 13),
+    panel.grid.minor = element_blank(),
+    legend.position  = "right",
+    legend.title     = element_text(face = "bold", size = 10),
+    legend.text      = element_text(face = "italic", size = 9.5) 
+  )
+
+print(p_all)
+
+todas_out <- file.path(output_folder, "bacterias_individuales.png")
+ggsave(todas_out, p_all, width = 10, height = 6, dpi = 300)
+```
+### metabolitos
+
+```{r}
+library(dplyr)
+library(RColorBrewer)
+library(ggplot2)
+
+
+aminoacidos <- c("cycle",
+  "EX_ala__L_e", "EX_arg__L_e", "EX_asn__L_e", "EX_asp__L_e", "EX_cys__L_e",
+  "EX_glu__L_e", "EX_gln__L_e", "EX_gly_e",    "EX_his__L_e", "EX_ile__L_e",
+  "EX_leu__L_e", "EX_lys__L_e", "EX_met__L_e", "EX_phe__L_e", "EX_pro__L_e",
+  "EX_ser__L_e", "EX_thr__L_e", "EX_trp__L_e", "EX_tyr__L_e", "EX_val__L_e"
+)
+
+keymets <- c("cycle",
+  "EX_ac_e", "EX_for_e", "EX_gal_e", "EX_glyclt_e", "EX_lcts_e",
+  "EX_meoh_e", "EX_pppn_e", "EX_co2_e", "EX_etoh_e", "EX_glc__D_e"
+)
+
+ruta_flux <- "D:/septiembre/bacterias/cc/vk1/individual/fluxes/sshinii.tsv"
+flux_file <- read.delim(ruta_flux, sep = "\t", check.names = FALSE)
+
+
+cepa <- tools::file_path_sans_ext(basename(ruta_flux))
+
+output_bacteria <- "D:/septiembre/graficas/cc/individuales/metabolitos/"
+#dir.create(output_bacteria)
+flux_file <- flux_file[1:min(200, nrow(flux_file)), ]
+  
+df_clean <- flux_file[, c(TRUE, colSums(abs(flux_file[, -1, drop = FALSE])) > 0), drop = FALSE]
+  
+df_filtro <- df_clean %>%
+    select(any_of(aminoacidos)) %>%
+    select(-any_of(c("cycle", colnames(flux_file)[1])))
+  
+  # Preparar matriz
+data_flux <- as.matrix(df_filtro)
+rownames(data_flux) <- as.numeric(flux_file[[1]])*0.1
+  
+
+
+  # Quitar columnas constantes para evitar problemas con scale="column"
+  #col_vars <- apply(data, 2, var, na.rm = TRUE)
+  #data <- data[, col_vars > 0, drop = FALSE]
+
+  # HEATMAP SIN NINGÚN DENDROGRAMA (Rowv = NA, Colv = NA)
+color_met <- colorRampPalette(c("#F2F4F7", "#B3C5D3"))(25)
+mets_bac <- heatmap(data_flux, 
+          Rowv    = NA,     # Apaga el dendrograma 
+          Colv    = NA,     # Apaga el dendrograma 
+          scale   = "column", 
+          labRow  = rownames(data_flux),   
+          cexRow = 0.8,
+          cexCol = 1,
+          margins = c(6, 3),
+          col = color_met,
+          main    = cepa)
+
+bac_save <- file.path(output_bacteria, paste0(cepa, "_keymets.png"))
+dev.print(
+  device = png, 
+  filename = bac_save, 
+  width = 7.5, 
+  height = 5, 
+  units = "in", 
+  res = 300
+)
+                  #baltitudinis_biomass    = "#455866",
+                  #batrophaeus_biomass     = "#7C4146",
+                  #binfantis_biomass       = "#D75454",
+                  #bthuringiensis_biomass  = "#5A8CB5",
+                  #corynebacterium_biomass = "#436FA6",
+                  #mindicus_biomass        = "#C79786"
+                  #mluteus_biomass         = "#BC525D",
+                  #pmegaterium_biomass     = "#C56E66",
+
+
+
+                  #sarlettae_biomass       = "#5CBDB8",
+                  #sshinii_biomass         = "#B3C5D3",
+                  #mluteus_biomass         = "#BC525D",
+                  #pmegaterium_biomass     = "#C56E66",
+
+
+  
+```
+
+## Comunidad
+### biomasas
+```{r}
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(fs)
+library(tidyr)
+library(ggrepel)
+library(scales)
+
+# Rutas
+ruta_txt <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/biomass_tamanho_2/"
+output_folder <- "/media/abigaylmontantearenas/KINGSTON/septiembre/graficas/cc/comunidades/logxy"
+dir_create(output_folder)
+
+colores_bac <- c(
+  baltitudinis_biomass    = "#455866",
+  corynebacterium_biomass = "#436FA6",
+  sarlettae_biomass       = "#5CBDB8",
+  bthuringiensis_biomass  = "#5A8CB5",
+  sshinii_biomass         = "#B3C5D3",
+  batrophaeus_biomass     = "#7C4146",
+  mluteus_biomass         = "#BC525D",
+  binfantis_biomass       = "#D75454",
+  pmegaterium_biomass     = "#C56E66",
+  mindicus_biomass        = "#C79786"
+)
+name_bac <- c(
+  baltitudinis_biomass    = "Bacillus altitudinis",
+  corynebacterium_biomass = "Corynebacterium sp.",
+  sarlettae_biomass       = "Staphylococcus arlettae",
+  bthuringiensis_biomass  = "Bacillus thuringiensis",
+  sshinii_biomass         = "Staphylococcus shinii",
+  batrophaeus_biomass     = "Bacillus atrophaeus",
+  mluteus_biomass         = "Micrococcus luteus",
+  binfantis_biomass       = "Bacillus infantis",
+  pmegaterium_biomass     = "Priestia megaterium",
+  mindicus_biomass        = "Metabacillus indicus"
+)
+
+keys_clean <- sub("_biomass$", "", names(colores_bac))
+colores_bac_completos <- c(colores_bac, setNames(colores_bac, keys_clean))
+name_bac_completos    <- c(name_bac, setNames(name_bac, keys_clean))
+
+archivos <- list.files(ruta_txt, pattern = "\\.txt$", full.names = TRUE)
+
+# ==============================================================================
+
+all_community_metrics <- data.frame()
+
+for (i in archivos) {
+  com_name <- sub("\\.txt$", "", basename(i))
+  
+  df <- read_table(
+    i,
+    col_names = c("cicle", "x", "y", "id", "mass"),
+    show_col_types = FALSE
+  )
+  
+  df_sub <- df %>%
+    filter(cicle <= 5000) %>%
+    mutate(
+      species = sub("\\.cmd$", "", id),
+      hours   = cicle * 0.1,
+      mass    = as.numeric(mass)
+    ) %>%
+    arrange(hours)
+  
+  # Cálculo de métricas 
+  metrics_com <- df_sub %>%
+    group_by(species) %>%
+    arrange(hours) %>%
+    summarise(
+      biomass_final   = last(mass),
+      auc             = sum(diff(hours) * (head(mass, -1) + tail(mass, -1)) / 2),
+      order_magnitude = ifelse(last(mass) > 0, floor(log10(last(mass))), NA_real_),
+      .groups         = "drop"
+    ) %>%
+    arrange(desc(biomass_final)) %>%
+    mutate(
+      community    = com_name,
+      clean_name   = ifelse(species %in% names(name_bac_completos), name_bac_completos[species], species),
+      label_legend = clean_name
+    )
+  
+  all_community_metrics <- bind_rows(all_community_metrics, metrics_com)
+  
+  # Reordenar para que la leyenda quede de mayor a menor
+  df_sub <- df_sub %>%
+    mutate(
+      species = factor(
+        species,
+        levels = metrics_com$species,
+        labels = metrics_com$label_legend
+      )
+    )
+  
+  # Vector con nombres exactos para la leyenda de las curvas
+  colores_curvas <- setNames(
+    colores_bac_completos[metrics_com$species],
+    metrics_com$label_legend
+  )
+  
+  # Gráfica de curvas por comunidad
+  q_curves <- ggplot(df_sub, aes(x = hours, y = mass, color = species, linetype = species)) +
+    geom_line(linewidth = 0.9) +
+    scale_y_log10() +
+    #scale_x_log10() +
+    geom_point(size = 1.2, alpha = 0.6) +
+    scale_color_manual(values = colores_curvas) +
+    labs(
+      title    = com_name,
+      x        = "Tiempo (h)",
+      y        = "Biomasa (g)",
+      color    = "Cepa",
+      linetype = "Cepa"
+    ) +
+    theme_bw(base_size = 12) +
+    theme(
+      plot.title       = element_text(face = "bold", size = 13),
+      panel.grid.minor = element_blank(),
+      legend.position  = "right",
+      legend.text      = element_text(face = "italic", size = 9.5)
+    )
+  
+  print(q_curves)
+  #ggsave(file.path(output_folder, paste0(com_name, ".png")), q_curves, width = 9, height = 5.5, dpi = 300)
+}
+
+# Exportar tabla consolidada
+#write.csv(all_community_metrics, file.path(output_folder, "metricas_todas_las_comunidades.csv"), row.names = FALSE)
+
+# ==============================================================================
+# GRÁFICAS  AUC 
+# ==============================================================================
+
+comunidades_unicas <- unique(all_community_metrics$community)
+
+for (com_name in comunidades_unicas) {
+  
+  # Filtrar datos de la comunidad y ordenar por AUC
+  metrics_auc <- all_community_metrics %>%
+    filter(community == com_name) %>%
+    arrange(desc(auc)) %>%
+    mutate(species_ordered = factor(species, levels = rev(species)))
+  
+  # Gráfica de barras
+  p_bar_auc <- ggplot(metrics_auc, aes(x = species_ordered, y = auc, fill = species)) +
+    geom_col(width = 0.65, show.legend = FALSE) +
+    coord_flip() +
+    scale_fill_manual(values = colores_bac_completos) +
+    scale_x_discrete(labels = name_bac_completos) +
+    scale_y_continuous(expand = expansion(mult = c(0.01, 0.18))) +
+    labs(
+      title = paste("AUC -", com_name),
+      x     = "Cepa",
+      y     = "AUC"
+    ) +
+    theme_bw(base_size = 11) +
+    theme(
+      plot.title       = element_text(face = "bold"),
+      panel.grid.minor = element_blank(),
+      legend.position  = "right",
+      legend.text      = element_text(face = "italic", size = 9.5)
+    )
+  
+  print(p_bar_auc)
+  #out_path <- file.path(output_folder, paste0(com_name, "_auc.png"))
+  #ggsave(out_path, p_bar_auc, width = 7, height = 4.5, dpi = 300)
+}
+```
+### metabolitos 
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+aminoacidos <- c("cycle",
+  "EX_ala__L_e", "EX_arg__L_e", "EX_asn__L_e", "EX_asp__L_e", "EX_cys__L_e",
+  "EX_glu__L_e", "EX_gln__L_e", "EX_gly_e",    "EX_his__L_e", "EX_ile__L_e",
+  "EX_leu__L_e", "EX_lys__L_e", "EX_met__L_e", "EX_phe__L_e", "EX_pro__L_e",
+  "EX_ser__L_e", "EX_thr__L_e", "EX_trp__L_e", "EX_tyr__L_e", "EX_val__L_e"
+)
+
+keymets <- c("cycle",
+  "EX_ac_e", "EX_for_e", "EX_gal_e", "EX_glyclt_e", "EX_lcts_e",
+  "EX_meoh_e", "EX_pppn_e", "EX_co2_e", "EX_etoh_e", "EX_glc__D_e"
+)
+
+#ac_e = acetate, for_e = formate, gal_e = galactose, glyclt_e = glycolate, lcts_e = lactose, meoh_e = methanol, pppn_e = phenylpropanoate
+
+ruta_flux <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/fluxes/C11/"
+archivos_flux <- list.files(ruta_flux, full.names = TRUE, pattern = "\\.txt$|\\.tsv$|\\.csv$")
+
+for (flux in archivos_flux) {
+  df <- read.delim(flux, sep = "\t")
+  
+  # Subset 
+  df <- df[1:min(800, nrow(df)), , drop = FALSE]
+  
+  # Filtrar columnas con actividad (> 0) 
+  cols_activas <- c(TRUE, colSums(abs(df[, -1, drop = FALSE])) > 0)
+  df_clean <- df[, cols_activas, drop = FALSE]
+  
+  # Seleccionar cycle y metabolitos presentes
+  df_filtro <- df_clean %>%
+    select(any_of(aminoacidos))
+  
+  if (ncol(df_filtro) <= 1) {
+    next
+  }
+  
+  df_long <- df_filtro %>%
+    pivot_longer(
+      cols = -cycle,
+      names_to = "metabolito",
+      values_to = "flux"
+    )
+  
+  # ORDENAR COLORES DE GRAFICAS CON ETIQUETAS
+  orden_mets <- sort(unique(df_long$metabolito))
+  df_long$metabolito <- factor(df_long$metabolito, levels = orden_mets)
+  
+  # Gráfica
+  m <- ggplot(df_long, aes(x = cycle, y = flux, color = metabolito)) +
+    geom_line(linewidth = 0.1) +
+    geom_point(size = 0.5) +
+    facet_wrap(~ metabolito, scales = "free_y") +
+    guides(color = guide_legend(
+      override.aes = list(
+        shape = 15,
+        size = 6,
+        linetype = 0
+      )
+    )) +
+    labs(
+      title = paste("Flujos -", basename(flux)),
+      x = "Cycle",
+      y = "Flux",
+      color = "Metabolitos"
+    ) +
+    theme_bw() +
+    theme(
+      strip.background = element_blank(),
+      strip.text = element_blank(),
+      legend.position = "right",
+      legend.title = element_text(face = "bold", size = 11),
+      legend.text = element_text(size = 9),
+      legend.key = element_blank(),
+      legend.key.width = unit(1.0, "cm"),
+      legend.key.height = unit(0.6, "cm"),
+      axis.text.x = element_text(size = 7, angle = 45, hjust = 1)
+    )
+  
+  print(m)
+}
+
+
+
+```
+
+```{r}
+library(dplyr)
+library(RColorBrewer)
+
+
+aminoacidos <- c("cycle",
+  "EX_ala__L_e", "EX_arg__L_e", "EX_asn__L_e", "EX_asp__L_e", "EX_cys__L_e",
+  "EX_glu__L_e", "EX_gln__L_e", "EX_gly_e",    "EX_his__L_e", "EX_ile__L_e",
+  "EX_leu__L_e", "EX_lys__L_e", "EX_met__L_e", "EX_phe__L_e", "EX_pro__L_e",
+  "EX_ser__L_e", "EX_thr__L_e", "EX_trp__L_e", "EX_tyr__L_e", "EX_val__L_e"
+)
+keymets <- c("cycle",
+  "EX_ac_e", "EX_for_e", "EX_gal_e", "EX_glyclt_e", "EX_lcts_e",
+  "EX_meoh_e", "EX_pppn_e", "EX_co2_e", "EX_etoh_e", "EX_glc__D_e"
+)
+
+output_comu <- "D:/septiembre/graficas/cc/comunidades/mets"
+#dir.create(output_comu)
+ruta_flux <- "D:/septiembre/bacterias/cc/vk1/comunidades/fluxes/C29"
+archivos_flux <- list.files(ruta_flux, full.names = TRUE, pattern = "\\.txt$|\\.tsv$|\\.csv$")
+
+
+for (flux in archivos_flux) {
+  df <- read.delim(flux, sep = "\t")
+  
+  if (nrow(df) >= 200) {
+  df <- df[2500:min(3500, nrow(df)), ]
+} else {
+  next  
+}
+  
+  df_clean <- df[, c(TRUE, colSums(abs(df[, -1, drop = FALSE])) > 0), drop = FALSE]
+  
+  df_filtro <- df_clean %>%
+    select(any_of(aminoacidos)) %>%
+    select(-any_of(c("cycle", colnames(df)[1])))
+  
+    #rownames(data_flux) <- as.numeric(flux_file[[1]])*0.1
+
+  
+  if (ncol(df_filtro) < 2) {
+    message("Saltando ", basename(flux), ": no tiene metabolitos activos")
+    next
+  }
+  
+  # Preparar matriz
+  data <- as.matrix(df_filtro)
+  rownames(data) <- as.numeric(df[[1]])*0.1
+
+
+  # SIN DENDROGRAMA (Rowv = NA, Colv = NA)
+  color_met <- colorRampPalette(c("#F2F4F7", "#B7E4C7"))(25)
+  comu_mets <- heatmap(data, 
+            Rowv    = NA,     # Apaga el dendrograma 
+            Colv    = NA,     # Apaga el dendrograma 
+            scale   = "column", 
+            labRow  = rownames(data),   
+            cexRow = 0.8,
+            cexCol = 1,
+            margins = c(6, 3),
+            col     = color_met,
+            main    = basename(flux))
+
+  nombre_base <- tools::file_path_sans_ext(basename(flux))
+  bac_save <- file.path(output_comu, paste0(nombre_base, "_aminoacidos_2.png"))
+  dev.print(
+    device   = png, 
+    filename = bac_save, 
+    width    = 7.5, 
+    height   = 5, 
+    units    = "in", 
+    res      = 300
+  )
+  
+}
+```
+
+```{r}
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+aminoacidos <- c("cycle",
+  "EX_ala__L_e", "EX_arg__L_e", "EX_asn__L_e", "EX_asp__L_e", "EX_cys__L_e",
+  "EX_glu__L_e", "EX_gln__L_e", "EX_gly_e",    "EX_his__L_e", "EX_ile__L_e",
+  "EX_leu__L_e", "EX_lys__L_e", "EX_met__L_e", "EX_phe__L_e", "EX_pro__L_e",
+  "EX_ser__L_e", "EX_thr__L_e", "EX_trp__L_e", "EX_tyr__L_e", "EX_val__L_e"
+)
+
+keymets <- c("cycle",
+  "EX_ac_e", "EX_for_e", "EX_gal_e", "EX_glyclt_e", "EX_lcts_e",
+  "EX_meoh_e", "EX_pppn_e", "EX_co2_e", "EX_etoh_e", "EX_glc__D_e"
+)
+
+#ac_e = acetate, for_e = formate, gal_e = galactose, glyclt_e = glycolate, lcts_e = lactose, meoh_e = methanol, pppn_e = phenylpropanoate
+
+ruta_flux <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/fluxes/C11/"
+archivos_flux <- list.files(ruta_flux, full.names = TRUE, pattern = "\\.txt$|\\.tsv$|\\.csv$")
+
+for (flux in archivos_flux) {
+  df <- read.delim(flux, sep = "\t")
+  
+  # Subset 
+  df <- df[1:min(800, nrow(df)), , drop = FALSE]
+  
+  cols_activas <- c(TRUE, colSums(abs(df[, -1, drop = FALSE])) > 0)
+  df_clean <- df[, cols_activas, drop = FALSE]
+  
+  df_filtro <- df_clean %>%
+    select(any_of(aminoacidos))
+  
+  if (ncol(df_filtro) <= 1) {
+    next
+  }
+  
+  df_long <- df_filtro %>%
+    pivot_longer(
+      cols = -cycle,
+      names_to = "metabolito",
+      values_to = "flux"
+    )
+  
+  # ORDENAR COLORES DE GRAFICAS CON ETIQUETAS
+  orden_mets <- sort(unique(df_long$metabolito))
+  df_long$metabolito <- factor(df_long$metabolito, levels = orden_mets)
+  
+  # Gráfica
+  m <- ggplot(df_long, aes(x = cycle, y = flux, color = metabolito)) +
+    geom_line(linewidth = 0.1) +
+    geom_point(size = 0.5) +
+    facet_wrap(~ metabolito, scales = "free_y") +
+    guides(color = guide_legend(
+      override.aes = list(
+        shape = 15,
+        size = 6,
+        linetype = 0
+      )
+    )) +
+    labs(
+      title = paste("Flujos -", basename(flux)),
+      x = "Cycle",
+      y = "Flux",
+      color = "Metabolitos"
+    ) +
+    theme_bw() +
+    theme(
+      strip.background = element_blank(),
+      strip.text = element_blank(),
+      legend.position = "right",
+      legend.title = element_text(face = "bold", size = 11),
+      legend.text = element_text(size = 9),
+      legend.key = element_blank(),
+      legend.key.width = unit(1.0, "cm"),
+      legend.key.height = unit(0.6, "cm"),
+      axis.text.x = element_text(size = 7, angle = 45, hjust = 1)
+    )
+  
+  print(m)
+}
+```
+
+
+## Comparacion
+```{r}
+
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(fs)
+
+#"D:/septiembre/bacterias/cc/vk1/individual/fluxes/sshinii.tsv"
+path_indi <- "D:/septiembre/bacterias/cc/vk1/individual/biomass/"
+path_com  <- "D:/septiembre/bacterias/cc/vk1/comunidades/biomass/"
+output_folder <- "D:/septiembre/graficas/cc/comparacion/"
+dir_create(output_folder)
+
+
+colores_bac <- c(
+  baltitudinis   = "#455866",
+  corynebacterium = "#436FA6",
+  sarlettae       = "#5CBDB8",
+  bthuringiensis  = "#5A8CB5",
+  sshinii        = "#B3C5D3",
+  batrophaeus   = "#7C4146",
+  mluteus         = "#BC525D",
+  binfantis      = "#D75454",
+  pmegaterium    = "#C56E66",
+  mindicus        = "#C79786"
+)
+
+name_bac <- c(
+  baltitudinis    = "Bacillus altitudinis",
+  corynebacterium = "Corynebacterium sp.",
+  sarlettae     = "Staphylococcus arlettae",
+  bthuringiensis  = "Bacillus thuringiensis",
+  sshinii       = "Staphylococcus shinii",
+  batrophaeus  = "Bacillus atrophaeus",
+  mluteus        = "Micrococcus luteus",
+  binfantis       = "Bacillus infantis",
+  pmegaterium     = "Priestia megaterium",
+  mindicus        = "Metabacillus indicus"
+)
+
+
+com_files <- list.files(path_com, pattern = "\\.txt$", full.names = TRUE)
+com_files <- com_files[!dir.exists(com_files)]
+
+all_com_data <- data.frame()
+
+for (f in com_files) {
+  # Extraer identificador de comunidad (ej. "com1_biomass.txt" -> "C1")
+  com_raw <- tools::file_path_sans_ext(basename(f))
+  com_num <- str_extract(com_raw, "[0-9]+")
+  com_id  <- ifelse(!is.na(com_num), paste0("C", com_num), com_raw)
+  
+  df_c <- read.table(f, header = FALSE, fill = TRUE, comment.char = "")
+  if (ncol(df_c) < 5) next
+  colnames(df_c)[1:5] <- c("time", "x", "y", "model", "biomass")
+  
+  # Limpiar nombre: "pseudomonas.cmd" -> "pseudomonas"
+  df_c <- df_c %>%
+    mutate(
+      time     = as.numeric(time),
+      biomass  = as.numeric(biomass),
+      model_id = str_remove(model, "\\.cmd$"),
+      Origen   = com_id
+    )
+  
+  all_com_data <- bind_rows(all_com_data, df_c)
+}
+
+
+#  GRÁFICAS PARA COMPARAR
+
+indi_files <- list.files(path_indi, full.names = TRUE)
+indi_files <- indi_files[!dir.exists(indi_files)]
+
+for (f_ind in indi_files) {
+  
+  raw_name <- tools::file_path_sans_ext(basename(f_ind))
+  id_cepa  <- sub("_biomass$", "", raw_name)
+  
+  df_ind_raw <- read.table(f_ind, header = FALSE, fill = TRUE, comment.char = "")
+  if (ncol(df_ind_raw) < 5) next
+  colnames(df_ind_raw)[1:5] <- c("time", "c2", "c3", "model_raw", "biomass")
+  
+  df_ind <- df_ind_raw %>%
+    mutate(
+      time    = as.numeric(time),
+      biomass = as.numeric(biomass)
+    ) %>%
+    arrange(time)
+  
+  # Biomasa final  individual
+  bio_final_ind <- data.frame(
+    Origen        = "Individual",
+    biomass_final = last(df_ind$biomass)
+  )
+  
+  # Filtrar bacteria en las comunidades
+  df_com_match <- all_com_data %>%
+    filter(model_id == id_cepa)
+  
+  
+  # Biomasa final ordenada de mayor a menor
+  bio_final_com <- df_com_match %>%
+    group_by(Origen) %>%
+    arrange(time) %>%
+    summarise(biomass_final = last(biomass), .groups = "drop") %>%
+    arrange(desc(biomass_final))
+  
+  data_barras <- bind_rows(bio_final_ind, bio_final_com) %>%
+    mutate(
+      order_mag = ifelse(biomass_final > 0, floor(log10(biomass_final)), NA_real_),
+      Origen    = factor(Origen, levels = c("Individual", bio_final_com$Origen))
+    )
+  
+  color_actual  <- ifelse(id_cepa %in% names(colores_bac), colores_bac[id_cepa], "#2b5c8f")
+  nombre_actual <- ifelse(id_cepa %in% names(name_bac), name_bac[id_cepa], id_cepa)
+  
+  # gráfica de barras
+  p_comp <- ggplot(data_barras, aes(x = Origen, y = biomass_final)) +
+    geom_col(fill = color_actual, color = "black", width = 0.6) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+    labs(
+      title    = nombre_actual,
+      x        = "Condición",
+      y        = "Biomasa Final (g)"
+    ) +
+    theme_bw(base_size = 12) +
+    theme(
+      plot.title         = element_text(face = "bold.italic", size = 13),
+      panel.grid.minor   = element_blank(),
+      panel.grid.major.x = element_blank(),
+      axis.text.x        = element_text(angle = 45, hjust = 1, face = "bold")
+    )
+  
+  print(p_comp)
+  out_file <- file.path(output_folder, paste0("comp_biomasa_", id_cepa, ".png"))
+  ggsave(out_file, p_comp, width = 7.5, height = 5, dpi = 300)
+}
+
+```
+
+
+
+````{r}
+library(png)
+library(grid)
+library(patchwork)
+library(ggplot2)
+
+# 1. Carpeta y rutas
+carpeta <- "D:/septiembre/graficas/cc/comunidades/logy/"
+rutas <- file.path(carpeta, paste0("C", 1:32, "_biomass.png"))
+
+# 2. Leer imágenes eliminando márgenes internos
+lista_grobs <- lapply(rutas, function(ruta) {
+  img <- rasterGrob(readPNG(ruta), interpolate = TRUE)
+  wrap_elements(img) + 
+    theme_void() + 
+    theme(plot.margin = margin(t = 0, r = 1, b = 0, l = 1, unit = "pt"))
+})
+
+# 3. Ensamblar en 8 columnas x 4 filas
+panel_32 <- wrap_plots(lista_grobs, ncol = 8, nrow = 4)
+
+# 4. Guardar con altura reducida (elimina el espacio vertical excesivo)
+ggsave(
+  filename  = file.path(carpeta, "panel_total_32_comunidades_compacto.png"),
+  plot      = panel_32,
+  width     = 24,    # Mantiene el ancho para las 8 columnas
+  height    = 8.5,   # Reducido de 14 a 8.5 para pegar los renglones
+  dpi       = 300,
+  limitsize = FALSE
+)
+
+
+````
+
+
+```{r}
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(scales)
+
+# 1. Rutas
+ruta_txt <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/biomass/"
+
+# 2. Diccionarios de colores y nombres
+colores_bac <- c(
+  baltitudinis_biomass    = "#455866",
+  corynebacterium_biomass = "#436FA6",
+  sarlettae_biomass       = "#5CBDB8",
+  bthuringiensis_biomass  = "#5A8CB5",
+  sshinii_biomass         = "#B3C5D3",
+  batrophaeus_biomass     = "#7C4146",
+  mluteus_biomass         = "#BC525D",
+  binfantis_biomass       = "#D75454",
+  pmegaterium_biomass     = "#C56E66",
+  mindicus_biomass        = "#C79786"
+)
+
+name_bac <- c(
+  baltitudinis_biomass    = "Bacillus altitudinis",
+  corynebacterium_biomass = "Corynebacterium sp.",
+  sarlettae_biomass       = "Staphylococcus arlettae",
+  bthuringiensis_biomass  = "Bacillus thuringiensis",
+  sshinii_biomass         = "Staphylococcus shinii",
+  batrophaeus_biomass     = "Bacillus atrophaeus",
+  mluteus_biomass         = "Micrococcus luteus",
+  binfantis_biomass       = "Bacillus infantis",
+  pmegaterium_biomass     = "Priestia megaterium",
+  mindicus_biomass        = "Metabacillus indicus"
+)
+
+keys_clean <- sub("_biomass$", "", names(colores_bac))
+colores_bac_completos <- c(colores_bac, setNames(colores_bac, keys_clean))
+name_bac_completos    <- c(name_bac, setNames(name_bac, keys_clean))
+
+# Paleta asignada a los nombres legibles
+colores_plot <- setNames(colores_bac_completos, name_bac_completos)
+colores_plot <- colores_plot[!duplicated(names(colores_plot))]
+
+# 3. Lectura y consolidación de todos los archivos
+archivos <- list.files(ruta_txt, pattern = "\\.txt$", full.names = TRUE)
+
+all_data <- list()
+
+for (i in archivos) {
+  com_name <- sub("\\.txt$", "", basename(i))
+  
+  df <- read_table(
+    i,
+    col_names = c("cicle", "x", "y", "id", "mass"),
+    show_col_types = FALSE
+  )
+  
+  df_sub <- df %>%
+    filter(cicle <= 5000) %>%
+    mutate(
+      species       = sub("\\.cmd$", "", id),
+      hours         = cicle * 0.1,
+      mass          = as.numeric(mass),
+      community     = com_name,
+      species_clean = ifelse(species %in% names(name_bac_completos), name_bac_completos[species], species)
+    ) %>%
+    arrange(hours)
+  
+  all_data[[com_name]] <- df_sub
+}
+
+# Unir todo el set de datos
+df_total <- bind_rows(all_data)
+
+# 4. Imprimir la gráfica única
+print(
+  ggplot(df_total, aes(x = hours, y = mass, color = species_clean, linetype = species_clean)) +
+    geom_line(linewidth = 0.8) +
+    geom_point(size = 0.9, alpha = 0.5) +
+    scale_y_log10() +
+    scale_x_log10() +
+    scale_color_manual(values = colores_plot) +
+    scale_linetype_discrete() +
+    facet_wrap(~ community) +
+    labs(
+      title    = "Dinámica de Biomasa por Comunidad",
+      x        = "Tiempo (h)",
+      y        = "Biomasa (g)",
+      color    = "Cepa",
+      linetype = "Cepa"
+    ) +
+    theme_bw(base_size = 11) +
+    theme(
+      plot.title       = element_text(face = "bold", size = 14, hjust = 0.5),
+      strip.text       = element_text(face = "bold", size = 10),
+      panel.grid.minor = element_blank(),
+      legend.position  = "bottom",
+      legend.text      = element_text(face = "italic", size = 9)
+    )
+)
+```
+
+
+### Frecuencia relativa
+```{r}
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(fs)
+library(stringr)
+
+ruta_comunidades <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/biomass"
+ruta_individual  <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/individual/biomass"
+output_folder    <- "/media/abigaylmontantearenas/KINGSTON/septiembre/graficas/cc/abundancia"
+dir_create(output_folder)
+
+colores_bac <- c(
+  baltitudinis_biomass    = "#455866",
+  corynebacterium_biomass = "#436FA6",
+  sarlettae_biomass       = "#5CBDB8",
+  bthuringiensis_biomass  = "#5A8CB5",
+  sshinii_biomass         = "#B3C5D3",
+  batrophaeus_biomass     = "#7C4146",
+  mluteus_biomass         = "#BC525D",
+  binfantis_biomass       = "#D75454",
+  pmegaterium_biomass     = "#C56E66",
+  mindicus_biomass        = "#C79786"
+)
+
+name_bac <- c(
+  baltitudinis_biomass    = "Bacillus altitudinis",
+  corynebacterium_biomass = "Corynebacterium sp.",
+  sarlettae_biomass       = "Staphylococcus arlettae",
+  bthuringiensis_biomass  = "Bacillus thuringiensis",
+  sshinii_biomass         = "Staphylococcus shinii",
+  batrophaeus_biomass     = "Bacillus atrophaeus",
+  mluteus_biomass         = "Micrococcus luteus",
+  binfantis_biomass       = "Bacillus infantis",
+  pmegaterium_biomass     = "Priestia megaterium",
+  mindicus_biomass        = "Metabacillus indicus"
+)
+
+keys_clean <- sub("_biomass$", "", names(colores_bac))
+colores_bac_completos <- c(colores_bac, setNames(colores_bac, keys_clean))
+name_bac_completos    <- c(name_bac, setNames(name_bac, keys_clean))
+
+archivos_com <- list.files(ruta_comunidades, pattern = "\\.txt$", ignore.case = TRUE, full.names = TRUE)
+
+all_data <- map_dfr(archivos_com, function(file_path) {
+  # Extraer solo C1, C2, etc., removiendo _biomass y la extensión
+  com_id <- sub("\\.[^.]+$", "", basename(file_path))
+  com_id <- sub("_biomass$", "", com_id, ignore.case = TRUE)
+  com_id <- sub("^com(unidad)?_?", "C", com_id, ignore.case = TRUE)
+  
+  df <- read_table(
+    file_path,
+    col_names = c("cicle", "x", "y", "model", "biomass"),
+    col_types = cols(
+      cicle   = col_double(),
+      x       = col_double(),
+      y       = col_double(),
+      model   = col_character(),
+      biomass = col_double()
+    ),
+    show_col_types = FALSE
+  )
+  
+  if (nrow(df) == 0) return(NULL)
+  
+  df %>%
+    mutate(
+      model_id   = sub("\\.cmd$", "", model),
+      clean_name = ifelse(model_id %in% names(name_bac_completos), name_bac_completos[model_id], model_id),
+      hours      = cicle * 0.1,
+      com        = com_id
+    ) %>%
+    filter(model_id %in% names(colores_bac_completos))
+})
+
+# Tiempos de interés cada 20 horas (200 ciclos)
+cicles_keep <- seq(0, 2000, by = 200)
+
+rel_time <- all_data %>%
+  filter(cicle %in% cicles_keep) %>%
+  group_by(com, cicle, hours, clean_name) %>%
+  summarise(biomass = sum(biomass), .groups = "drop") %>%
+  group_by(com, cicle) %>%
+  mutate(rel_abund = biomass / sum(biomass)) %>%
+  ungroup()
+
+# Ordenar las comunidades de forma numérica natural (C1, C2, ..., C10, C11...)
+com_numeros <- as.numeric(regmatches(rel_time$com, regexpr("[0-9]+", rel_time$com)))
+if (!all(is.na(com_numeros))) {
+  orden_coms <- unique(rel_time$com[order(com_numeros)])
+  rel_time$com <- factor(rel_time$com, levels = orden_coms)
+}
+
+colores_plot <- setNames(colores_bac_completos, name_bac_completos)
+colores_plot <- colores_plot[!duplicated(names(colores_plot))]
+
+for (com_i in levels(rel_time$com)) {
+  df_sub <- rel_time %>% filter(com == com_i)
+  
+  if (nrow(df_sub) == 0) next
+  
+  p_com <- ggplot(df_sub, aes(x = factor(hours), y = rel_abund, fill = clean_name)) +
+    geom_bar(stat = "identity", width = 0.85) +
+    scale_fill_manual(values = colores_plot, name = "Cepa") +
+    scale_y_continuous(
+      expand = c(0, 0), 
+      breaks = seq(0, 1, by = 0.2), 
+      labels = scales::percent
+    ) +
+    labs(
+      title = com_i,
+      x     = "Tiempo (h)",
+      y     = "Abundancia Relativa"
+    ) +
+    theme_classic(base_size = 14) +
+    theme(
+      plot.title         = element_text(face = "bold", size = 18, hjust = 0.5),
+      axis.title         = element_text(size = 15),
+      axis.text.x        = element_text(angle = 45, hjust = 1, vjust = 1, size = 12, color = "black"),
+      axis.text.y        = element_text(size = 12, color = "black"),
+      panel.grid.major.y = element_line(color = "grey95", linewidth = 0.5),
+      legend.title       = element_text(size = 15),
+      legend.text        = element_text(face = "italic", size = 12)
+    )
+  
+  print(p_com)
+  
+  ggsave(
+    filename = file.path(output_folder, paste0("abundancia_relativa_", com_i, ".png")),
+    plot     = p_com,
+    width    = 9,
+    height   = 6,
+    dpi      = 300
+  )
+}
+
+```
+
+
+```{r}
+library(png)
+library(grid)
+library(cowplot)
+
+ruta_imagenes <- "/media/abigaylmontantearenas/KINGSTON/septiembre/graficas/cc/abundancia"
+ruta_salida   <- "/media/abigaylmontantearenas/KINGSTON/septiembre/graficas/cc"
+
+comunidades <- c("C1", "C2", "C4", "C6", "C8", "C10", "C15", "C21")
+
+archivos_panel <- file.path(
+  ruta_imagenes, 
+  paste0("abundancia_relativa_", comunidades, ".png")
+)
+
+archivos_validos <- archivos_panel[file.exists(archivos_panel)]
+
+lista_graficos <- lapply(archivos_validos, function(ruta) {
+  img <- readPNG(ruta)
+  rasterGrob(img, interpolate = TRUE)
+})
+
+# Cuadrícula de 2 columnas con etiquetas A, B, C, D
+panel_cow <- plot_grid(
+  plotlist   = lista_graficos,
+  ncol       = 4,
+  #labels     = "AUTO",
+  label_size = 14
+)
+
+# Mostrar en pantalla
+print(panel_cow)
+
+archivo_salida <- file.path(ruta_salida, "bthuringiensis_dinamica2.png")
+
+save_plot(
+  filename    = archivo_salida,
+  plot        = panel_cow,
+  base_width  = 22,
+  base_height = 8,
+  dpi         = 300,
+  bg          = "white"
+)
+
+
+```
+ 
+ 
+ 
+
+
+
+```{r}
+
+syncom <- read.csv("/home/abigaylmontantearenas/Documents/proyecto_tesis/01_data/cc/syncoms.csv", sep = ",")
+
+# Source - https://stackoverflow.com/q/34076588
+# Posted by Evgenij Reznik
+# Retrieved 2026-09-25, License - CC BY-SA 3.0
+
+syncom[,c("strain", "C10","C13","C15", "C19", "C21", "C28")]
+syncom[,c("strain", "C16","C22", "C25", "C26", "C29", "C30", "C32")]
+
+
+
+```
+### consumo y produccion
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+ruta_txt <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/fluxes/"
+#com1_corynebacterium_exchange_fluxes.tsv
+archivos <- list.files(
+  path = ruta_txt,
+  pattern = "_corynebacterium_.*\\.tsv$",
+  full.names = TRUE,
+  ignore.case = TRUE,
+  recursive = TRUE
+)
+
+print(archivos)
+
+flux_file_m <- read.delim(ruta, sep = "\t", check.names = FALSE)
+
+flux_file_m <- flux_file_m[1:min(200, nrow(flux_file_m)), , drop = FALSE]
+
+cols_activas <- c(TRUE, colSums(abs(flux_file_m[, -1, drop = FALSE]), na.rm = TRUE) > 0)
+df_clean_m <- flux_file_m[, cols_activas, drop = FALSE]
+
+colnames(df_clean_m)[1] <- "cycle"
+
+consumo <- df_clean_m[, c(TRUE, vapply(df_clean_m[, -1], function(x) any(x < 0, na.rm = TRUE), logical(1)))]
+
+df_long_m <- consumo %>%
+  pivot_longer(
+    cols = -cycle,
+    names_to = "metabolito",
+    values_to = "flux"
+  )
+produccion <- df_clean_m[, c(TRUE, vapply(df_clean_m[, -1], function(x) any(x > 0, na.rm = TRUE), logical(1)))]
+
+
+df_long_p <- produccion %>%
+  pivot_longer(
+    cols = -cycle,
+    names_to = "metabolito",
+    values_to = "flux"
+  )
+
+df_long_c <- consumo %>%
+  pivot_longer(
+    cols = -cycle,
+    names_to = "metabolito",
+    values_to = "flux"
+  )
+
+
+# ORDENAR COLORES DE GRAFICAS CON ETIQUETAS
+orden_mets <- sort(unique(df_long_m$metabolito))
+df_long_m$metabolito <- factor(df_long_m$metabolito, levels = orden_mets)
+
+# Gráfica
+m <- ggplot(df_long_m, aes(x = cycle, y = flux, color = metabolito)) +
+  geom_line(linewidth = 0.1) +
+  geom_point(size = 0.5) +
+  facet_wrap(~ metabolito, scales = "free_y") +
+  guides(color = guide_legend(
+    override.aes = list(
+      shape = 15,
+      size = 6,
+      linetype = 0
+    )
+  )) +
+  labs(
+    title = paste("Flujos -", basename(ruta)),
+    x = "Cycle",
+    y = "Flux",
+    color = "Metabolitos"
+  ) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    legend.position = "right",
+    legend.title = element_text(face = "bold", size = 11),
+    legend.text = element_text(size = 9),
+    legend.key = element_blank(),
+    legend.key.width = unit(1.0, "cm"),
+    legend.key.height = unit(0.6, "cm"),
+    axis.text.x = element_text(size = 7, angle = 45, hjust = 1)
+  )
+
+print(m)
+
+#################################
+
+ruta_txt <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/fluxes/"
+
+archivos <- list.files(
+  path = ruta_txt,
+  pattern = "_corynebacterium_.*\\.tsv$",
+  full.names = TRUE,
+  ignore.case = TRUE,
+  recursive = TRUE
+)
+
+# Listas para acumular las tablas de cada archivo
+lista_c <- list()
+lista_p <- list()
+
+for (ruta in archivos) {
+  flux_file_m <- read.delim(ruta, sep = "\t", check.names = FALSE)
+  flux_file_m <- flux_file_m[1:min(200, nrow(flux_file_m)), , drop = FALSE]
+  
+  cols_activas <- c(TRUE, colSums(abs(flux_file_m[, -1, drop = FALSE]), na.rm = TRUE) > 0)
+  df_clean_m <- flux_file_m[, cols_activas, drop = FALSE]
+  colnames(df_clean_m)[1] <- "cycle"
+  
+  # Consumo (< 0)
+  consumo <- df_clean_m[, c(TRUE, vapply(df_clean_m[, -1, drop = FALSE], function(x) any(x < 0, na.rm = TRUE), logical(1))), drop = FALSE]
+  if (ncol(consumo) > 1) {
+    df_long_c <- consumo %>%
+      pivot_longer(cols = -cycle, names_to = "metabolito", values_to = "flux") %>%
+      mutate(archivo = basename(ruta))
+    lista_c[[ruta]] <- df_long_c
+  }
+  
+  # Producción (> 0)
+  produccion <- df_clean_m[, c(TRUE, vapply(df_clean_m[, -1, drop = FALSE], function(x) any(x > 0, na.rm = TRUE), logical(1))), drop = FALSE]
+  if (ncol(produccion) > 1) {
+    df_long_p <- produccion %>%
+      pivot_longer(cols = -cycle, names_to = "metabolito", values_to = "flux") %>%
+      mutate(archivo = basename(ruta))
+    lista_p[[ruta]] <- df_long_p
+  }
+}
+
+# Juntar todos los archivos
+df_long_c <- bind_rows(lista_c)
+df_long_p <- bind_rows(lista_p)
+
+
+orden_mets <- sort(unique(df_long_c$metabolito))
+df_long_c$metabolito <- factor(df_long_c$metabolito, levels = orden_mets)
+
+m_c <- ggplot(df_long_c, aes(x = cycle, y = flux, color = metabolito, group = interaction(metabolito, archivo))) +
+  geom_line(linewidth = 0.1) +
+  geom_point(size = 0.5) +
+  facet_wrap(~ metabolito, scales = "free_y") +
+  guides(color = guide_legend(
+    override.aes = list(shape = 15, size = 6, linetype = 0)
+  )) +
+  labs(
+    title = "Flujos - Consumo Corynebacterium",
+    x = "Cycle",
+    y = "Flux",
+    color = "Metabolitos"
+  ) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    legend.position = "right",
+    legend.title = element_text(face = "bold", size = 11),
+    legend.text = element_text(size = 9),
+    legend.key = element_blank(),
+    legend.key.width = unit(1.0, "cm"),
+    legend.key.height = unit(0.6, "cm"),
+    axis.text.x = element_text(size = 7, angle = 45, hjust = 1)
+  )
+
+print(m_c)
+
+
+orden_mets <- sort(unique(df_long_p$metabolito))
+df_long_p$metabolito <- factor(df_long_p$metabolito, levels = orden_mets)
+
+m_p <- ggplot(df_long_p, aes(x = cycle, y = flux, color = metabolito, group = interaction(metabolito, archivo))) +
+  geom_line(linewidth = 0.1) +
+  geom_point(size = 0.5) +
+  facet_wrap(~ metabolito, scales = "free_y") +
+  guides(color = guide_legend(
+    override.aes = list(shape = 15, size = 6, linetype = 0)
+  )) +
+  labs(
+    title = "Flujos - Producción Corynebacterium",
+    x = "Cycle",
+    y = "Flux",
+    color = "Metabolitos"
+  ) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    legend.position = "right",
+    legend.title = element_text(face = "bold", size = 11),
+    legend.text = element_text(size = 9),
+    legend.key = element_blank(),
+    legend.key.width = unit(1.0, "cm"),
+    legend.key.height = unit(0.6, "cm"),
+    axis.text.x = element_text(size = 7, angle = 45, hjust = 1)
+  )
+
+print(m_p)
+
+
+
+
+
+############################################
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+graphics.off()
+
+ruta_txt <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/fluxes"
+output   <- "/media/abigaylmontantearenas/KINGSTON/septiembre/graficas/cc/binfantis"
+
+if (!dir.exists(output)) {
+  dir.create(output, recursive = TRUE)
+}
+
+archivos <- list.files(
+  path = ruta_txt,
+  pattern = "_binfantis_.*\\.tsv$",
+  full.names = TRUE,
+  ignore.case = TRUE,
+  recursive = TRUE
+)
+
+# Listas para acumular la presencia de metabolitos de todas las comunidades
+registro_consumo    <- list()
+registro_produccion <- list()
+
+for (ruta in archivos) {
+  flux_file_m <- read.delim(ruta, sep = "\t", check.names = FALSE)
+  if (nrow(flux_file_m) == 0) next
+  
+  flux_file_m <- flux_file_m[1:min(1000, nrow(flux_file_m)), , drop = FALSE]
+  
+  # 1. Conservar columnas activas
+  cols_activas <- c(TRUE, colSums(abs(flux_file_m[, -1, drop = FALSE]), na.rm = TRUE) > 0)
+  df_clean_m <- flux_file_m[, cols_activas, drop = FALSE]
+  
+  # Tiempo en horas (ciclo * 0.1)
+  df_clean_m[, 1] <- df_clean_m[, 1] * 0.1
+  colnames(df_clean_m)[1] <- "tiempo"
+  
+  nombre_archivo <- sub("\\.tsv$", "", basename(ruta))
+  
+  # -------------------------------------------------------------
+  # 2. CONSUMO (< 0)
+  # -------------------------------------------------------------
+  cols_c <- c(TRUE, vapply(df_clean_m[, -1, drop = FALSE], function(x) any(x < 0, na.rm = TRUE), logical(1)))
+  consumo <- df_clean_m[, cols_c, drop = FALSE]
+  
+  if (ncol(consumo) > 1) {
+    mets_c <- colnames(consumo)[-1]
+    
+    # Guardar en la lista global para el CSV final
+    registro_consumo[[nombre_archivo]] <- data.frame(
+      comunidad  = nombre_archivo,
+      metabolito = mets_c,
+      stringsAsFactors = FALSE
+    )
+    
+    df_long_c <- consumo %>%
+      pivot_longer(cols = -tiempo, names_to = "metabolito", values_to = "flujo")
+    
+    # Filtrar dinamicas apreciables
+    df_long_c <- df_long_c %>%
+      group_by(metabolito) %>%
+      filter((max(flujo, na.rm = TRUE) - min(flujo, na.rm = TRUE)) > 1e-5) %>%
+      ungroup()
+    
+    if (nrow(df_long_c) > 0) {
+      orden_mets_c <- sort(unique(df_long_c$metabolito))
+      df_long_c$metabolito <- factor(df_long_c$metabolito, levels = orden_mets_c)
+      
+      m_c <- ggplot(df_long_c, aes(x = tiempo, y = flujo, color = metabolito)) +
+        geom_line(linewidth = 0.5) +
+        geom_point(size = 0.7, alpha = 0.7) +
+        facet_wrap(~ metabolito, scales = "free_y", ncol = 5) +
+        labs(
+          title = paste("Consumo -", nombre_archivo),
+          x = "Tiempo (h)",
+          y = "Flujo"
+        ) +
+        theme_bw() +
+        theme(
+          # Conservar etiquetas en cada recuadro
+          strip.background = element_rect(fill = "grey95", color = "grey70"),
+          strip.text = element_text(size = 7, face = "bold"),
+          legend.position = "none",
+          axis.text.x = element_text(size = 7, angle = 45, hjust = 1),
+          axis.text.y = element_text(size = 6),
+          panel.spacing = unit(0.5, "lines")
+        )
+      
+      filas_c <- ceiling(length(unique(df_long_c$metabolito)) / 5)
+      alto_c  <- max(6, filas_c * 2.2)
+      
+      ggsave(
+        filename = file.path(output, paste0("consumo_", nombre_archivo, ".png")),
+        plot = m_c, width = 13, height = alto_c, dpi = 300
+      )
+    }
+  }
+  
+  # -------------------------------------------------------------
+  # 3. PRODUCCIÓN (> 0)
+  # -------------------------------------------------------------
+  cols_p <- c(TRUE, vapply(df_clean_m[, -1, drop = FALSE], function(x) any(x > 0, na.rm = TRUE), logical(1)))
+  produccion <- df_clean_m[, cols_p, drop = FALSE]
+  
+  if (ncol(produccion) > 1) {
+    mets_p <- colnames(produccion)[-1]
+    
+    # Guardar en la lista global para el CSV final
+    registro_produccion[[nombre_archivo]] <- data.frame(
+      comunidad  = nombre_archivo,
+      metabolito = mets_p,
+      stringsAsFactors = FALSE
+    )
+    
+    df_long_p <- produccion %>%
+      pivot_longer(cols = -tiempo, names_to = "metabolito", values_to = "flujo")
+    
+    # Filtrar dinamicas apreciables
+    df_long_p <- df_long_p %>%
+      group_by(metabolito) %>%
+      filter((max(flujo, na.rm = TRUE) - min(flujo, na.rm = TRUE)) > 1e-5) %>%
+      ungroup()
+    
+    if (nrow(df_long_p) > 0) {
+      orden_mets_p <- sort(unique(df_long_p$metabolito))
+      df_long_p$metabolito <- factor(df_long_p$metabolito, levels = orden_mets_p)
+      
+      m_p <- ggplot(df_long_p, aes(x = tiempo, y = flujo, color = metabolito)) +
+        geom_line(linewidth = 0.5) +
+        geom_point(size = 0.7, alpha = 0.7) +
+        facet_wrap(~ metabolito, scales = "free_y", ncol = 5) +
+        labs(
+          title = paste("Producción -", nombre_archivo),
+          x = "Tiempo (h)",
+          y = "Flujo"
+        ) +
+        theme_bw() +
+        theme(
+          # Conservar etiquetas en cada recuadro
+          strip.background = element_rect(fill = "grey95", color = "grey70"),
+          strip.text = element_text(size = 7, face = "bold"),
+          legend.position = "none",
+          axis.text.x = element_text(size = 7, angle = 45, hjust = 1),
+          axis.text.y = element_text(size = 6),
+          panel.spacing = unit(0.5, "lines")
+        )
+      
+      filas_p <- ceiling(length(unique(df_long_p$metabolito)) / 5)
+      alto_p  <- max(6, filas_p * 2.2)
+      
+      ggsave(
+        filename = file.path(output, paste0("produccion_", nombre_archivo, ".png")),
+        plot = m_p, width = 13, height = alto_p, dpi = 300
+      )
+    }
+  }
+}
+
+# -------------------------------------------------------------
+# 4. GUARDAR LOS 2 ARCHIVOS CSV GLOBALES
+# -------------------------------------------------------------
+tabla_consumo_total <- bind_rows(registro_consumo)
+tabla_produccion_total <- bind_rows(registro_produccion)
+
+write.csv(
+  tabla_consumo_total,
+  file = file.path(output, "metabolitos_consumo_infidivual.csv"),
+  row.names = FALSE
+)
+
+write.csv(
+  tabla_produccion_total,
+  file = file.path(output, "metabolitos_produccion_individual.csv"),
+  row.names = FALSE
+)
+```
+
+### Dinamicas de comunidades
+```{r}
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(fs)
+library(png)
+library(grid)
+library(cowplot)
+
+ruta_txt        <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/biomass"
+ruta_individual <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/individual/biomass"
+output_folder   <- "/media/abigaylmontantearenas/KINGSTON/septiembre/graficas/cc/dinamicas/log"
+dir_create(output_folder)
+
+claves_cepas <- c(
+  "Bacillus altitudinis"    = "baltitudinis",
+  "Corynebacterium sp."     = "corynebacterium",
+  "Staphylococcus arlettae" = "sarlettae",
+  "Bacillus thuringiensis"  = "bthuringiensis",
+  "Staphylococcus shinii"   = "sshinii",
+  "Bacillus atrophaeus"     = "batrophaeus",
+  "Micrococcus luteus"      = "mluteus",
+  "Bacillus infantis"       = "binfantis",
+  "Priestia megaterium"     = "pmegaterium",
+  "Metabacillus indicus"    = "mindicus"
+)
+
+colores_bac <- c(
+  "Bacillus altitudinis"    = "#455866",
+  "Corynebacterium sp."     = "#436FA6",
+  "Staphylococcus arlettae" = "#5CBDB8",
+  "Bacillus thuringiensis"  = "#5A8CB5",
+  "Staphylococcus shinii"   = "#B3C5D3",
+  "Bacillus atrophaeus"     = "#7C4146",
+  "Micrococcus luteus"      = "#BC525D",
+  "Bacillus infantis"       = "#D75454",
+  "Priestia megaterium"     = "#C56E66",
+  "Metabacillus indicus"    = "#C79786"
+)
+
+cepa_objetivo <- "Metabacillus indicus"
+ciclo_maximo  <- 2000
+
+#"Bacillus altitudinis"    
+#"Corynebacterium sp."     
+#"Staphylococcus arlettae"
+#"Bacillus thuringiensis" 
+#"Staphylococcus shinii"  
+#"Bacillus atrophaeus"     
+#"Micrococcus luteus"      
+#"Bacillus infantis"     
+#"Priestia megaterium"   
+#"Metabacillus indicus"  
+
+
+clave_cepa <- claves_cepas[cepa_objetivo]
+color_cepa <- colores_bac[cepa_objetivo]
+
+archivos_com <- list.files(ruta_txt, pattern = "\\.txt$", ignore.case = TRUE, full.names = TRUE)
+
+df_plot <- map_dfr(archivos_com, function(f) {
+  com_name <- sub("\\.[^.]+$", "", basename(f))
+  df <- read_table(
+    f,
+    col_names = c("cicle", "x", "y", "id", "mass"),
+    col_types = cols(cicle = col_double(), x = col_double(), y = col_double(), id = col_character(), mass = col_double()),
+    show_col_types = FALSE
+  )
+  if (nrow(df) == 0) return(NULL)
+  
+  df %>%
+    filter(str_detect(id, clave_cepa)) %>%
+    mutate(
+      hours     = cicle * 0.1,
+      mass      = as.numeric(mass),
+      community = com_name
+    )
+}) %>%
+  filter(mass > 0, cicle <= ciclo_maximo)
+
+archivos_ind <- list.files(ruta_individual, pattern = "\\.txt$", recursive = TRUE, full.names = TRUE)
+
+archivo_ind_cepa <- archivos_ind[str_detect(tolower(archivos_ind), tolower(clave_cepa))]
+
+if (length(archivo_ind_cepa) == 0) {
+  archivo_ind_cepa <- map_chr(archivos_ind, function(f) {
+    lineas <- readLines(f, n = 5, warn = FALSE)
+    if (any(str_detect(lineas, clave_cepa))) return(f)
+    return(NA_character_)
+  }) %>% na.omit()
+}
+
+cat("Archivo individual cargado:", archivo_ind_cepa[1], "\n")
+
+df_ind_raw <- read_table(
+  archivo_ind_cepa[1],
+  col_names = c("cicle", "x", "y", "id", "mass"),
+  col_types = cols(cicle = col_double(), x = col_double(), y = col_double(), id = col_character(), mass = col_double()),
+  show_col_types = FALSE
+)
+
+df_ind_plot <- df_ind_raw %>%
+  group_by(cicle) %>%
+  summarise(mass = sum(mass), .groups = "drop") %>%
+  mutate(hours = cicle * 0.1) %>%
+  filter(mass > 0, cicle <= ciclo_maximo)
+
+
+grafica_especifica <- ggplot() +
+  geom_line(
+    data = df_plot,
+    aes(x = hours, y = mass, group = community),
+    color = color_cepa,
+    alpha = 0.45,
+    linewidth = 0.8
+  ) +
+  geom_line(
+    data = df_ind_plot,
+    aes(x = hours, y = mass),
+    color = color_cepa,
+    linetype = "dashed",
+    linewidth = 1.6,
+    alpha = 1
+  ) +
+  scale_y_log10() +
+  labs(
+    title = bquote(italic(.(cepa_objetivo))),
+    x        = "Tiempo (h)",
+    #y        = "Biomasa (g)"
+    y = expression(paste(log[10], " Biomasa (g)"))
+  ) +
+  theme_bw(base_size = 13) +
+  theme(
+    plot.title       = element_text(size = 14, hjust = 0.5),
+    plot.subtitle    = element_text(size = 9.5, hjust = 0.5, color = "gray30"),
+    panel.grid.minor = element_blank(),
+    axis.title       = element_text(face = "bold")
+  )
+
+print(grafica_especifica)
+
+nombre_archivo <- paste0(gsub(" ", "_", cepa_objetivo), "_dinamica.png")
+
+ggsave(
+  filename = file.path(output_folder, nombre_archivo),
+  plot     = grafica_especifica,
+  width    = 8,
+  height   = 5.5,
+  dpi      = 300
+)
+
+
+
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(fs)
+
+
+ruta_txt        <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/comunidades/biomass"
+ruta_individual <- "/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/vk1/individual/biomass"
+output_folder   <- "/media/abigaylmontantearenas/KINGSTON/septiembre/graficas/cc"
+dir_create(output_folder)
+
+cepas_info <- tibble::tribble(
+  ~cepa,                     ~clave,           ~color,
+  "Bacillus altitudinis",    "baltitudinis",    "#455866",
+  "Corynebacterium sp.",     "corynebacterium", "#436FA6",
+  "Bacillus thuringiensis",  "bthuringiensis",  "#5A8CB5",
+  "Staphylococcus arlettae", "sarlettae",       "#5CBDB8",
+  "Bacillus atrophaeus",     "batrophaeus",     "#7C4146",
+  "Micrococcus luteus",      "mluteus",         "#BC525D",
+  "Bacillus infantis",       "binfantis",       "#D75454",
+  "Priestia megaterium",     "pmegaterium",     "#C56E66",
+  "Metabacillus indicus",    "mindicus",        "#C79786",
+  "Staphylococcus shinii",   "sshinii",         "#B3C5D3"
+)
+
+ciclo_maximo <- 2000
+
+archivos_com <- list.files(ruta_txt, pattern = "\\.txt$", ignore.case = TRUE, full.names = TRUE)
+
+df_todas_com <- map_dfr(archivos_com, function(f) {
+  com_name <- sub("\\.[^.]+$", "", basename(f))
+  df <- read_table(
+    f,
+    col_names = c("cicle", "x", "y", "id", "mass"),
+    col_types = cols(cicle = col_double(), x = col_double(), y = col_double(), id = col_character(), mass = col_double()),
+    show_col_types = FALSE
+  )
+  if (nrow(df) == 0) return(NULL)
+  
+  df %>%
+    mutate(
+      hours     = cicle * 0.1,
+      mass      = as.numeric(mass),
+      community = com_name
+    )
+}) %>%
+  filter(mass > 0, cicle <= ciclo_maximo)
+
+df_com_plot <- map_dfr(1:nrow(cepas_info), function(i) {
+  c_nombre <- cepas_info$cepa[i]
+  c_clave  <- cepas_info$clave[i]
+  
+  df_todas_com %>%
+    filter(str_detect(id, c_clave)) %>%
+    mutate(
+      cepa      = c_nombre,
+      condicion = "Comunidad"
+    )
+})
+
+
+archivos_ind <- list.files(ruta_individual, pattern = "\\.txt$", recursive = TRUE, full.names = TRUE)
+
+df_ind_plot <- map_dfr(1:nrow(cepas_info), function(i) {
+  c_nombre <- cepas_info$cepa[i]
+  c_clave  <- cepas_info$clave[i]
+  
+  arch_ind <- archivos_ind[str_detect(tolower(archivos_ind), tolower(c_clave))]
+  if (length(arch_ind) == 0) return(NULL)
+  
+  read_table(
+    arch_ind[1],
+    col_names = c("cicle", "x", "y", "id", "mass"),
+    col_types = cols(cicle = col_double(), x = col_double(), y = col_double(), id = col_character(), mass = col_double()),
+    show_col_types = FALSE
+  ) %>%
+    group_by(cicle) %>%
+    summarise(mass = sum(mass), .groups = "drop") %>%
+    mutate(
+      hours     = cicle * 0.1,
+      cepa      = c_nombre,
+      condicion = "Aislado"
+    ) %>%
+    filter(mass > 0, cicle <= ciclo_maximo)
+})
+
+# Fijar orden exacto de las 10 cepas
+niveles_cepas <- cepas_info$cepa
+df_com_plot$cepa <- factor(df_com_plot$cepa, levels = niveles_cepas)
+df_ind_plot$cepa <- factor(df_ind_plot$cepa, levels = niveles_cepas)
+
+colores_cepas <- setNames(cepas_info$color, cepas_info$cepa)
+
+p_panel <- ggplot() +
+  geom_line(
+    data = df_com_plot,
+    aes(x = hours, y = mass, group = community, color = cepa, linetype = condicion),
+    alpha = 0.45,
+    linewidth = 0.6
+  ) +
+  geom_line(
+    data = df_ind_plot,
+    aes(x = hours, y = mass, color = cepa, linetype = condicion),
+    linewidth = 1.2
+  ) +
+  scale_color_manual(values = colores_cepas, guide = "none") +
+  scale_linetype_manual(
+    name   = NULL,
+    values = c("Aislado" = "dashed", "Comunidad" = "solid")
+  ) +
+  scale_y_log10() +
+  facet_wrap(~ cepa, nrow = 2, ncol = 5, scales = "fixed") +
+  labs(
+    x = "Tiempo (h)",
+    y = expression(log[10] * "(Biomasa [g])")
+  ) +
+  theme_bw(base_size = 11) +
+  theme(
+    strip.text         = element_text(face = "bold.italic", size = 9.5),
+    strip.background   = element_rect(fill = "grey95", color = "black"),
+    panel.grid.minor   = element_blank(),
+    axis.title         = element_text(face = "bold", size = 13),
+    panel.spacing.x    = unit(0.05, "lines"),
+    panel.spacing.y    = unit(0.05, "lines"),
+    plot.margin        = margin(t = 5, r = 5, b = 5, l = 5),
+    legend.position    = "bottom",
+    legend.title       = element_blank(),
+    legend.text        = element_text(size = 11),
+    legend.key.width   = unit(2, "cm")
+  )
+
+print(p_panel)
+
+
+salida_final <- file.path(output_folder, "panel_dinamicas_sin_espacios.png")
+
+ggsave(
+  filename = salida_final,
+  plot     = p_panel,
+  width    = 20,
+  height   = 8.5,
+  dpi      = 300
+)
+```
+
+
