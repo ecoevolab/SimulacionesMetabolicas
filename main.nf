@@ -37,13 +37,13 @@ workflow COMETS {
 
 
 workflow COMBOS {
-    cepas_ch = Channel.fromPath("${params.gem_path}/*.xml")
+    cepas_ch = Channel.fromPath("${params.gem_path_final}/*.xml")
                     .map { it.baseName }
                     .collect()
 
     combos_ch = cepas_ch.flatMap { cepas ->
         def cepasList = cepas as ArrayList
-        (2..4).collectMany { tam -> combinationsOf(cepasList, tam) }
+        (2..10).collectMany { tam -> combinationsOf(cepasList, tam) }
     }
 
     PROCESO_COMBOS(combos_ch)
