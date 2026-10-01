@@ -2359,19 +2359,54 @@ for dir in C*/; do
 done
 
 
+#############################################################
 
 
 
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains pmegaterium mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/pmegaterium1
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains pmegaterium corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/pmegaterium2
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains baltitudinis mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/baltitudinis1
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains baltitudinis corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/baltitudinis2
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains batrophaeus mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/batrophaeus1
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains batrophaeus corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/batrophaeus2
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains binfantis mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/binfantis1
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains binfantis corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/binfantis2
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains bthuringiensis mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/bthuringiensis1
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains bthuringiensis corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/bthuringiensis2
+
+´´´´´´´´´´´´´
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains mindicus mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/mindicus1
+
+python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains mindicus corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/mindicus2
 
 
 
+for d in */; do
+    nombre=$(basename "$d")
+    archivo="${nombre}/_exchange_fluxes.tsv"
 
+    cp $archivo fluxes/${nombre}_exchange_fluxes.tsv 
+done
 
+for d in */; do
+    nombre=$(basename "$d")
+    archivo="${nombre}/*_exchange_fluxes.tsv"
 
-
-
-
-
-
-
-
+    for f in $archivo; do
+        if [ -f "$f" ]; then
+            cp "$f" "fluxes/${nombre}_$(basename "$f")"
+        fi
+    done
+done
