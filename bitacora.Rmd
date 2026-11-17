@@ -2359,21 +2359,55 @@ for dir in C*/; do
 done
 
 
+<<<<<<< HEAD
+##################################
+=======
 #############################################################
+>>>>>>> dev
 
 
+for d in */; do
+    nombre=$(basename "$d")
+    archivo="${d}media.txt"
 
+<<<<<<< HEAD
+    if [ -f "$archivo" ]; then
+        cp "$archivo" "media/${nombre}_media.txt"
+    fi
+done
+=======
 python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains pmegaterium mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/pmegaterium1
+>>>>>>> dev
 
 python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains pmegaterium corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/pmegaterium2
 
+<<<<<<< HEAD
+###### 121026 #################
+=======
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+>>>>>>> dev
 
 python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains baltitudinis mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/baltitudinis1
 
+<<<<<<< HEAD
+ Identificadores BiGG de los Metabolitos (Intermediarios)
+• glc__D_c: D-Glucosa
+• g6p_c: D-Glucosa-6-fosfato
+• f6p_c: D-Fructosa-6-fosfato
+• fdp_c: D-Fructosa-1,6-bisofosfato
+• dhap_c: Dihidroxiacetona fosfato
+• g3p_c (o gap_c): Gliceraldehído-3-fosfato
+• 13dpg_c: 1,3-Bisofosfoglicerato (3-Phospho-D-glyceroyl phosphate)
+• 3pg_c: 3-Fosfoglicerato
+• 2pg_c: 2-Fosfoglicerato
+• pep_c: Fosfoenolpiruvato
+• pyr_c: Piruvato
+Co-factores comunes: atp_c (ATP), adp_c (ADP), nad_c (NAD+), nadh_c (NADH), h2o_c (Agua), h_c (H+), pi_c (Fosfato inorgánico).
+=======
 python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains baltitudinis corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/baltitudinis2
 
 python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains batrophaeus mluteus --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/batrophaeus1
+>>>>>>> dev
 
 python /mnt/data/sur/users/mmontante/SimulacionesMetabolicas/sim_syncom_comets.py --gem_path /mnt/data/sur/users/mmontante/02_resultados/cc/models/final_models --strains batrophaeus corynebacterium --cycles 5000 --initial_mass 5e-6 --media mm --media_dil 1 --media_vol 0.03 --outdir ./02_resultados/2909_resultados/batrophaeus2
 

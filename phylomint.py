@@ -11,10 +11,10 @@ output_path = '/media/abigaylmontantearenas/KINGSTON/septiembre/bacterias/cc/gem
 
 maxcc = 5
 
-# obtener archivos xml
+#  archivos xml
 files = [f for f in os.listdir(input_dir) if f.endswith('.xml')]
 
-# # guardar datos
+# guardar datos
 ConfidenceDic = {}
 nonSeedSetDic = {}
 
@@ -50,18 +50,4 @@ with open(output_path, 'w') as out:
             )
 
             out.write(f'{A_name}\t{B_name}\t{comp}\t{coop}\n')
-
-#import os
-#from lib import BuildGraphNetX
-
-#sbml_path = '/home/abigaylmontantearenas/Documents/proyecto_tesis/02_data/rizo/carveme/prokka/ST00042_prokka_carveme_lb.xml'
-
-# construir grafo
-#DG = BuildGraphNetX.buildDG(sbml_path)
-
-# obtener seed set
-#seed_set = BuildGraphNetX.getSeedSet(DG, maxComponentSize=5)
-
-#print("Seed set:", seed_set)
-#print("Tamaño:", len(seed_set))
 
