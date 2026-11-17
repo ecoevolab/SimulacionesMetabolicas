@@ -37,7 +37,7 @@ workflow COMETS {
 
 
 workflow COMBOS {
-    cepas_ch = Channel.fromPath("${params.gem_path_final}/*.xml")
+    cepas_ch = Channel.fromPath("${params.gem_path}/*.xml")
                     .map { it.baseName }
                     .collect()
 
